@@ -112,8 +112,12 @@ public class MovieItems {
             }
         }
     }
-
-    public int getId() {
+	
+	public MovieItems(){
+	
+	}
+	
+	public int getId() {
         return id;
     }
 
@@ -153,8 +157,12 @@ public class MovieItems {
     public String getMovieRatings() {
         return movieRatings;
     }
-
-    public String getMovieRatingsVote() {
+	
+	public void setMovieRatings(String movieRatings){
+		this.movieRatings = movieRatings;
+	}
+	
+	public String getMovieRatingsVote() {
         return movieRatingsVote;
     }
 
@@ -165,8 +173,12 @@ public class MovieItems {
             return "Language Unknown";
         }
     }
-
-    public String getMovieLanguages() {
+	
+	public void setMovieOriginalLanguage(String movieOriginalLanguage){
+		this.movieOriginalLanguage = movieOriginalLanguage;
+	}
+	
+	public String getMovieLanguages() {
         if(movieLanguages != null){
             return movieLanguages;
         } else {
@@ -191,8 +203,12 @@ public class MovieItems {
             return "Release Date Unknown";
         }
     }
-
-    public String getMovieOverview() {
+	
+	public void setMovieReleaseDate(String movieReleaseDate){
+		this.movieReleaseDate = movieReleaseDate;
+	}
+	
+	public String getMovieOverview() {
         // Set default value for DetailedMovieOverview if DetailedMovieOverview is null or ""
         if (movieOverview != null && !movieOverview.isEmpty()) {
             return movieOverview;
