@@ -12,11 +12,14 @@ import com.example.cataloguemoviestorage.item.MovieItems;
 import java.util.ArrayList;
 
 import static android.provider.BaseColumns._ID;
+import static com.example.cataloguemoviestorage.database.FavouriteMovieDatabaseContract.FavouriteMovieItemColumns.FILE_PATH_COLUMN;
 import static com.example.cataloguemoviestorage.database.FavouriteMovieDatabaseContract.FavouriteMovieItemColumns.ORIGINAL_LANGUAGE_COLUMN;
 import static com.example.cataloguemoviestorage.database.FavouriteMovieDatabaseContract.FavouriteMovieItemColumns.RATINGS_COLUMN;
 import static com.example.cataloguemoviestorage.database.FavouriteMovieDatabaseContract.FavouriteMovieItemColumns.RELEASE_DATE_COLUMN;
 import static com.example.cataloguemoviestorage.database.FavouriteMovieDatabaseContract.FavouriteMovieItemColumns.TABLE_NAME;
+import static com.example.cataloguemoviestorage.database.FavouriteMovieDatabaseContract.FavouriteMovieItemColumns.TITLE_COLUMN;
 
+// Class ini berguna untuk memanipulasi value dari database (Data Manipulation Language)
 public class FavouriteMovieItemsHelper {
     private static final String DATABASE_TABLE = TABLE_NAME;
     private static FavouriteMovieDatabaseHelper favouriteMovieDatabaseHelper;
@@ -24,6 +27,7 @@ public class FavouriteMovieItemsHelper {
 
     private static SQLiteDatabase favouriteMovieDatabase;
 
+    // Constructor untuk FavouriteMovieItemsHelper
     public FavouriteMovieItemsHelper(Context context) {
         favouriteMovieDatabaseHelper = new FavouriteMovieDatabaseHelper(context);
     }
@@ -76,9 +80,11 @@ public class FavouriteMovieItemsHelper {
                 // Set MovieItems object value sbg item dari ArrayList
                 movieItems = new MovieItems();
                 movieItems.setId(cursor.getInt(cursor.getColumnIndexOrThrow(_ID)));
+                movieItems.setMovieTitle(cursor.getString(cursor.getColumnIndexOrThrow(TITLE_COLUMN)));
                 movieItems.setMovieRatings(cursor.getString(cursor.getColumnIndexOrThrow(RATINGS_COLUMN)));
                 movieItems.setMovieOriginalLanguage(cursor.getString(cursor.getColumnIndexOrThrow(ORIGINAL_LANGUAGE_COLUMN)));
                 movieItems.setMovieReleaseDate(cursor.getString(cursor.getColumnIndexOrThrow(RELEASE_DATE_COLUMN)));
+                movieItems.setMoviePosterPath(cursor.getString(cursor.getColumnIndexOrThrow(FILE_PATH_COLUMN)));
                 // Add movie item data ke ArrayList
                 favouriteMovieItemsArrayList.add(movieItems);
                 // Memindahkan Cursor ke baris selanjutnya
@@ -98,9 +104,11 @@ public class FavouriteMovieItemsHelper {
         ContentValues movieItemValues = new ContentValues();
         // Insert value ke ContentValues object
         movieItemValues.put(_ID, movieItems.getId());
+        movieItemValues.put(TITLE_COLUMN, movieItems.getMovieTitle());
         movieItemValues.put(RATINGS_COLUMN, movieItems.getMovieRatings());
         movieItemValues.put(ORIGINAL_LANGUAGE_COLUMN, movieItems.getMovieOriginalLanguage());
         movieItemValues.put(RELEASE_DATE_COLUMN, movieItems.getMovieReleaseDate());
+        movieItemValues.put(FILE_PATH_COLUMN, movieItems.getMoviePosterPath());
         // Execute SQLiteDatabase insert method
         return favouriteMovieDatabase.insert(DATABASE_TABLE, null, movieItemValues);
     }

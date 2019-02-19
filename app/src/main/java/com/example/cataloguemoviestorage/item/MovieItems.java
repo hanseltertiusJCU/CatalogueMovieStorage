@@ -133,8 +133,12 @@ public class MovieItems {
             return "Title Unknown";
         }
     }
-
-    public String getMovieTagline() {
+	
+	public void setMovieTitle(String movieTitle){
+		this.movieTitle = movieTitle;
+	}
+	
+	public String getMovieTagline() {
         // Set default value for DetailedMovieTagline if DetailedMovieTagline is null or ""
         if (movieTagline != null && !movieTagline.isEmpty()) {
             return movieTagline;
@@ -220,4 +224,8 @@ public class MovieItems {
     public String getMoviePosterPath() {
         return moviePosterPath;
     }
+	
+	public void setMoviePosterPath(String moviePosterPath){
+		this.moviePosterPath = moviePosterPath;
+	}
 }

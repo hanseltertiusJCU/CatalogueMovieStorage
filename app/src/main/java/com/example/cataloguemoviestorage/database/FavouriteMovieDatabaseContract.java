@@ -10,8 +10,10 @@ public class FavouriteMovieDatabaseContract {
         // Nama tabel dari database
         static String TABLE_NAME = "favourite_movies";
         // Nama columns dari database
+        static String TITLE_COLUMN = "title";
         static String RATINGS_COLUMN = "ratings";
         static String RELEASE_DATE_COLUMN = "release_date";
         static String ORIGINAL_LANGUAGE_COLUMN = "original_language";
+        static String FILE_PATH_COLUMN = "file_path";
     }
 }

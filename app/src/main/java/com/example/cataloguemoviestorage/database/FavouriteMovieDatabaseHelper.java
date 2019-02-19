@@ -24,12 +24,17 @@ public class FavouriteMovieDatabaseHelper extends SQLiteOpenHelper {
             + " (%s INTEGER PRIMARY KEY,"
             + " %s TEXT NOT NULL,"
             + " %s TEXT NOT NULL,"
+            + " %s TEXT NOT NULL,"
+            + " %s TEXT NOT NULL,"
             + " %s TEXT NOT NULL)",
             FavouriteMovieDatabaseContract.FavouriteMovieItemColumns.TABLE_NAME,
             FavouriteMovieDatabaseContract.FavouriteMovieItemColumns._ID,
+            FavouriteMovieDatabaseContract.FavouriteMovieItemColumns.TITLE_COLUMN,
             FavouriteMovieDatabaseContract.FavouriteMovieItemColumns.RATINGS_COLUMN,
             FavouriteMovieDatabaseContract.FavouriteMovieItemColumns.RELEASE_DATE_COLUMN,
-            FavouriteMovieDatabaseContract.FavouriteMovieItemColumns.ORIGINAL_LANGUAGE_COLUMN);
+            FavouriteMovieDatabaseContract.FavouriteMovieItemColumns.ORIGINAL_LANGUAGE_COLUMN,
+            FavouriteMovieDatabaseContract.FavouriteMovieItemColumns.FILE_PATH_COLUMN
+    );
 
     @Override
     public void onCreate(SQLiteDatabase db) {
