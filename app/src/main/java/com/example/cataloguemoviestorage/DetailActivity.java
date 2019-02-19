@@ -60,8 +60,8 @@ public class DetailActivity extends AppCompatActivity {
 
     private Observer<ArrayList<MovieItems>> detailedMovieObserver;
     
-    // Global variable to handle menu
-    private Menu menu;
+    // Constant untuk key dri drawable
+	private static final String KEY_DRAWABLE_MARKED_AS_FAVORITE = "drawable_favorite_state";
     
     // Drawable Global variable to handle orientation changes
 	private int drawableMenuMarkedAsFavouriteResourceId = R.drawable.ic_favourite_off;
@@ -74,6 +74,11 @@ public class DetailActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         setSupportActionBar(detailedToolbar);
+        
+        // Cek jika savedInstanceState itu ada, jika iya, restore drawable marked as favorite icon state
+        if(savedInstanceState != null){
+        	drawableMenuMarkedAsFavouriteResourceId = savedInstanceState.getInt(KEY_DRAWABLE_MARKED_AS_FAVORITE);
+		}
 
         // Get intent untuk mendapatkan id dan title dari {@link MainActivity}
         detailedMovieId = getIntent().getIntExtra(NowPlayingMovieFragment.MOVIE_ID_DATA, 0);
@@ -211,6 +216,12 @@ public class DetailActivity extends AppCompatActivity {
 		}
     	return super.onOptionsItemSelected(item);
     }
-    
+	
+	@Override
+	protected void onSaveInstanceState(Bundle outState){
+		// Save drawable marked as favorite state
+    	outState.putInt(KEY_DRAWABLE_MARKED_AS_FAVORITE, drawableMenuMarkedAsFavouriteResourceId);
+    	super.onSaveInstanceState(outState);
+	}
 }
 
