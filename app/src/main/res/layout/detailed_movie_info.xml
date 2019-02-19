@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".DetailActivity">
+
+    <ImageView
+        android:id="@+id/detailed_poster_image"
+        style="@style/PosterImage"
+        android:layout_margin="@dimen/inner_view_margin"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.01"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        tools:src="@drawable/no_image_available" />
+
+
+    <TextView
+        android:id="@+id/detailed_movie_title_text"
+        style="@style/DetailedMovieText"
+        android:textSize="@dimen/movie_detailed_title"
+        android:textStyle="bold"
+        android:layout_marginLeft="@dimen/inner_view_margin"
+        android:layout_marginRight="@dimen/inner_view_margin"
+        android:layout_marginTop="@dimen/text_margin"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/detailed_poster_image"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/detailed_movie_tagline_text"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintVertical_weight="1"
+        tools:text="@string/detailed_movie_title_text" />
+
+    <TextView
+        android:id="@+id/detailed_movie_tagline_text"
+        style="@style/DetailedMovieText"
+        android:textColor="@color/color_black"
+        android:layout_marginLeft="@dimen/inner_view_margin"
+        android:layout_marginRight="@dimen/inner_view_margin"
+        android:layout_marginTop="@dimen/text_margin"
+        app:layout_constraintTop_toBottomOf="@+id/detailed_movie_title_text"
+        app:layout_constraintStart_toEndOf="@+id/detailed_poster_image"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/detailed_movie_status_text"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintVertical_weight="1"
+        tools:text="@string/detailed_movie_tagline_text" />
+
+    <TextView
+        android:id="@+id/detailed_movie_status_text"
+        style="@style/DetailedMovieText"
+        android:textColor="@color/color_black"
+        android:layout_marginLeft="@dimen/inner_view_margin"
+        android:layout_marginRight="@dimen/inner_view_margin"
+        android:layout_marginTop="@dimen/text_margin"
+        app:layout_constraintTop_toBottomOf="@+id/detailed_movie_tagline_text"
+        app:layout_constraintStart_toEndOf="@+id/detailed_poster_image"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/detailed_movie_rating_text"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintVertical_weight="1"
+        tools:text="@string/detailed_movie_status_text" />
+
+    <TextView
+        android:id="@+id/detailed_movie_rating_text"
+        style="@style/DetailedMovieText"
+        android:layout_marginLeft="@dimen/inner_view_margin"
+        android:layout_marginTop="@dimen/text_margin"
+        android:layout_marginRight="@dimen/inner_view_margin"
+        android:layout_marginBottom="8dp"
+        android:textColor="@color/color_black"
+        app:layout_constraintBottom_toTopOf="@+id/languages_spoken"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/detailed_poster_image"
+        app:layout_constraintTop_toBottomOf="@+id/detailed_movie_status_text"
+        app:layout_constraintVertical_weight="1"
+        tools:text="@string/detailed_movie_rating_text" />
+
+
+    <TextView
+        android:id="@+id/languages_spoken"
+        style="@style/DetailedMovieScrollViewTitleText"
+        android:layout_marginStart="@dimen/inner_view_margin"
+        android:layout_marginEnd="@dimen/inner_view_margin"
+        android:layout_marginTop="@dimen/text_margin"
+        android:text="@string/languages_title"
+        app:layout_constraintBottom_toTopOf="@+id/detailed_movie_languages_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/detailed_poster_image" />
+
+    <TextView
+        android:id="@+id/detailed_movie_languages_text"
+        style="@style/DetailedMovieScrollViewContentText"
+        android:layout_marginStart="@dimen/inner_view_margin"
+        android:layout_marginEnd="@dimen/inner_view_margin"
+        android:layout_marginTop="@dimen/text_margin"
+        app:layout_constraintBottom_toTopOf="@+id/genres"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/languages_spoken"
+        tools:text="@string/detailed_movie_languages_text" />
+
+    <TextView
+        android:id="@+id/genres"
+        style="@style/DetailedMovieScrollViewTitleText"
+        android:layout_marginStart="@dimen/inner_view_margin"
+        android:layout_marginEnd="@dimen/inner_view_margin"
+        android:layout_marginTop="@dimen/text_margin"
+        android:text="@string/genres_title"
+        app:layout_constraintBottom_toTopOf="@+id/detailed_movie_genres_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/detailed_movie_languages_text" />
+
+    <TextView
+        android:id="@+id/detailed_movie_genres_text"
+        style="@style/DetailedMovieScrollViewContentText"
+        android:layout_marginStart="@dimen/inner_view_margin"
+        android:layout_marginEnd="@dimen/inner_view_margin"
+        android:layout_marginTop="@dimen/text_margin"
+        app:layout_constraintBottom_toTopOf="@+id/release_date"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/genres"
+        tools:text="@string/detailed_movie_genres_text" />
+
+    <TextView
+        android:id="@+id/release_date"
+        style="@style/DetailedMovieScrollViewTitleText"
+        android:layout_marginStart="@dimen/inner_view_margin"
+        android:layout_marginEnd="@dimen/inner_view_margin"
+        android:layout_marginTop="@dimen/text_margin"
+        android:text="@string/release_date_title"
+        app:layout_constraintBottom_toTopOf="@+id/detailed_movie_release_date_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/detailed_movie_genres_text" />
+
+    <TextView
+        android:id="@+id/detailed_movie_release_date_text"
+        style="@style/DetailedMovieScrollViewContentText"
+        android:layout_marginStart="@dimen/inner_view_margin"
+        android:layout_marginEnd="@dimen/inner_view_margin"
+        android:layout_marginTop="@dimen/text_margin"
+        app:layout_constraintBottom_toTopOf="@+id/overview"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/release_date"
+        tools:text="@string/detailed_movie_release_date_text" />
+
+    <TextView
+        android:id="@+id/overview"
+        style="@style/DetailedMovieScrollViewTitleText"
+        android:layout_marginStart="@dimen/inner_view_margin"
+        android:layout_marginEnd="@dimen/inner_view_margin"
+        android:layout_marginTop="@dimen/text_margin"
+        android:text="@string/overview_title"
+        app:layout_constraintBottom_toTopOf="@+id/detailed_movie_overview_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/detailed_movie_release_date_text" />
+
+    <TextView
+        android:id="@+id/detailed_movie_overview_text"
+        style="@style/DetailedMovieScrollViewContentText"
+        android:layout_marginStart="@dimen/inner_view_margin"
+        android:layout_marginTop="@dimen/text_margin"
+        android:layout_marginEnd="@dimen/inner_view_margin"
+        android:layout_marginBottom="@dimen/text_margin"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/overview"
+        tools:text="@string/detailed_movie_overview_text" />
+
+</android.support.constraint.ConstraintLayout>

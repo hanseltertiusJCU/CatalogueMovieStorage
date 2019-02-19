@@ -1,3 +1,55 @@
 <resources>
     <string name="app_name">CatalogueMovieStorage</string>
+
+    <!-- Set values for edit text search -->
+    <string name="hint_text">Type a movie</string>
+    <string name="search_text">Search</string>
+
+    <!-- Set values for Movie data placeholder -->
+    <string name="movie_title_text">Movie Title</string>
+    <string name="movie_ratings_text">Ratings</string>
+    <string name="movie_release_date_text">Release Date</string>
+    <string name="movie_language_text">Language</string>
+
+    <!-- Set action bar title -->
+    <string name="search_movie">Search Movie</string>
+    <string name="now_playing">Now Playing</string>
+    <string name="upcoming">Up Coming</string>
+
+    <!-- Set Detailed Movie section value placeholder -->
+    <string name="detailed_movie_rating_text">Detailed Movie Rating Text</string>
+    <string name="detailed_movie_status_text">Detailed Movie Status Text</string>
+    <string name="detailed_movie_tagline_text">Detailed Movie Tagline Text</string>
+    <string name="detailed_movie_title_text">Detailed Movie Title Text</string>
+    <string name="detailed_movie_overview_text">Detailed Overview</string>
+    <string name="detailed_movie_release_date_text">yyyy-MM-dd</string>
+
+    <!-- Set Detailed Movie section title -->
+    <string name="overview_title">Overview</string>
+    <string name="release_date_title">Release Date</string>
+    <string name="genres_title">Genre(s)</string>
+    <string name="detailed_movie_languages_text">Detailed Movie Language(s) Text</string>
+    <string name="languages_title">Language(s) spoken</string>
+    <string name="detailed_movie_genres_text">Detailed Movie Genre(s) Text</string>
+
+    <!-- Set Span movie item section title -->
+    <string name="span_movie_item_ratings">Ratings :</string>
+    <string name="span_movie_item_language">Language :</string>
+    <string name="span_movie_item_release_date">Release Date :</string>
+
+    <!-- Set Span movie item section title -->
+    <string name="span_movie_detail_status">Status :</string>
+    <string name="span_movie_detail_rating">Rating :</string>
+    <string name="span_movie_detail_from">from</string>
+    <string name="span_movie_detail_votes">vote(s)</string>
+
+    <string name="change_language_settings">Change Language Settings</string>
+
+    <!-- Set Title for app menu -->
+    <string name="catalogue_api">Catalogue Movie API</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
 </resources>
