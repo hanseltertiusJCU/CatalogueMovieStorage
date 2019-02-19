@@ -12,6 +12,8 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -57,6 +59,12 @@ public class DetailActivity extends AppCompatActivity {
     private DetailedMovieViewModel detailedMovieViewModel;
 
     private Observer<ArrayList<MovieItems>> detailedMovieObserver;
+    
+    // Global variable to handle menu
+    private Menu menu;
+    
+    // Drawable Global variable to handle orientation changes
+	private int drawableMenuMarkedAsFavouriteResourceId = R.drawable.ic_favourite_off;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -173,5 +181,36 @@ public class DetailActivity extends AppCompatActivity {
         };
         return observer;
     }
+    
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+    	// Inflate menu
+    	getMenuInflater().inflate(R.menu.menu_favourite, menu);
+    	// Set inflated menu icon
+    	menu.findItem(R.id.action_marked_as_favorite).setIcon(drawableMenuMarkedAsFavouriteResourceId);
+        return true;
+    }
+    
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        switch(item.getItemId()){
+			case R.id.action_marked_as_favorite:
+				// Check for current state of drawable menu icon
+				if(drawableMenuMarkedAsFavouriteResourceId == R.drawable.ic_favourite_off){
+					// Change icon into marked as favourite
+					drawableMenuMarkedAsFavouriteResourceId = R.drawable.ic_favourite_on;
+					invalidateOptionsMenu();
+				} else {
+					// Change icon into unmarked as favourite
+					drawableMenuMarkedAsFavouriteResourceId = R.drawable.ic_favourite_off;
+					invalidateOptionsMenu();
+				}
+				break;
+        	default:
+        		break;
+		}
+    	return super.onOptionsItemSelected(item);
+    }
+    
 }
 
