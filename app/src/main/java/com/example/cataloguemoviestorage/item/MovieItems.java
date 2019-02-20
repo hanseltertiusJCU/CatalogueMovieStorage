@@ -1,9 +1,12 @@
 package com.example.cataloguemoviestorage.item;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-public class MovieItems {
+public class MovieItems implements Parcelable{
 
     private int id;
     private String movieTitle;
@@ -116,8 +119,8 @@ public class MovieItems {
 	public MovieItems(){
 	
 	}
-	
-	public int getId() {
+    
+    public int getId() {
         return id;
     }
 
@@ -228,4 +231,52 @@ public class MovieItems {
 	public void setMoviePosterPath(String moviePosterPath){
 		this.moviePosterPath = moviePosterPath;
 	}
+    
+    @Override
+    public int describeContents(){
+        return 0;
+    }
+    
+    @Override
+    public void writeToParcel(Parcel dest , int flags){
+        dest.writeInt(id);
+        dest.writeString(movieTitle);
+        dest.writeString(movieTagline);
+        dest.writeString(movieStatus);
+        dest.writeString(movieRatings);
+        dest.writeString(movieRatingsVote);
+        dest.writeString(movieOriginalLanguage);
+        dest.writeString(movieLanguages);
+        dest.writeString(movieGenres);
+        dest.writeString(movieReleaseDate);
+        dest.writeString(movieOverview);
+        dest.writeString(moviePosterPath);
+    }
+    
+    protected MovieItems(Parcel in){
+        id = in.readInt();
+        movieTitle = in.readString();
+        movieTagline = in.readString();
+        movieStatus = in.readString();
+        movieRatings = in.readString();
+        movieRatingsVote = in.readString();
+        movieOriginalLanguage = in.readString();
+        movieLanguages = in.readString();
+        movieGenres = in.readString();
+        movieReleaseDate = in.readString();
+        movieOverview = in.readString();
+        moviePosterPath = in.readString();
+    }
+    
+    public static final Creator <MovieItems> CREATOR = new Creator <MovieItems>(){
+        @Override
+        public MovieItems createFromParcel(Parcel in){
+            return new MovieItems(in);
+        }
+        
+        @Override
+        public MovieItems[] newArray(int size){
+            return new MovieItems[size];
+        }
+    };
 }

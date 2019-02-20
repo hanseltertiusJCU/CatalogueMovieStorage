@@ -51,7 +51,16 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         notifyDataSetChanged();
     }
     
-    // todo: bikin add sm remove item method
+    public void addItem(MovieItems movieItems){
+        this.mMovieData.add(movieItems);
+        notifyItemInserted(mMovieData.size() - 1);
+    }
+    
+    public void removeItem(int position){
+        this.mMovieData.remove(position);
+        notifyItemRemoved(position);
+        notifyItemRangeChanged(position, mMovieData.size());
+    }
 
     @NonNull
     @Override
