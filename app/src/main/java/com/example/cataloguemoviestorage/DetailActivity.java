@@ -3,9 +3,12 @@ package com.example.cataloguemoviestorage;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
@@ -192,7 +195,14 @@ public class DetailActivity extends AppCompatActivity {
     	// Inflate menu
     	getMenuInflater().inflate(R.menu.menu_favourite, menu);
     	// Set inflated menu icon
+		// todo: mungkin bawa boolean dri intent bwt nentuin iconnya
     	menu.findItem(R.id.action_marked_as_favorite).setIcon(drawableMenuMarkedAsFavouriteResourceId);
+        // Get icon from drawable
+    	Drawable menuDrawable = menu.findItem(R.id.action_marked_as_favorite).getIcon();
+        menuDrawable = DrawableCompat.wrap(menuDrawable);
+        // Set color of menu icon to white, because the default was black
+        DrawableCompat.setTint(menuDrawable, ContextCompat.getColor(this, R.color.colorWhite));
+        menu.findItem(R.id.action_marked_as_favorite).setIcon(menuDrawable);
         return true;
     }
     
@@ -200,10 +210,12 @@ public class DetailActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item){
         switch(item.getItemId()){
 			case R.id.action_marked_as_favorite:
-				// Check for current state of drawable menu icon
+				// Check for current state of drawable menu icon (logic: klo misalnya false value booleannya, maka )
 				if(drawableMenuMarkedAsFavouriteResourceId == R.drawable.ic_favourite_off){
 					// Change icon into marked as favourite
 					drawableMenuMarkedAsFavouriteResourceId = R.drawable.ic_favourite_on;
+					// todo: change value boolean into true
+                    // todo: insert
 					invalidateOptionsMenu();
 				} else {
 					// Change icon into unmarked as favourite

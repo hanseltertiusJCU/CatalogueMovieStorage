@@ -50,6 +50,8 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         // dpt ditampilkan pada ListView yg berisi adapter yg berkaitan dengan ListView
         notifyDataSetChanged();
     }
+    
+    // todo: bikin add sm remove item method
 
     @NonNull
     @Override

@@ -39,7 +39,6 @@
     <TextView
         android:id="@+id/detailed_movie_tagline_text"
         style="@style/DetailedMovieText"
-        android:textColor="@color/color_black"
         android:layout_marginLeft="@dimen/inner_view_margin"
         android:layout_marginRight="@dimen/inner_view_margin"
         android:layout_marginTop="@dimen/text_margin"
@@ -54,7 +53,6 @@
     <TextView
         android:id="@+id/detailed_movie_status_text"
         style="@style/DetailedMovieText"
-        android:textColor="@color/color_black"
         android:layout_marginLeft="@dimen/inner_view_margin"
         android:layout_marginRight="@dimen/inner_view_margin"
         android:layout_marginTop="@dimen/text_margin"
@@ -73,7 +71,6 @@
         android:layout_marginTop="@dimen/text_margin"
         android:layout_marginRight="@dimen/inner_view_margin"
         android:layout_marginBottom="8dp"
-        android:textColor="@color/color_black"
         app:layout_constraintBottom_toTopOf="@+id/languages_spoken"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"

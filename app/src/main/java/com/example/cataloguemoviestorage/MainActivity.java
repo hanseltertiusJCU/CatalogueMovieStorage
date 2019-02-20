@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.example.cataloguemoviestorage.adapter.MovieSectionsFragmentPagerAdapter;
+import com.example.cataloguemoviestorage.fragment.FavoriteMovieFragment;
 import com.example.cataloguemoviestorage.fragment.NowPlayingMovieFragment;
 import com.example.cataloguemoviestorage.fragment.UpcomingMovieFragment;
 
@@ -30,11 +31,14 @@ public class MainActivity extends AppCompatActivity {
 
     private TextView tabNowPlaying;
     private TextView tabUpcoming;
+    private TextView tabFavorite;
 
     private Drawable[] nowPlayingDrawables;
     private Drawable nowPlayingDrawable;
     private Drawable[] upcomingDrawables;
     private Drawable upcomingDrawable;
+    private Drawable[] favoriteDrawables;
+    private Drawable favoriteDrawable;
 
     @BindView(R.id.main_toolbar) Toolbar mainToolbar;
 
@@ -56,9 +60,9 @@ public class MainActivity extends AppCompatActivity {
 
         // Panggil method ini untuk saving Fragment state di ViewPager, kesannya kyk simpen
         // fragment ketika sebuah fragment sedang tidak di display.
-        // Kita menggunakan value 1 sebagai parameter karena kita punya 2 fragments, dan kita
-        // hanya butuh simpan 1 fragments (1 lg untuk display).
-        viewPager.setOffscreenPageLimit(1);
+        // Kita menggunakan value 2 sebagai parameter karena kita punya 3 fragments, dan kita
+        // hanya butuh simpan 2 fragments (1 lg untuk display).
+        viewPager.setOffscreenPageLimit(2);
 
         // Panggil method tsb untuk membuat fragment yang akan disimpan ke ViewPager
         createViewPagerContent(viewPager);
@@ -92,6 +96,12 @@ public class MainActivity extends AppCompatActivity {
                         upcomingDrawable = upcomingDrawables[1];
                         upcomingDrawable.setTint(getResources().getColor(R.color.colorAccent));
                         break;
+                    case 2:
+                        tabFavorite.setTextColor(getResources().getColor(R.color.colorAccent));
+                        favoriteDrawables = tabFavorite.getCompoundDrawables();
+                        favoriteDrawable = favoriteDrawables[1];
+                        favoriteDrawable.setTint(getResources().getColor(R.color.colorAccent));
+                        break;
                     default:
                         break;
                 }
@@ -105,17 +115,22 @@ public class MainActivity extends AppCompatActivity {
                 // sedang tidak dipilih
                 switch (position){
                     case 0:
-                        tabNowPlaying.setTextColor(getResources().getColor(R.color.color_black));
+                        tabNowPlaying.setTextColor(getResources().getColor(R.color.colorBlack));
                         nowPlayingDrawables = tabNowPlaying.getCompoundDrawables();
                         nowPlayingDrawable = nowPlayingDrawables[1];
-                        nowPlayingDrawable.setTint(getResources().getColor(R.color.color_black));
+                        nowPlayingDrawable.setTint(getResources().getColor(R.color.colorBlack));
                         break;
                     case 1:
-                        tabUpcoming.setTextColor(getResources().getColor(R.color.color_black));
+                        tabUpcoming.setTextColor(getResources().getColor(R.color.colorBlack));
                         upcomingDrawables = tabUpcoming.getCompoundDrawables();
                         upcomingDrawable = upcomingDrawables[1];
-                        upcomingDrawable.setTint(getResources().getColor(R.color.color_black));
+                        upcomingDrawable.setTint(getResources().getColor(R.color.colorBlack));
                         break;
+                    case 2:
+                        tabFavorite.setTextColor(getResources().getColor(R.color.colorBlack));
+                        favoriteDrawables = tabFavorite.getCompoundDrawables();
+                        favoriteDrawable = favoriteDrawables[1];
+                        favoriteDrawable.setTint(getResources().getColor(R.color.colorBlack));
                     default:
                         break;
                 }
@@ -154,6 +169,15 @@ public class MainActivity extends AppCompatActivity {
         tabUpcoming.setText(getString(R.string.upcoming));
         tabUpcoming.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_upcoming, 0,0);
         tabLayout.getTabAt(1).setCustomView(tabUpcoming);
+        
+        tabFavorite = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
+        tabFavorite.setText(getString(R.string.favorite));
+        tabFavorite.setCompoundDrawablesRelativeWithIntrinsicBounds(0, R.drawable.ic_favourite_off, 0, 0);
+        // Make the color black as the default tint color in drawable is white
+        favoriteDrawables = tabFavorite.getCompoundDrawables();
+        favoriteDrawable = favoriteDrawables[1];
+        favoriteDrawable.setTint(getResources().getColor(R.color.colorBlack));
+        tabLayout.getTabAt(2).setCustomView(tabFavorite);
     }
 
     // Method tsb berguna untuk membuat isi dari ViewPager
@@ -165,6 +189,7 @@ public class MainActivity extends AppCompatActivity {
         // Tambahkan fragment beserta title ke FragmentPagerAdapter, method tsb adalah
         movieSectionsFragmentPagerAdapter.addMovieSectionFragment(new NowPlayingMovieFragment(), getString(R.string.now_playing));
         movieSectionsFragmentPagerAdapter.addMovieSectionFragment(new UpcomingMovieFragment(), getString(R.string.upcoming));
+        movieSectionsFragmentPagerAdapter.addMovieSectionFragment(new FavoriteMovieFragment(), getString(R.string.favorite));
 
         // Set FragmentPagerAdapter ke ViewPager
         viewPager.setAdapter(movieSectionsFragmentPagerAdapter);

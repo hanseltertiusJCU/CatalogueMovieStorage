@@ -34,8 +34,8 @@ import butterknife.ButterKnife;
  * A simple {@link Fragment} subclass.
  */
 public class NowPlayingMovieFragment extends Fragment {
-
-    // Key untuk membawa data ke intent (data tidak d private untuk dapat diakses ke {@link DetailActivity})
+    
+    // Key untuk membawa data ke intent (data tidak d private untuk dapat diapplikasikan di berbagai Fragments dan diakses ke {@link DetailActivity})
     public static final String MOVIE_ID_DATA = "MOVIE_ID_DATA";
     public static final String MOVIE_TITLE_DATA = "MOVIE_TITLE_DATA";
     // Bikin constant (key) yang merepresent Parcelable object
@@ -72,7 +72,7 @@ public class NowPlayingMovieFragment extends Fragment {
         movieAdapter.notifyDataSetChanged();
 
         // Set background color untuk RecyclerView
-        recyclerView.setBackgroundColor(getResources().getColor(R.color.color_white));
+        recyclerView.setBackgroundColor(getResources().getColor(R.color.colorWhite));
 
         if(getContext() != null){
             // Buat object DividerItemDecoration dan set drawable untuk DividerItemDecoration

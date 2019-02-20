@@ -15,6 +15,7 @@
     <string name="search_movie">Search Movie</string>
     <string name="now_playing">Now Playing</string>
     <string name="upcoming">Up Coming</string>
+    <string name="favorite">Favorite</string>
 
     <!-- Set Detailed Movie section value placeholder -->
     <string name="detailed_movie_rating_text">Detailed Movie Rating Text</string>
