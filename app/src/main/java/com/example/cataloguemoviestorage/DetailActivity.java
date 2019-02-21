@@ -15,6 +15,7 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,7 +24,9 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.example.cataloguemoviestorage.database.FavouriteMovieItemsHelper;
 import com.example.cataloguemoviestorage.factory.DetailedMovieViewModelFactory;
+import com.example.cataloguemoviestorage.fragment.FavoriteMovieFragment;
 import com.example.cataloguemoviestorage.fragment.NowPlayingMovieFragment;
 import com.example.cataloguemoviestorage.item.MovieItems;
 import com.example.cataloguemoviestorage.model.DetailedMovieViewModel;
@@ -47,6 +50,7 @@ public class DetailActivity extends AppCompatActivity {
     @BindView(R.id.detailed_movie_overview_text) TextView textViewDetailedMovieOverview;
     private int detailedMovieId;
     private String detailedMovieTitle;
+    private boolean isdetailedMovieFavorite;
     // Set layout value untuk dapat menjalankan process loading data
     @BindView(R.id.detailed_progress_bar) ProgressBar detailedProgressBar;
 
@@ -67,7 +71,10 @@ public class DetailActivity extends AppCompatActivity {
 	private static final String KEY_DRAWABLE_MARKED_AS_FAVORITE = "drawable_favorite_state";
     
     // Drawable Global variable to handle orientation changes
-	private int drawableMenuMarkedAsFavouriteResourceId = R.drawable.ic_favourite_off;
+	private int drawableMenuMarkedAsFavouriteResourceId;
+	
+	private MovieItems detailedMovieItem; // mesti bawa movieitems
+	private FavouriteMovieItemsHelper favouriteMovieItemsHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +82,9 @@ public class DetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_detail);
 
         ButterKnife.bind(this);
+        
+        // Create instance dari FavoriteMovieItemsHelper
+		favouriteMovieItemsHelper = FavouriteMovieItemsHelper.getInstance(getApplicationContext());
 
         setSupportActionBar(detailedToolbar);
         
@@ -86,7 +96,7 @@ public class DetailActivity extends AppCompatActivity {
         // Get intent untuk mendapatkan id dan title dari {@link MainActivity}
         detailedMovieId = getIntent().getIntExtra(NowPlayingMovieFragment.MOVIE_ID_DATA, 0);
         detailedMovieTitle = getIntent().getStringExtra(NowPlayingMovieFragment.MOVIE_TITLE_DATA);
-
+        
         // Cek kalo ada action bar
         if(getSupportActionBar() != null){
             // Set action bar title untuk DetailActivity
@@ -107,6 +117,8 @@ public class DetailActivity extends AppCompatActivity {
 
         // Tempelkan Observer ke LiveData object
         detailedMovieViewModel.getDetailedMovie().observe(this, detailedMovieObserver);
+        
+        
 
         // Add on offset changed listener ke AppBarLayout untuk mengatur
         // ketika app barnya itu gede/collapse
@@ -185,6 +197,11 @@ public class DetailActivity extends AppCompatActivity {
                 textViewDetailedMovieReleaseDate.setText(detailedMovieItems.get(0).getMovieReleaseDate());
 
                 textViewDetailedMovieOverview.setText(detailedMovieItems.get(0).getMovieOverview());
+                
+                // Set value dari Item dan boolean
+				detailedMovieItem = detailedMovieItems.get(0);
+				isdetailedMovieFavorite = detailedMovieItem.getMovieFavorite();
+				Log.d("Boolean value", String.valueOf(isdetailedMovieFavorite));
             }
         };
         return observer;
@@ -194,9 +211,15 @@ public class DetailActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu){
     	// Inflate menu
     	getMenuInflater().inflate(R.menu.menu_favourite, menu);
-    	// Set inflated menu icon
-		// todo: mungkin bawa boolean dri intent bwt nentuin iconnya
-    	menu.findItem(R.id.action_marked_as_favorite).setIcon(drawableMenuMarkedAsFavouriteResourceId);
+    	// Cek jika value boolean nya itu adalah true, yang berarti menandakan movie favorite
+        if(isdetailedMovieFavorite){
+            // Set drawable resource
+        	drawableMenuMarkedAsFavouriteResourceId = R.drawable.ic_favourite_on;
+        } else {
+            drawableMenuMarkedAsFavouriteResourceId = R.drawable.ic_favourite_off;
+        }
+		// Set inflated menu icon
+        menu.findItem(R.id.action_marked_as_favorite).setIcon(drawableMenuMarkedAsFavouriteResourceId);
         // Get icon from drawable
     	Drawable menuDrawable = menu.findItem(R.id.action_marked_as_favorite).getIcon();
         menuDrawable = DrawableCompat.wrap(menuDrawable);
@@ -208,20 +231,30 @@ public class DetailActivity extends AppCompatActivity {
     
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
-        switch(item.getItemId()){
+    	
+    	switch(item.getItemId()){
 			case R.id.action_marked_as_favorite:
-				// Check for current state of drawable menu icon (logic: klo misalnya false value booleannya, maka )
-				if(drawableMenuMarkedAsFavouriteResourceId == R.drawable.ic_favourite_off){
+				// Check for current state of drawable menu icon
+				if(!isdetailedMovieFavorite){
 					// Change icon into marked as favourite
 					drawableMenuMarkedAsFavouriteResourceId = R.drawable.ic_favourite_on;
-					// todo: change value boolean into true
-                    // todo: insert
-					invalidateOptionsMenu();
+					isdetailedMovieFavorite = true;
+                    // Insert based on data
+                    favouriteMovieItemsHelper.insertFavouriteMovieItem(detailedMovieItem); // pake variable
+                    Log.d("Insert data from DB", "Inserted an item");
+                    Log.d("Boolean value", String.valueOf(isdetailedMovieFavorite));
+                    invalidateOptionsMenu();
 				} else {
 					// Change icon into unmarked as favourite
 					drawableMenuMarkedAsFavouriteResourceId = R.drawable.ic_favourite_off;
+					isdetailedMovieFavorite = false;
+					// Remove from database
+					favouriteMovieItemsHelper.deleteFavouriteMovieItem(detailedMovieItem.getId());
+					Log.d("Delete data from DB", "Removed an item");
+					Log.d("Boolean value", String.valueOf(isdetailedMovieFavorite));
 					invalidateOptionsMenu();
 				}
+				detailedMovieItem.setMovieFavorite(isdetailedMovieFavorite);
 				break;
         	default:
         		break;

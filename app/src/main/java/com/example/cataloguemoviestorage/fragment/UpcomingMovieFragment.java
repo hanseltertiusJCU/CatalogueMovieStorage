@@ -115,7 +115,6 @@ public class UpcomingMovieFragment extends Fragment {
         // Dapatkan id dan title bedasarkan ListView item
         int movieIdItem = movieItems.getId();
         String movieTitleItem = movieItems.getMovieTitle();
-        // todo: bikin statement yg menunjukkan boolean (specifically, cek jika idnya itu ada di arraylist)
         Intent intentWithMovieIdData = new Intent(getActivity(), DetailActivity.class);
         // Bawa data untuk disampaikan ke {@link DetailActivity}
         intentWithMovieIdData.putExtra(MOVIE_ID_DATA, movieIdItem);

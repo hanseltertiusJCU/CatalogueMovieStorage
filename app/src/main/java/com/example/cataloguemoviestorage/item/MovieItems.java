@@ -20,6 +20,8 @@ public class MovieItems implements Parcelable{
     private String movieReleaseDate;
     private String movieOverview;
     private String moviePosterPath;
+    // Nilai untuk tahu bahwa movie item itu termasuk dalam kategori favorit ato tidak
+    private boolean isMovieFavorite;
 
     public MovieItems(JSONObject object, boolean isMovieDetailed) {
         // Cek jika app berada di section DetailActivity agar dapat mengakses URL Movie Details
@@ -31,6 +33,10 @@ public class MovieItems implements Parcelable{
                 String dataStatus = object.getString("status");
                 String dataVoteAverage = object.getString("vote_average");
                 String dataVoteCount = object.getString("vote_count");
+                // value tsb berguna untuk mentransfer ke MainActivity
+                String dataOriginalLanguage = object.getString("original_language");
+                // Ubah language menjadi upper case
+                String displayed_language = dataOriginalLanguage.toUpperCase();
                 JSONArray dataLanguageArray = object.getJSONArray("spoken_languages");
                 String dataLanguages = null;
                 // Cek jika languageArray ada datanya atau tidak
@@ -82,6 +88,7 @@ public class MovieItems implements Parcelable{
                 this.movieStatus = dataStatus;
                 this.movieRatings = dataVoteAverage;
                 this.movieRatingsVote = dataVoteCount;
+                this.movieOriginalLanguage = displayed_language;
                 this.movieLanguages = dataLanguages;
                 this.movieGenres = dataGenres;
                 this.movieReleaseDate = dataReleaseDate;
@@ -232,6 +239,14 @@ public class MovieItems implements Parcelable{
 		this.moviePosterPath = moviePosterPath;
 	}
     
+    public boolean getMovieFavorite(){
+        return isMovieFavorite;
+    }
+    
+    public void setMovieFavorite(boolean movieFavorite){
+        isMovieFavorite = movieFavorite;
+    }
+    
     @Override
     public int describeContents(){
         return 0;
@@ -251,6 +266,7 @@ public class MovieItems implements Parcelable{
         dest.writeString(movieReleaseDate);
         dest.writeString(movieOverview);
         dest.writeString(moviePosterPath);
+        dest.writeByte((byte) (isMovieFavorite?1:0));
     }
     
     protected MovieItems(Parcel in){
@@ -266,6 +282,7 @@ public class MovieItems implements Parcelable{
         movieReleaseDate = in.readString();
         movieOverview = in.readString();
         moviePosterPath = in.readString();
+        isMovieFavorite = in.readByte() != 0;
     }
     
     public static final Creator <MovieItems> CREATOR = new Creator <MovieItems>(){

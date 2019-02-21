@@ -10,6 +10,7 @@ public class FavouriteMovieDatabaseContract {
         // Nama tabel dari database
         static String TABLE_NAME = "favourite_movies";
         // Nama columns dari database
+        static String ID_COLUMN = "id";
         static String TITLE_COLUMN = "title";
         static String RATINGS_COLUMN = "ratings";
         static String RELEASE_DATE_COLUMN = "release_date";

@@ -21,7 +21,8 @@ public class FavouriteMovieDatabaseHelper extends SQLiteOpenHelper {
 
     // Create table statement
     private static final String SQL_CREATE_FAVOURITE_MOVIE_STATEMENT = String.format("CREATE TABLE %s"
-            + " (%s INTEGER PRIMARY KEY,"
+            + " (%s INTEGER PRIMARY KEY AUTOINCREMENT,"
+            + " %s INTEGER NOT NULL,"
             + " %s TEXT NOT NULL,"
             + " %s TEXT NOT NULL,"
             + " %s TEXT NOT NULL,"
@@ -29,6 +30,7 @@ public class FavouriteMovieDatabaseHelper extends SQLiteOpenHelper {
             + " %s TEXT NOT NULL)",
             FavouriteMovieDatabaseContract.FavouriteMovieItemColumns.TABLE_NAME,
             FavouriteMovieDatabaseContract.FavouriteMovieItemColumns._ID,
+            FavouriteMovieDatabaseContract.FavouriteMovieItemColumns.ID_COLUMN,
             FavouriteMovieDatabaseContract.FavouriteMovieItemColumns.TITLE_COLUMN,
             FavouriteMovieDatabaseContract.FavouriteMovieItemColumns.RATINGS_COLUMN,
             FavouriteMovieDatabaseContract.FavouriteMovieItemColumns.RELEASE_DATE_COLUMN,

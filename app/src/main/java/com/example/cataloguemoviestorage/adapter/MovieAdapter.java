@@ -45,21 +45,17 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
     }
 
     public void setData(ArrayList<MovieItems> mData) {
-        this.mMovieData = mData;
+        
+        // Jika ada data di parameter, maka clear isi data di ArrayList global variable
+        if(mData.size() > 0){
+            this.mMovieData.clear();
+        }
+        
+        // Add semua isi data ke global variable ArrayList
+        this.mMovieData.addAll(mData);
         // Method tersebut berguna untuk memanggil adapter bahwa ada data yg bru, sehingga data tsb
-        // dpt ditampilkan pada ListView yg berisi adapter yg berkaitan dengan ListView
+        // dpt ditampilkan pada RecyclerView yg berisi adapter yg berkaitan dengan RecyclerView
         notifyDataSetChanged();
-    }
-    
-    public void addItem(MovieItems movieItems){
-        this.mMovieData.add(movieItems);
-        notifyItemInserted(mMovieData.size() - 1);
-    }
-    
-    public void removeItem(int position){
-        this.mMovieData.remove(position);
-        notifyItemRemoved(position);
-        notifyItemRangeChanged(position, mMovieData.size());
     }
 
     @NonNull
