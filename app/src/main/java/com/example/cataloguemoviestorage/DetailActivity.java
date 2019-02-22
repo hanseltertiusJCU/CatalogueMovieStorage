@@ -50,7 +50,7 @@ public class DetailActivity extends AppCompatActivity {
     private int detailedMovieId;
     private String detailedMovieTitle;
     private int detailedMovieFavoriteState;
-    private boolean isdetailedMovieFavorite;
+    private boolean menuClickable = false;
     // Set layout value untuk dapat menjalankan process loading data
     @BindView(R.id.detailed_progress_bar) ProgressBar detailedProgressBar;
 
@@ -202,13 +202,27 @@ public class DetailActivity extends AppCompatActivity {
                 
                 // Set value dari Item dan boolean
 				detailedMovieItem = detailedMovieItems.get(0);
-				Log.d("Boolean value", String.valueOf(detailedMovieFavoriteState));
+				// Set menu clickable into true
+				menuClickable = true;
+				// Update option menu to recall onPrepareOptionMenu method
+				invalidateOptionsMenu();
             }
         };
         return observer;
     }
-    
-    @Override
+	
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu){
+		if(menuClickable){
+			menu.findItem(R.id.action_marked_as_favorite).setEnabled(true);
+		} else {
+			menu.findItem(R.id.action_marked_as_favorite).setEnabled(false);
+		}
+    	
+    	return super.onPrepareOptionsMenu(menu);
+	}
+	
+	@Override
     public boolean onCreateOptionsMenu(Menu menu){
     	// Inflate menu
     	getMenuInflater().inflate(R.menu.menu_favourite, menu);
@@ -246,6 +260,7 @@ public class DetailActivity extends AppCompatActivity {
                     favouriteMovieItemsHelper.insertFavouriteMovieItem(detailedMovieItem); // pake variable
                     Log.d("Insert data from DB", "Inserted an item");
                     Log.d("Boolean value", String.valueOf(detailedMovieFavoriteState));
+					// Update option menu
                     invalidateOptionsMenu();
 				} else {
 					// Change icon into unmarked as favourite
@@ -259,6 +274,7 @@ public class DetailActivity extends AppCompatActivity {
 					favouriteMovieItemsHelper.deleteFavouriteMovieItem(detailedMovieItem.getId());
 					Log.d("Delete data from DB", "Removed an item");
 					Log.d("Boolean value", String.valueOf(detailedMovieFavoriteState));
+					// Update option menu
 					invalidateOptionsMenu();
 				}
 				break;
