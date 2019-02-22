@@ -39,11 +39,11 @@ public class FavoriteMovieFragment extends Fragment implements LoadFavoriteMovie
 	private static final String MOVIE_LIST_STATE = "movieListState";
 	@BindView(R.id.rv_list)
 	RecyclerView recyclerView;
-	private MovieAdapter movieAdapter;
+	MovieAdapter movieAdapter;
 	@BindView(R.id.progress_bar)
 	ProgressBar progressBar;
-	// Helper untuk membuka koneksi ke DB
-	private FavouriteMovieItemsHelper favouriteMovieItemsHelper;
+	// Helper untuk membuka koneksi ke DB (mesti public biar bs akses ke fragment lainnya)
+	FavouriteMovieItemsHelper favouriteMovieItemsHelper;
 	// Bikin linearlayout manager untuk dapat call onsaveinstancestate method
 	private LinearLayoutManager favoriteLinearLayoutManager;
 	// Array list untuk menyimpan data bedasarkan Database
@@ -80,6 +80,7 @@ public class FavoriteMovieFragment extends Fragment implements LoadFavoriteMovie
 	@Override
 	public void onActivityCreated(@Nullable Bundle savedInstanceState){
 		super.onActivityCreated(savedInstanceState);
+		
 		if(getActivity().getApplicationContext() != null){
 			favouriteMovieItemsHelper = FavouriteMovieItemsHelper.getInstance(getActivity().getApplicationContext());
 			favouriteMovieItemsHelper.open();
@@ -126,9 +127,10 @@ public class FavoriteMovieFragment extends Fragment implements LoadFavoriteMovie
 		// Cek jika ArrayList ada data
 		if(favoriteMovieItemList.size() > 0){
 			intentWithMovieIdData.putExtra(MOVIE_BOOLEAN_STATE_DATA , favoriteMovieItemList.get(itemPosition).getFavoriteBooleanState());
+			intentWithMovieIdData.putExtra(DetailActivity.EXTRA_MOVIE_ITEM_POSITION, itemPosition);
 		}
 		// Start activity tujuan bedasarkan intent object
-		startActivity(intentWithMovieIdData);
+		startActivityForResult(intentWithMovieIdData, DetailActivity.REQUEST_CHANGE);
 	}
 	
 	
@@ -174,12 +176,12 @@ public class FavoriteMovieFragment extends Fragment implements LoadFavoriteMovie
 	@Override
 	public void onResume(){
 		super.onResume();
-		// todo: mungkin pake if statement klo misalnya data berganti di helper, klo ga ya restore scroll position (basic logic)
-		// Lakukan AsyncTask kembali setelah berpindah dari {@link DetailActivity},
-		// karena ketika balik dr DetailActivity ke MainActivity,
-		// state Activity ke onResume = Fragment ke onResume juga
-		// Hal tsb berguna agar bs load kembali ke DB
-		new LoadFavoriteMoviesAsync(favouriteMovieItemsHelper , this).execute();
+//		// todo: mungkin pake if statement klo misalnya data berganti di helper, klo ga ya restore scroll position (basic logic)
+//		// Lakukan AsyncTask kembali setelah berpindah dari {@link DetailActivity},
+//		// karena ketika balik dr DetailActivity ke MainActivity,
+//		// state Activity ke onResume = Fragment ke onResume juga
+//		// Hal tsb berguna agar bs load kembali ke DB
+//		new LoadFavoriteMoviesAsync(favouriteMovieItemsHelper , this).execute();
 	}
 	
 	
@@ -218,6 +220,28 @@ public class FavoriteMovieFragment extends Fragment implements LoadFavoriteMovie
 		protected void onPostExecute(ArrayList <MovieItems> movieItems){
 			super.onPostExecute(movieItems);
 			weakCallback.get().postExecute(movieItems); // memanggil method postExecute di interface {@link LoadFavoriteMoviesCallback}
+		}
+	}
+	
+	@Override
+	public void onActivityResult(int requestCode , int resultCode , Intent data){
+		super.onActivityResult(requestCode , resultCode , data);
+		if(data != null){
+			// Check for correct request code
+			if(requestCode == DetailActivity.REQUEST_CHANGE){
+				// Check for result code
+				if(resultCode == DetailActivity.RESULT_ADD){
+					// Tambahkan item ke adapter dan reset scroll position ke paling atas
+					MovieItems newMovieItem = data.getParcelableExtra(DetailActivity.EXTRA_MOVIE_ITEM);
+					movieAdapter.addItem(newMovieItem);
+					recyclerView.smoothScrollToPosition(0);
+				} else if(resultCode == DetailActivity.RESULT_DELETE){
+					// Delete item dari adapter dan reset scroll position ke paling atas
+					int deletedMovieItemPosition = data.getIntExtra(DetailActivity.EXTRA_MOVIE_ITEM_POSITION, 0);
+					movieAdapter.removeItem(deletedMovieItemPosition);
+					recyclerView.smoothScrollToPosition(0);
+				}
+			}
 		}
 	}
 	

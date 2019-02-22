@@ -153,9 +153,10 @@ public class NowPlayingMovieFragment extends Fragment implements LoadFavoriteMov
 		// Cek jika ArrayList ada data
 		if(favoriteMovieItemList.size() > 0){
 			intentWithMovieIdData.putExtra(MOVIE_BOOLEAN_STATE_DATA , favoriteMovieItemList.get(itemPosition).getFavoriteBooleanState());
+			intentWithMovieIdData.putExtra(DetailActivity.EXTRA_MOVIE_ITEM_POSITION, itemPosition);
 		}
 		// Start activity tujuan bedasarkan intent object
-		startActivity(intentWithMovieIdData);
+		startActivityForResult(intentWithMovieIdData, DetailActivity.REQUEST_CHANGE);
 	}
 	
 	@Override

@@ -155,10 +155,11 @@ public class UpcomingMovieFragment extends Fragment implements LoadFavoriteMovie
 		intentWithMovieIdData.putExtra(MOVIE_TITLE_DATA , movieTitleItem);
 		if(favoriteMovieItemList.size() > 0){
 			intentWithMovieIdData.putExtra(MOVIE_BOOLEAN_STATE_DATA , favoriteMovieItemList.get(itemPosition).getFavoriteBooleanState());
+			intentWithMovieIdData.putExtra(DetailActivity.EXTRA_MOVIE_ITEM_POSITION, itemPosition);
 		}
 		
 		// Start activity tujuan bedasarkan intent object
-		startActivity(intentWithMovieIdData);
+		startActivityForResult(intentWithMovieIdData, DetailActivity.REQUEST_CHANGE);
 	}
 	
 	@Override

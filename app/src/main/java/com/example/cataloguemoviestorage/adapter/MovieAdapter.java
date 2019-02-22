@@ -57,6 +57,19 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         // dpt ditampilkan pada RecyclerView yg berisi adapter yg berkaitan dengan RecyclerView
         notifyDataSetChanged();
     }
+    
+    // Add item
+    public void addItem(MovieItems movieItems){
+        this.mMovieData.add(movieItems);
+        notifyItemInserted(0); // Insert ke index 0 = data paling pertama
+    }
+    
+    // Remove item
+    public void removeItem(int position){
+        this.mMovieData.remove(position);
+        notifyItemRemoved(position);
+        notifyItemRangeChanged(position, mMovieData.size());
+    }
 
     @NonNull
     @Override

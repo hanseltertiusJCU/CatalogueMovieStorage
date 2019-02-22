@@ -9,13 +9,13 @@ import android.support.annotation.Nullable;
 public class FavouriteMovieDatabaseHelper extends SQLiteOpenHelper {
 
     // Name of database file
-    public static String DATABASE_NAME = "favouritemovies";
+    private static String DATABASE_NAME = "favouritemovies";
 
     // Version of database, guna untuk handle change in schema database
-    public static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 1;
 
     // Constructor from DB Helper
-    public FavouriteMovieDatabaseHelper(@Nullable Context context) {
+    FavouriteMovieDatabaseHelper(@Nullable Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 

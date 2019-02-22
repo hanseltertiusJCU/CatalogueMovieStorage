@@ -119,22 +119,6 @@ public class FavouriteMovieItemsHelper {
         return favouriteMovieDatabase.insert(DATABASE_TABLE, null, movieItemValues);
     }
     
-    // Method untuk update data ke DB dengan menggunakan SQLiteDatabase update method
-    public int updateFavoriteMovieItem(MovieItems movieItems){
-        ContentValues movieItemValues = new ContentValues();
-        // Insert value ke ContentValues object
-        movieItemValues.put(_ID, movieItems.getId());
-        movieItemValues.put(TITLE_COLUMN, movieItems.getMovieTitle());
-        movieItemValues.put(RATINGS_COLUMN, movieItems.getMovieRatings());
-        movieItemValues.put(ORIGINAL_LANGUAGE_COLUMN, movieItems.getMovieOriginalLanguage());
-        movieItemValues.put(RELEASE_DATE_COLUMN, movieItems.getMovieReleaseDate());
-        movieItemValues.put(FILE_PATH_COLUMN, movieItems.getMoviePosterPath());
-        movieItemValues.put(DATE_ADDED_COLUMN, movieItems.getDateAddedFavorite());
-        movieItemValues.put(FAVORITE_COLUMN, movieItems.getFavoriteBooleanState());
-        // Execute SQLiteDatabase update method
-        return favouriteMovieDatabase.update(DATABASE_TABLE, movieItemValues, _ID + " = '" + movieItems.getId() + "'", null);
-    }
-    
     // Method untuk delete data dari DB dengan menggunakan SQLiteDatabase delete method
     public int deleteFavouriteMovieItem(int id){
         return favouriteMovieDatabase.delete(TABLE_NAME, _ID + " = '" + id + "'", null);
