@@ -36,6 +36,7 @@ public class FavoriteMovieFragment extends Fragment implements LoadFavoriteMovie
 	// Key untuk membawa data ke intent (data tidak d private untuk dapat diapplikasikan di berbagai Fragments dan diakses ke {@link DetailActivity})
 	public static final String MOVIE_ID_DATA = "MOVIE_ID_DATA";
 	public static final String MOVIE_TITLE_DATA = "MOVIE_TITLE_DATA";
+	public static final String MOVIE_BOOLEAN_STATE_DATA = "MOVIE_BOOLEAN_STATE_DATA";
 	// Bikin constant (key) yang merepresent Parcelable object
 	private static final String MOVIE_LIST_STATE = "movieListState";
 	@BindView(R.id.rv_list)
@@ -43,17 +44,20 @@ public class FavoriteMovieFragment extends Fragment implements LoadFavoriteMovie
 	private MovieAdapter movieAdapter;
 	@BindView(R.id.progress_bar)
 	ProgressBar progressBar;
+	// Helper untuk membuka koneksi ke DB
 	private FavouriteMovieItemsHelper favouriteMovieItemsHelper;
 	// Bikin linearlayout manager untuk dapat call onsaveinstancestate method
 	private LinearLayoutManager favoriteLinearLayoutManager;
+	// Array list untuk menyimpan data bedasarkan Database
+	private static ArrayList <MovieItems> favoriteMovieItemList;
 	
 	
 	@Nullable
 	@Override
 	public View onCreateView(@NonNull LayoutInflater inflater , @Nullable ViewGroup container , @Nullable Bundle savedInstanceState){
 		// Inflate the layout for this fragment
-		View view = inflater.inflate(R.layout.fragment_movie, container, false);
-		ButterKnife.bind(this, view);
+		View view = inflater.inflate(R.layout.fragment_movie , container , false);
+		ButterKnife.bind(this , view);
 		return view;
 	}
 	
@@ -67,8 +71,8 @@ public class FavoriteMovieFragment extends Fragment implements LoadFavoriteMovie
 		
 		if(getContext() != null){
 			// Buat object DividerItemDecoration dan set drawable untuk DividerItemDecoration
-			DividerItemDecoration itemDecorator = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
-			itemDecorator.setDrawable(ContextCompat.getDrawable(getContext(), R.drawable.item_divider));
+			DividerItemDecoration itemDecorator = new DividerItemDecoration(getContext() , DividerItemDecoration.VERTICAL);
+			itemDecorator.setDrawable(ContextCompat.getDrawable(getContext() , R.drawable.item_divider));
 			// Set divider untuk RecyclerView items
 			recyclerView.addItemDecoration(itemDecorator);
 		}
@@ -83,34 +87,51 @@ public class FavoriteMovieFragment extends Fragment implements LoadFavoriteMovie
 			favouriteMovieItemsHelper.open();
 		}
 		
-		if(savedInstanceState == null){
-			// Panggil AsyncTask class
-			new LoadFavoriteMoviesAsync(favouriteMovieItemsHelper, this).execute();
-		} else {
+		if(savedInstanceState != null){
 			// Retrieve array list parcelable
-			ArrayList<MovieItems> movieItemsList = savedInstanceState.getParcelableArrayList(MOVIE_LIST_STATE);
+			ArrayList <MovieItems> movieItemsList = savedInstanceState.getParcelableArrayList(MOVIE_LIST_STATE);
 			if(movieItemsList != null){
 				if(movieItemsList.size() > 0){
 					movieAdapter.setData(movieItemsList);
 				}
 			}
+		} else{
+			// Lakukan AsyncTask utk meretrieve ArrayList yg isinya data dari database
+			new LoadFavoriteMoviesAsync(favouriteMovieItemsHelper , this).execute();
 		}
-
-
+		
 	}
 	
-	private void showSelectedMovieItems(MovieItems movieItems) {
-		// Dapatkan id dan title bedasarkan ListView item
+	private void showSelectedMovieItems(MovieItems movieItems){
+		// Dapatkan id dan title bedasarkan item di ArrayList
 		int movieIdItem = movieItems.getId();
 		String movieTitleItem = movieItems.getMovieTitle();
-		Intent intentWithMovieIdData = new Intent(getActivity(), DetailActivity.class);
+		// Item position untuk mengakses arraylist specific position
+		int itemPosition = 0;
+		
+		// if statement untuk tahu bahwa idnya itu termasuk d dalam tabel ato tidak, looping pake arraylist
+		// Cek jika size dari ArrayList itu lebih dari 0
+		if(favoriteMovieItemList.size() > 0){
+			for(int i = 0 ; i < favoriteMovieItemList.size() ; i++){
+				if(movieIdItem == favoriteMovieItemList.get(i).getId()){
+					favoriteMovieItemList.get(i).setFavoriteBooleanState(1);
+					// Dapatin position dari arraylist jika idnya itu sama kyk id yg tersedia
+					itemPosition = i;
+					break;
+				}
+			}
+		}
+		Intent intentWithMovieIdData = new Intent(getActivity() , DetailActivity.class);
 		// Bawa data untuk disampaikan ke {@link DetailActivity}
-		intentWithMovieIdData.putExtra(MOVIE_ID_DATA, movieIdItem);
-		intentWithMovieIdData.putExtra(MOVIE_TITLE_DATA, movieTitleItem);
+		intentWithMovieIdData.putExtra(MOVIE_ID_DATA , movieIdItem);
+		intentWithMovieIdData.putExtra(MOVIE_TITLE_DATA , movieTitleItem);
+		// Cek jika ArrayList ada data
+		if(favoriteMovieItemList.size() > 0){
+			intentWithMovieIdData.putExtra(MOVIE_BOOLEAN_STATE_DATA , favoriteMovieItemList.get(itemPosition).getFavoriteBooleanState());
+		}
 		// Start activity tujuan bedasarkan intent object
 		startActivity(intentWithMovieIdData);
 	}
-	
 	
 	
 	@Override
@@ -146,38 +167,51 @@ public class FavoriteMovieFragment extends Fragment implements LoadFavoriteMovie
 	@Override
 	public void onSaveInstanceState(@NonNull Bundle outState){
 		super.onSaveInstanceState(outState);
-		outState.putParcelableArrayList(MOVIE_LIST_STATE, movieAdapter.getmMovieData());
+		// Cek jika favoriteLinearLayoutManager itu ada, jika tidak maka kita tidak akan ngapa2in
+		// di onSaveInstanceState
+		outState.putParcelableArrayList(MOVIE_LIST_STATE , movieAdapter.getmMovieData());
 	}
 	
 	// Class tsb berguna untuk membaca data dari Database lalu mendisplay data yg ada di sana
-	private static class LoadFavoriteMoviesAsync extends AsyncTask<Void, Void, ArrayList<MovieItems>>{
+	private static class LoadFavoriteMoviesAsync extends AsyncTask <Void, Void, ArrayList <MovieItems>>{
 		// WeakReference digunakan karena AsyncTask akan dibuat dan dieksekusi scr bersamaan di method onCreate().
 		// Selain itu, ketika Activity destroyed, Activity tsb dapat dikumpulkan oleh GarbageCollector, sehingga
 		// dapat mencegah memory leak
-		private final WeakReference<FavouriteMovieItemsHelper> weakFavoriteMovieItemsHelper;
-		private final WeakReference<LoadFavoriteMoviesCallback> weakCallback;
+		private final WeakReference <FavouriteMovieItemsHelper> weakFavoriteMovieItemsHelper;
+		private final WeakReference <LoadFavoriteMoviesCallback> weakCallback;
 		
-		private LoadFavoriteMoviesAsync(FavouriteMovieItemsHelper favouriteMovieItemsHelper, LoadFavoriteMoviesCallback callback){
-			weakFavoriteMovieItemsHelper = new WeakReference<>(favouriteMovieItemsHelper);
-			weakCallback = new WeakReference<>(callback);
+		private LoadFavoriteMoviesAsync(FavouriteMovieItemsHelper favouriteMovieItemsHelper , LoadFavoriteMoviesCallback callback){
+			weakFavoriteMovieItemsHelper = new WeakReference <>(favouriteMovieItemsHelper);
+			weakCallback = new WeakReference <>(callback);
 		}
 		
 		@Override
-		protected void onPreExecute() {
+		protected void onPreExecute(){
 			super.onPreExecute();
 			weakCallback.get().preExecute(); // memanggil method preExecute di interface {@link LoadFavoriteMoviesCallback}
 		}
 		
 		@Override
-		protected ArrayList<MovieItems> doInBackground(Void... voids) {
-			return weakFavoriteMovieItemsHelper.get().getAllFavouriteMovieItems(); // Memanggil query method dari {@link FavouriteMovieItemsHelper}
+		protected ArrayList <MovieItems> doInBackground(Void... voids){
+			favoriteMovieItemList = weakFavoriteMovieItemsHelper.get().getAllFavouriteMovieItems();
+			return favoriteMovieItemList; // Memanggil query method dari {@link FavouriteMovieItemsHelper}
 		}
 		
 		@Override
-		protected void onPostExecute(ArrayList<MovieItems> movieItems) {
+		protected void onPostExecute(ArrayList <MovieItems> movieItems){
 			super.onPostExecute(movieItems);
 			weakCallback.get().postExecute(movieItems); // memanggil method postExecute di interface {@link LoadFavoriteMoviesCallback}
 		}
+	}
+	
+	@Override
+	public void onResume(){
+		super.onResume();
+		// Lakukan AsyncTask kembali setelah berpindah dari {@link DetailActivity},
+		// karena ketika balik dr DetailActivity ke MainActivity,
+		// state Activity ke onResume = Fragment ke onResume juga
+		// Hal tsb berguna agar bs load kembali ke DB
+		new LoadFavoriteMoviesAsync(favouriteMovieItemsHelper , this).execute();
 	}
 	
 	@Override

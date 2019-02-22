@@ -26,7 +26,6 @@ import android.widget.TextView;
 
 import com.example.cataloguemoviestorage.database.FavouriteMovieItemsHelper;
 import com.example.cataloguemoviestorage.factory.DetailedMovieViewModelFactory;
-import com.example.cataloguemoviestorage.fragment.FavoriteMovieFragment;
 import com.example.cataloguemoviestorage.fragment.NowPlayingMovieFragment;
 import com.example.cataloguemoviestorage.item.MovieItems;
 import com.example.cataloguemoviestorage.model.DetailedMovieViewModel;
@@ -50,6 +49,7 @@ public class DetailActivity extends AppCompatActivity {
     @BindView(R.id.detailed_movie_overview_text) TextView textViewDetailedMovieOverview;
     private int detailedMovieId;
     private String detailedMovieTitle;
+    private int detailedMovieFavoriteState;
     private boolean isdetailedMovieFavorite;
     // Set layout value untuk dapat menjalankan process loading data
     @BindView(R.id.detailed_progress_bar) ProgressBar detailedProgressBar;
@@ -67,8 +67,8 @@ public class DetailActivity extends AppCompatActivity {
 
     private Observer<ArrayList<MovieItems>> detailedMovieObserver;
     
-    // Constant untuk key dri drawable
-	private static final String KEY_DRAWABLE_MARKED_AS_FAVORITE = "drawable_favorite_state";
+    // Constant untuk key dri drawable dan boolean state
+	private static final String KEY_DRAWABLE_MARKED_AS_FAVORITE_STATE = "drawable_favorite_state";
     
     // Drawable Global variable to handle orientation changes
 	private int drawableMenuMarkedAsFavouriteResourceId;
@@ -87,15 +87,17 @@ public class DetailActivity extends AppCompatActivity {
 		favouriteMovieItemsHelper = FavouriteMovieItemsHelper.getInstance(getApplicationContext());
 
         setSupportActionBar(detailedToolbar);
+	
+		// Get intent untuk mendapatkan id dan title dari {@link MainActivity}
+		detailedMovieId = getIntent().getIntExtra(NowPlayingMovieFragment.MOVIE_ID_DATA, 0);
+		detailedMovieTitle = getIntent().getStringExtra(NowPlayingMovieFragment.MOVIE_TITLE_DATA);
+		detailedMovieFavoriteState = getIntent().getIntExtra(NowPlayingMovieFragment.MOVIE_BOOLEAN_STATE_DATA, 0);
         
         // Cek jika savedInstanceState itu ada, jika iya, restore drawable marked as favorite icon state
         if(savedInstanceState != null){
-        	drawableMenuMarkedAsFavouriteResourceId = savedInstanceState.getInt(KEY_DRAWABLE_MARKED_AS_FAVORITE);
+        	detailedMovieFavoriteState = savedInstanceState.getInt(KEY_DRAWABLE_MARKED_AS_FAVORITE_STATE);
+        	
 		}
-
-        // Get intent untuk mendapatkan id dan title dari {@link MainActivity}
-        detailedMovieId = getIntent().getIntExtra(NowPlayingMovieFragment.MOVIE_ID_DATA, 0);
-        detailedMovieTitle = getIntent().getStringExtra(NowPlayingMovieFragment.MOVIE_TITLE_DATA);
         
         // Cek kalo ada action bar
         if(getSupportActionBar() != null){
@@ -200,8 +202,7 @@ public class DetailActivity extends AppCompatActivity {
                 
                 // Set value dari Item dan boolean
 				detailedMovieItem = detailedMovieItems.get(0);
-				isdetailedMovieFavorite = detailedMovieItem.getMovieFavorite();
-				Log.d("Boolean value", String.valueOf(isdetailedMovieFavorite));
+				Log.d("Boolean value", String.valueOf(detailedMovieFavoriteState));
             }
         };
         return observer;
@@ -212,7 +213,7 @@ public class DetailActivity extends AppCompatActivity {
     	// Inflate menu
     	getMenuInflater().inflate(R.menu.menu_favourite, menu);
     	// Cek jika value boolean nya itu adalah true, yang berarti menandakan movie favorite
-        if(isdetailedMovieFavorite){
+        if(detailedMovieFavoriteState == 1){
             // Set drawable resource
         	drawableMenuMarkedAsFavouriteResourceId = R.drawable.ic_favourite_on;
         } else {
@@ -235,26 +236,31 @@ public class DetailActivity extends AppCompatActivity {
     	switch(item.getItemId()){
 			case R.id.action_marked_as_favorite:
 				// Check for current state of drawable menu icon
-				if(!isdetailedMovieFavorite){
+				if(detailedMovieFavoriteState != 1){
 					// Change icon into marked as favourite
 					drawableMenuMarkedAsFavouriteResourceId = R.drawable.ic_favourite_on;
-					isdetailedMovieFavorite = true;
-                    // Insert based on data
+					detailedMovieFavoriteState = 1;
+					// Set boolean state value into MovieItem
+					detailedMovieItem.setFavoriteBooleanState(detailedMovieFavoriteState);
+					// Insert based on data
                     favouriteMovieItemsHelper.insertFavouriteMovieItem(detailedMovieItem); // pake variable
                     Log.d("Insert data from DB", "Inserted an item");
-                    Log.d("Boolean value", String.valueOf(isdetailedMovieFavorite));
+                    Log.d("Boolean value", String.valueOf(detailedMovieFavoriteState));
                     invalidateOptionsMenu();
 				} else {
 					// Change icon into unmarked as favourite
 					drawableMenuMarkedAsFavouriteResourceId = R.drawable.ic_favourite_off;
-					isdetailedMovieFavorite = false;
+					detailedMovieFavoriteState = 0;
+					// Set boolean state value into MovieItem
+					detailedMovieItem.setFavoriteBooleanState(detailedMovieFavoriteState);
+					// Update data into database
+					favouriteMovieItemsHelper.updateFavoriteMovieItem(detailedMovieItem);
 					// Remove from database
 					favouriteMovieItemsHelper.deleteFavouriteMovieItem(detailedMovieItem.getId());
 					Log.d("Delete data from DB", "Removed an item");
-					Log.d("Boolean value", String.valueOf(isdetailedMovieFavorite));
+					Log.d("Boolean value", String.valueOf(detailedMovieFavoriteState));
 					invalidateOptionsMenu();
 				}
-				detailedMovieItem.setMovieFavorite(isdetailedMovieFavorite);
 				break;
         	default:
         		break;
@@ -265,7 +271,7 @@ public class DetailActivity extends AppCompatActivity {
 	@Override
 	protected void onSaveInstanceState(Bundle outState){
 		// Save drawable marked as favorite state
-    	outState.putInt(KEY_DRAWABLE_MARKED_AS_FAVORITE, drawableMenuMarkedAsFavouriteResourceId);
+    	outState.putInt(KEY_DRAWABLE_MARKED_AS_FAVORITE_STATE , detailedMovieFavoriteState);
     	super.onSaveInstanceState(outState);
 	}
 }

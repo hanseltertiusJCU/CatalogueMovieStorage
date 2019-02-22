@@ -6,14 +6,15 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.support.v4.content.ContextCompat;
 
 import com.example.cataloguemoviestorage.item.MovieItems;
 
 import java.util.ArrayList;
 
 import static android.provider.BaseColumns._ID;
+import static com.example.cataloguemoviestorage.database.FavouriteMovieDatabaseContract.FavouriteMovieItemColumns.FAVORITE_COLUMN;
 import static com.example.cataloguemoviestorage.database.FavouriteMovieDatabaseContract.FavouriteMovieItemColumns.FILE_PATH_COLUMN;
-import static com.example.cataloguemoviestorage.database.FavouriteMovieDatabaseContract.FavouriteMovieItemColumns.ID_COLUMN;
 import static com.example.cataloguemoviestorage.database.FavouriteMovieDatabaseContract.FavouriteMovieItemColumns.ORIGINAL_LANGUAGE_COLUMN;
 import static com.example.cataloguemoviestorage.database.FavouriteMovieDatabaseContract.FavouriteMovieItemColumns.RATINGS_COLUMN;
 import static com.example.cataloguemoviestorage.database.FavouriteMovieDatabaseContract.FavouriteMovieItemColumns.RELEASE_DATE_COLUMN;
@@ -81,12 +82,12 @@ public class FavouriteMovieItemsHelper {
                 // Set MovieItems object value sbg item dari ArrayList
                 movieItems = new MovieItems();
                 movieItems.setId(cursor.getInt(cursor.getColumnIndexOrThrow(_ID)));
-                movieItems.setId(cursor.getInt(cursor.getColumnIndexOrThrow(ID_COLUMN)));
                 movieItems.setMovieTitle(cursor.getString(cursor.getColumnIndexOrThrow(TITLE_COLUMN)));
                 movieItems.setMovieRatings(cursor.getString(cursor.getColumnIndexOrThrow(RATINGS_COLUMN)));
                 movieItems.setMovieOriginalLanguage(cursor.getString(cursor.getColumnIndexOrThrow(ORIGINAL_LANGUAGE_COLUMN)));
                 movieItems.setMovieReleaseDate(cursor.getString(cursor.getColumnIndexOrThrow(RELEASE_DATE_COLUMN)));
                 movieItems.setMoviePosterPath(cursor.getString(cursor.getColumnIndexOrThrow(FILE_PATH_COLUMN)));
+                movieItems.setMovieFavorite(cursor.getInt(cursor.getColumnIndexOrThrow(FAVORITE_COLUMN)) == movieItems.getFavoriteBooleanState()); // movieitems getfavoritestate
                 // todo: set boolean value
                 // cursor.getint(cursor.getcolumnindexorthrow(column boolean))
                 // Add movie item data ke ArrayList
@@ -107,15 +108,31 @@ public class FavouriteMovieItemsHelper {
         // Create ContentValues object
         ContentValues movieItemValues = new ContentValues();
         // Insert value ke ContentValues object
-        movieItemValues.put(ID_COLUMN, movieItems.getId());
+        movieItemValues.put(_ID, movieItems.getId());
         movieItemValues.put(TITLE_COLUMN, movieItems.getMovieTitle());
         movieItemValues.put(RATINGS_COLUMN, movieItems.getMovieRatings());
         movieItemValues.put(ORIGINAL_LANGUAGE_COLUMN, movieItems.getMovieOriginalLanguage());
         movieItemValues.put(RELEASE_DATE_COLUMN, movieItems.getMovieReleaseDate());
         movieItemValues.put(FILE_PATH_COLUMN, movieItems.getMoviePosterPath());
+        movieItemValues.put(FAVORITE_COLUMN, movieItems.getFavoriteBooleanState());
         // todo: tar pake boolean operation, valuenya di bikin true (mungkin butuh int ato ga gatau deh.)
         // Execute SQLiteDatabase insert method
         return favouriteMovieDatabase.insert(DATABASE_TABLE, null, movieItemValues);
+    }
+    
+    // Method untuk update data ke DB dengan menggunakan SQLiteDatabase update method
+    public int updateFavoriteMovieItem(MovieItems movieItems){
+        ContentValues movieItemValues = new ContentValues();
+        // Insert value ke ContentValues object
+        movieItemValues.put(_ID, movieItems.getId());
+        movieItemValues.put(TITLE_COLUMN, movieItems.getMovieTitle());
+        movieItemValues.put(RATINGS_COLUMN, movieItems.getMovieRatings());
+        movieItemValues.put(ORIGINAL_LANGUAGE_COLUMN, movieItems.getMovieOriginalLanguage());
+        movieItemValues.put(RELEASE_DATE_COLUMN, movieItems.getMovieReleaseDate());
+        movieItemValues.put(FILE_PATH_COLUMN, movieItems.getMoviePosterPath());
+        movieItemValues.put(FAVORITE_COLUMN, movieItems.getFavoriteBooleanState());
+        // Execute SQLiteDatabase update method
+        return favouriteMovieDatabase.update(DATABASE_TABLE, movieItemValues, _ID + " = '" + movieItems.getId() + "'", null);
     }
     
     // todo: update cm bwt update boolean value, valuenya di bikin false

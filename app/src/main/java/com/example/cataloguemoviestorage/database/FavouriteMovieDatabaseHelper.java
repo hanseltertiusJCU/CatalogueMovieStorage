@@ -21,21 +21,21 @@ public class FavouriteMovieDatabaseHelper extends SQLiteOpenHelper {
 
     // Create table statement
     private static final String SQL_CREATE_FAVOURITE_MOVIE_STATEMENT = String.format("CREATE TABLE %s"
-            + " (%s INTEGER PRIMARY KEY AUTOINCREMENT,"
-            + " %s INTEGER NOT NULL,"
+            + " (%s INTEGER PRIMARY KEY,"
             + " %s TEXT NOT NULL,"
             + " %s TEXT NOT NULL,"
             + " %s TEXT NOT NULL,"
             + " %s TEXT NOT NULL,"
-            + " %s TEXT NOT NULL)",
+            + " %s TEXT NOT NULL,"
+            + " %s INTEGER NOT NULL DEFAULT 0)",
             FavouriteMovieDatabaseContract.FavouriteMovieItemColumns.TABLE_NAME,
             FavouriteMovieDatabaseContract.FavouriteMovieItemColumns._ID,
-            FavouriteMovieDatabaseContract.FavouriteMovieItemColumns.ID_COLUMN,
             FavouriteMovieDatabaseContract.FavouriteMovieItemColumns.TITLE_COLUMN,
             FavouriteMovieDatabaseContract.FavouriteMovieItemColumns.RATINGS_COLUMN,
             FavouriteMovieDatabaseContract.FavouriteMovieItemColumns.RELEASE_DATE_COLUMN,
             FavouriteMovieDatabaseContract.FavouriteMovieItemColumns.ORIGINAL_LANGUAGE_COLUMN,
-            FavouriteMovieDatabaseContract.FavouriteMovieItemColumns.FILE_PATH_COLUMN
+            FavouriteMovieDatabaseContract.FavouriteMovieItemColumns.FILE_PATH_COLUMN,
+            FavouriteMovieDatabaseContract.FavouriteMovieItemColumns.FAVORITE_COLUMN
     );
 
     @Override

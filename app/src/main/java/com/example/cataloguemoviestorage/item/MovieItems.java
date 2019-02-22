@@ -22,6 +22,7 @@ public class MovieItems implements Parcelable{
     private String moviePosterPath;
     // Nilai untuk tahu bahwa movie item itu termasuk dalam kategori favorit ato tidak
     private boolean isMovieFavorite;
+    private int favoriteBooleanState;
 
     public MovieItems(JSONObject object, boolean isMovieDetailed) {
         // Cek jika app berada di section DetailActivity agar dapat mengakses URL Movie Details
@@ -247,6 +248,15 @@ public class MovieItems implements Parcelable{
         isMovieFavorite = movieFavorite;
     }
     
+    public int getFavoriteBooleanState(){
+        return favoriteBooleanState;
+    }
+    
+    public void setFavoriteBooleanState(int favoriteBooleanState){
+        this.favoriteBooleanState = favoriteBooleanState;
+    }
+    
+    
     @Override
     public int describeContents(){
         return 0;
@@ -267,6 +277,7 @@ public class MovieItems implements Parcelable{
         dest.writeString(movieOverview);
         dest.writeString(moviePosterPath);
         dest.writeByte((byte) (isMovieFavorite?1:0));
+        dest.writeInt(favoriteBooleanState);
     }
     
     protected MovieItems(Parcel in){
@@ -283,6 +294,7 @@ public class MovieItems implements Parcelable{
         movieOverview = in.readString();
         moviePosterPath = in.readString();
         isMovieFavorite = in.readByte() != 0;
+        favoriteBooleanState = in.readInt();
     }
     
     public static final Creator <MovieItems> CREATOR = new Creator <MovieItems>(){
