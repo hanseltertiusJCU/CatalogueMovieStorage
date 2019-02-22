@@ -8,6 +8,7 @@ import org.json.JSONObject;
 
 public class MovieItems implements Parcelable{
 
+    // Nilai dari value untuk MovieItems
     private int id;
     private String movieTitle;
     private String movieTagline;
@@ -20,9 +21,12 @@ public class MovieItems implements Parcelable{
     private String movieReleaseDate;
     private String movieOverview;
     private String moviePosterPath;
+    // Nilai untuk mengetahui waktu dimana sebuah data di add menjadi favorite
+    private String dateAddedFavorite;
     // Nilai untuk tahu bahwa movie item itu termasuk dalam kategori favorit ato tidak
     private boolean isMovieFavorite;
     private int favoriteBooleanState;
+    
 
     public MovieItems(JSONObject object, boolean isMovieDetailed) {
         // Cek jika app berada di section DetailActivity agar dapat mengakses URL Movie Details
@@ -240,8 +244,12 @@ public class MovieItems implements Parcelable{
 		this.moviePosterPath = moviePosterPath;
 	}
     
-    public boolean getMovieFavorite(){
-        return isMovieFavorite;
+    public String getDateAddedFavorite(){
+        return dateAddedFavorite;
+    }
+    
+    public void setDateAddedFavorite(String dateAddedFavorite){
+        this.dateAddedFavorite = dateAddedFavorite;
     }
     
     public void setMovieFavorite(boolean movieFavorite){
@@ -256,7 +264,7 @@ public class MovieItems implements Parcelable{
         this.favoriteBooleanState = favoriteBooleanState;
     }
     
-    
+    // Parcelable implementation
     @Override
     public int describeContents(){
         return 0;
@@ -264,6 +272,7 @@ public class MovieItems implements Parcelable{
     
     @Override
     public void writeToParcel(Parcel dest , int flags){
+    
         dest.writeInt(id);
         dest.writeString(movieTitle);
         dest.writeString(movieTagline);
@@ -276,6 +285,7 @@ public class MovieItems implements Parcelable{
         dest.writeString(movieReleaseDate);
         dest.writeString(movieOverview);
         dest.writeString(moviePosterPath);
+        dest.writeString(dateAddedFavorite);
         dest.writeByte((byte) (isMovieFavorite?1:0));
         dest.writeInt(favoriteBooleanState);
     }
@@ -293,6 +303,7 @@ public class MovieItems implements Parcelable{
         movieReleaseDate = in.readString();
         movieOverview = in.readString();
         moviePosterPath = in.readString();
+        dateAddedFavorite = in.readString();
         isMovieFavorite = in.readByte() != 0;
         favoriteBooleanState = in.readInt();
     }

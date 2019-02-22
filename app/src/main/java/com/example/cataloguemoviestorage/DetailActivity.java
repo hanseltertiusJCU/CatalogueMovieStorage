@@ -31,7 +31,11 @@ import com.example.cataloguemoviestorage.item.MovieItems;
 import com.example.cataloguemoviestorage.model.DetailedMovieViewModel;
 import com.squareup.picasso.Picasso;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -254,6 +258,8 @@ public class DetailActivity extends AppCompatActivity {
 					// Change icon into marked as favourite
 					drawableMenuMarkedAsFavouriteResourceId = R.drawable.ic_favourite_on;
 					detailedMovieFavoriteState = 1;
+					// Set current date value into MovieItem
+					detailedMovieItem.setDateAddedFavorite(getCurrentDate());
 					// Set boolean state value into MovieItem
 					detailedMovieItem.setFavoriteBooleanState(detailedMovieFavoriteState);
 					// Insert based on data
@@ -289,6 +295,14 @@ public class DetailActivity extends AppCompatActivity {
 		// Save drawable marked as favorite state
     	outState.putInt(KEY_DRAWABLE_MARKED_AS_FAVORITE_STATE , detailedMovieFavoriteState);
     	super.onSaveInstanceState(outState);
+	}
+	
+	// Method tsb berguna untuk mendapatkan waktu dimana sebuah item di tambahkan
+	private String getCurrentDate(){
+		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.getDefault());
+		Date date = new Date();
+		
+		return dateFormat.format(date);
 	}
 }
 

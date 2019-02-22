@@ -27,6 +27,7 @@ public class FavouriteMovieDatabaseHelper extends SQLiteOpenHelper {
             + " %s TEXT NOT NULL,"
             + " %s TEXT NOT NULL,"
             + " %s TEXT NOT NULL,"
+            + " %s TEXT NOT NULL,"
             + " %s INTEGER NOT NULL DEFAULT 0)",
             FavouriteMovieDatabaseContract.FavouriteMovieItemColumns.TABLE_NAME,
             FavouriteMovieDatabaseContract.FavouriteMovieItemColumns._ID,
@@ -35,6 +36,7 @@ public class FavouriteMovieDatabaseHelper extends SQLiteOpenHelper {
             FavouriteMovieDatabaseContract.FavouriteMovieItemColumns.RELEASE_DATE_COLUMN,
             FavouriteMovieDatabaseContract.FavouriteMovieItemColumns.ORIGINAL_LANGUAGE_COLUMN,
             FavouriteMovieDatabaseContract.FavouriteMovieItemColumns.FILE_PATH_COLUMN,
+            FavouriteMovieDatabaseContract.FavouriteMovieItemColumns.DATE_ADDED_COLUMN,
             FavouriteMovieDatabaseContract.FavouriteMovieItemColumns.FAVORITE_COLUMN
     );
 

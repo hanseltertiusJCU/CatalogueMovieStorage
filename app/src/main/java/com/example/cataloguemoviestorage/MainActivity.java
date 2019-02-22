@@ -186,7 +186,7 @@ public class MainActivity extends AppCompatActivity {
         // Create FragmentPagerAdapter untuk mengetahui fragment mana yg di show
         movieSectionsFragmentPagerAdapter = new MovieSectionsFragmentPagerAdapter(this, getSupportFragmentManager());
 
-        // Tambahkan fragment beserta title ke FragmentPagerAdapter, method tsb adalah
+        // Tambahkan fragment beserta title ke FragmentPagerAdapter
         movieSectionsFragmentPagerAdapter.addMovieSectionFragment(new NowPlayingMovieFragment(), getString(R.string.now_playing));
         movieSectionsFragmentPagerAdapter.addMovieSectionFragment(new UpcomingMovieFragment(), getString(R.string.upcoming));
         movieSectionsFragmentPagerAdapter.addMovieSectionFragment(new FavoriteMovieFragment(), getString(R.string.favorite));
@@ -215,7 +215,5 @@ public class MainActivity extends AppCompatActivity {
         // Gunakan getSupportActionBar untuk backward compatibility
         getSupportActionBar().setTitle(title);
     }
-
-
 
 }

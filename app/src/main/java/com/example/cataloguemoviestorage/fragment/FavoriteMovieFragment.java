@@ -1,7 +1,6 @@
 package com.example.cataloguemoviestorage.fragment;
 
 import android.content.Intent;
-import android.graphics.Movie;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -11,7 +10,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -174,11 +172,21 @@ public class FavoriteMovieFragment extends Fragment implements LoadFavoriteMovie
 	}
 	
 	@Override
+	public void onResume(){
+		super.onResume();
+		// todo: mungkin pake if statement klo misalnya data berganti di helper, klo ga ya restore scroll position (basic logic)
+		// Lakukan AsyncTask kembali setelah berpindah dari {@link DetailActivity},
+		// karena ketika balik dr DetailActivity ke MainActivity,
+		// state Activity ke onResume = Fragment ke onResume juga
+		// Hal tsb berguna agar bs load kembali ke DB
+		new LoadFavoriteMoviesAsync(favouriteMovieItemsHelper , this).execute();
+	}
+	
+	
+	@Override
 	public void onSaveInstanceState(@NonNull Bundle outState){
 		super.onSaveInstanceState(outState);
-		// Cek jika favoriteLinearLayoutManager itu ada, jika tidak maka kita tidak akan ngapa2in
-		// di onSaveInstanceState
-		outState.putParcelableArrayList(MOVIE_LIST_STATE, movieAdapter.getmMovieData());
+		outState.putParcelableArrayList(MOVIE_LIST_STATE, favoriteMovieItemList);
 	}
 	
 	// Class tsb berguna untuk membaca data dari Database lalu mendisplay data yg ada di sana
@@ -211,16 +219,6 @@ public class FavoriteMovieFragment extends Fragment implements LoadFavoriteMovie
 			super.onPostExecute(movieItems);
 			weakCallback.get().postExecute(movieItems); // memanggil method postExecute di interface {@link LoadFavoriteMoviesCallback}
 		}
-	}
-	
-	@Override
-	public void onResume(){
-		super.onResume();
-		// Lakukan AsyncTask kembali setelah berpindah dari {@link DetailActivity},
-		// karena ketika balik dr DetailActivity ke MainActivity,
-		// state Activity ke onResume = Fragment ke onResume juga
-		// Hal tsb berguna agar bs load kembali ke DB
-		new LoadFavoriteMoviesAsync(favouriteMovieItemsHelper , this).execute();
 	}
 	
 	@Override
