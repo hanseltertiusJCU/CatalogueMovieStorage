@@ -1,4 +1,4 @@
-package com.example.cataloguemoviestorage.database;
+package com.example.cataloguemoviestorage.movie_database;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

@@ -4,7 +4,6 @@ package com.example.cataloguemoviestorage.fragment;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
@@ -25,12 +24,11 @@ import com.example.cataloguemoviestorage.LoadFavoriteMoviesCallback;
 import com.example.cataloguemoviestorage.R;
 import com.example.cataloguemoviestorage.adapter.MovieAdapter;
 import com.example.cataloguemoviestorage.async.LoadFavoriteMoviesAsync;
-import com.example.cataloguemoviestorage.database.FavouriteMovieItemsHelper;
+import com.example.cataloguemoviestorage.movie_database.FavouriteMovieItemsHelper;
 import com.example.cataloguemoviestorage.item.MovieItems;
 import com.example.cataloguemoviestorage.model.UpcomingViewModel;
 import com.example.cataloguemoviestorage.support.MovieItemClickSupport;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -61,8 +59,6 @@ public class UpcomingMovieFragment extends Fragment implements LoadFavoriteMovie
 	// Helper untuk membuka koneksi ke DB
 	private FavouriteMovieItemsHelper favouriteMovieItemsHelper;
 	private Observer <ArrayList <MovieItems>> upcomingObserver;
-	// Array list untuk menyimpan data bedasarkan Database
-	private static ArrayList <MovieItems> favMovieListData;
 	
 	public UpcomingMovieFragment(){
 		// Required empty public constructor
@@ -152,10 +148,10 @@ public class UpcomingMovieFragment extends Fragment implements LoadFavoriteMovie
 		int itemPosition = 0;
 		// if statement untuk tahu bahwa idnya itu termasuk d dalam tabel ato tidak, looping pake arraylist
 		// Cek jika size dari ArrayList itu lebih dari 0
-		if(favMovieListData.size() > 0){
-			for(int i = 0 ; i < favMovieListData.size() ; i++){
-				if(movieIdItem == favMovieListData.get(i).getId()){
-					favMovieListData.get(i).setFavoriteBooleanState(1);
+		if(FavoriteMovieFragment.favMovieListData.size() > 0){
+			for(int i = 0 ; i < FavoriteMovieFragment.favMovieListData.size() ; i++){
+				if(movieIdItem == FavoriteMovieFragment.favMovieListData.get(i).getId()){
+					FavoriteMovieFragment.favMovieListData.get(i).setFavoriteBooleanState(1);
 					// Dapatin position dari arraylist jika idnya itu sama kyk id yg tersedia
 					itemPosition = i;
 					break;
@@ -167,8 +163,8 @@ public class UpcomingMovieFragment extends Fragment implements LoadFavoriteMovie
 		// Bawa data untuk disampaikan ke {@link DetailActivity}
 		intentWithMovieIdData.putExtra(MOVIE_ID_DATA , movieIdItem);
 		intentWithMovieIdData.putExtra(MOVIE_TITLE_DATA , movieTitleItem);
-		if(favMovieListData.size() > 0){
-			intentWithMovieIdData.putExtra(MOVIE_BOOLEAN_STATE_DATA , favMovieListData.get(itemPosition).getFavoriteBooleanState());
+		if(FavoriteMovieFragment.favMovieListData.size() > 0){
+			intentWithMovieIdData.putExtra(MOVIE_BOOLEAN_STATE_DATA , FavoriteMovieFragment.favMovieListData.get(itemPosition).getFavoriteBooleanState());
 		}
 		
 		// Start activity tujuan bedasarkan intent object
@@ -211,7 +207,7 @@ public class UpcomingMovieFragment extends Fragment implements LoadFavoriteMovie
 	@Override
 	public void postExecute(ArrayList <MovieItems> movieItems){
 		// Bikin ArrayList global variable sama dengan hasil dari AsyncTask class
-		favMovieListData = movieItems;
+		FavoriteMovieFragment.favMovieListData = movieItems;
 	}
 	
 	@Override
@@ -224,17 +220,19 @@ public class UpcomingMovieFragment extends Fragment implements LoadFavoriteMovie
 				if(resultCode == DetailActivity.RESULT_CHANGE){
 					// Tambahkan item ke adapter dan reset scroll position ke paling atas
 					boolean changedDataState = data.getBooleanExtra(DetailActivity.EXTRA_MOVIE_CHANGED_STATE, false);
+					// Cek jika value dari changedDataState itu true
 					if(changedDataState){
-						// Execute AsyncTask kembali
-						new LoadFavoriteMoviesAsync(favouriteMovieItemsHelper , this).execute();
-						if(getActivity().getSupportFragmentManager() != null){
-							FavoriteMovieFragment favoriteMovieFragment = (FavoriteMovieFragment) getActivity().getSupportFragmentManager().getFragments().get(2);
-							// Cek jika favoriteMovieFragment itu ada
-							if(favoriteMovieFragment != null){
-								// Komunikasi dengan FavoriteMovieFragment dengan memanggil onActivityResult method di FavoriteMovieFragment
-								favoriteMovieFragment.onActivityResult(requestCode, resultCode, data);
+						if(getActivity() != null){
+							if(getActivity().getSupportFragmentManager() != null){
+								FavoriteMovieFragment favoriteMovieFragment = (FavoriteMovieFragment) getActivity().getSupportFragmentManager().getFragments().get(2);
+								// Cek jika favoriteMovieFragment itu ada
+								if(favoriteMovieFragment != null){
+									// Komunikasi dengan FavoriteMovieFragment dengan memanggil onActivityResult method di FavoriteMovieFragment
+									favoriteMovieFragment.onActivityResult(requestCode, resultCode, data);
+								}
 							}
 						}
+						
 					}
 				}
 			}

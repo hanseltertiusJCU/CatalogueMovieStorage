@@ -1,4 +1,4 @@
-package com.example.cataloguemoviestorage.database;
+package com.example.cataloguemoviestorage.movie_database;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -12,14 +12,14 @@ import com.example.cataloguemoviestorage.item.MovieItems;
 import java.util.ArrayList;
 
 import static android.provider.BaseColumns._ID;
-import static com.example.cataloguemoviestorage.database.FavouriteMovieDatabaseContract.FavouriteMovieItemColumns.DATE_ADDED_COLUMN;
-import static com.example.cataloguemoviestorage.database.FavouriteMovieDatabaseContract.FavouriteMovieItemColumns.FAVORITE_COLUMN;
-import static com.example.cataloguemoviestorage.database.FavouriteMovieDatabaseContract.FavouriteMovieItemColumns.FILE_PATH_COLUMN;
-import static com.example.cataloguemoviestorage.database.FavouriteMovieDatabaseContract.FavouriteMovieItemColumns.ORIGINAL_LANGUAGE_COLUMN;
-import static com.example.cataloguemoviestorage.database.FavouriteMovieDatabaseContract.FavouriteMovieItemColumns.RATINGS_COLUMN;
-import static com.example.cataloguemoviestorage.database.FavouriteMovieDatabaseContract.FavouriteMovieItemColumns.RELEASE_DATE_COLUMN;
-import static com.example.cataloguemoviestorage.database.FavouriteMovieDatabaseContract.FavouriteMovieItemColumns.TABLE_NAME;
-import static com.example.cataloguemoviestorage.database.FavouriteMovieDatabaseContract.FavouriteMovieItemColumns.TITLE_COLUMN;
+import static com.example.cataloguemoviestorage.movie_database.FavouriteMovieDatabaseContract.FavouriteMovieItemColumns.DATE_ADDED_COLUMN;
+import static com.example.cataloguemoviestorage.movie_database.FavouriteMovieDatabaseContract.FavouriteMovieItemColumns.FAVORITE_COLUMN;
+import static com.example.cataloguemoviestorage.movie_database.FavouriteMovieDatabaseContract.FavouriteMovieItemColumns.FILE_PATH_COLUMN;
+import static com.example.cataloguemoviestorage.movie_database.FavouriteMovieDatabaseContract.FavouriteMovieItemColumns.ORIGINAL_LANGUAGE_COLUMN;
+import static com.example.cataloguemoviestorage.movie_database.FavouriteMovieDatabaseContract.FavouriteMovieItemColumns.RATINGS_COLUMN;
+import static com.example.cataloguemoviestorage.movie_database.FavouriteMovieDatabaseContract.FavouriteMovieItemColumns.RELEASE_DATE_COLUMN;
+import static com.example.cataloguemoviestorage.movie_database.FavouriteMovieDatabaseContract.FavouriteMovieItemColumns.TABLE_NAME;
+import static com.example.cataloguemoviestorage.movie_database.FavouriteMovieDatabaseContract.FavouriteMovieItemColumns.TITLE_COLUMN;
 
 // Class ini berguna untuk memanipulasi value dari database (Data Manipulation Language)
 public class FavouriteMovieItemsHelper {

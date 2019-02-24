@@ -16,7 +16,6 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,7 +24,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.example.cataloguemoviestorage.database.FavouriteMovieItemsHelper;
+import com.example.cataloguemoviestorage.movie_database.FavouriteMovieItemsHelper;
 import com.example.cataloguemoviestorage.factory.DetailedMovieViewModelFactory;
 import com.example.cataloguemoviestorage.fragment.NowPlayingMovieFragment;
 import com.example.cataloguemoviestorage.item.MovieItems;
@@ -181,6 +180,7 @@ public class DetailActivity extends AppCompatActivity{
 		Observer <ArrayList <MovieItems>> observer = new Observer <ArrayList <MovieItems>>(){
 			@Override
 			public void onChanged(@Nullable ArrayList <MovieItems> detailedMovieItems){
+				// todo: create if statement to handle movies and tv show
 				// Ketika data selesai di load, maka kita akan mendapatkan data dan menghilangkan progress bar
 				// yang menandakan bahwa loadingnya sudah selesai
 				detailedContentMovie.setVisibility(View.VISIBLE);
@@ -285,18 +285,18 @@ public class DetailActivity extends AppCompatActivity{
 					// Change icon into marked as favourite
 					drawableMenuMarkedAsFavouriteResourceId = R.drawable.ic_favourite_on;
 					detailedMovieFavoriteState = 1;
-					// Set current date value into MovieItem
+					// Set current date value into MovieItem, where MovieItem added into Favorite
 					detailedMovieItem.setDateAddedFavorite(getCurrentDate());
 					// Set boolean state value into MovieItem
 					detailedMovieItem.setFavoriteBooleanState(detailedMovieFavoriteState);
-					// Samain state value dari intent yg dibawa
+					
+					// Cek jika value dari detailedMovieFavoriteState sama dengan value bawaan intent dengan key MOVIE_BOOLEAN_STATE_EXTRA
 					if(detailedMovieFavoriteState == getIntent().getIntExtra(NowPlayingMovieFragment.MOVIE_BOOLEAN_STATE_DATA , 0)){
+						// Set value changedState into false krn ga ad perubahan dengan state di bandingkan dengan value bawaan intent
 						changedState = false;
 					} else {
 						changedState = true;
 					}
-					
-					Log.d("Changed state", String.valueOf(changedState));
 					
 					// Cek jika ada pergantian state dari sebuah data
 					if(changedState){
@@ -306,7 +306,6 @@ public class DetailActivity extends AppCompatActivity{
 							// Bawa nilai ke intent
 							resultIntent.putExtra(EXTRA_MOVIE_CHANGED_STATE, changedState);
 							setResult(RESULT_CHANGE, resultIntent); // Set result that brings result code and intent
-							Log.d("Inserted data", "Insert to DB");
 						}
 					}
 					
@@ -318,14 +317,12 @@ public class DetailActivity extends AppCompatActivity{
 					detailedMovieFavoriteState = 0;
 					// Set boolean state value into MovieItem
 					detailedMovieItem.setFavoriteBooleanState(detailedMovieFavoriteState);
-					// Samain state value dari intent yg dibawa
+					// Cek jika value dari detailedMovieFavoriteState sama dengan value bawaan intent dengan key MOVIE_BOOLEAN_STATE_EXTRA
 					if(detailedMovieFavoriteState == getIntent().getIntExtra(NowPlayingMovieFragment.MOVIE_BOOLEAN_STATE_DATA , 0)){
 						changedState = false;
 					} else {
 						changedState = true;
 					}
-					
-					Log.d("Changed state", String.valueOf(changedState));
 					
 					// Cek jika ada pergantian state dari sebuah data
 					if(changedState){
@@ -336,7 +333,6 @@ public class DetailActivity extends AppCompatActivity{
 							resultIntent.putExtra(EXTRA_MOVIE_CHANGED_STATE, changedState);
 							setResult(RESULT_CHANGE, resultIntent); // Set result that brings result code and intent
 						}
-						Log.d("Deleted data", "Remove from DB");
 					}
 					
 					// Update option menu
@@ -355,6 +351,7 @@ public class DetailActivity extends AppCompatActivity{
 	@Override
 	public void onBackPressed(){
 		super.onBackPressed();
+		// Finish method untuk membawa Intent ke MainActivity
 		finish();
 	}
 	

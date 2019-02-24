@@ -1,4 +1,4 @@
-package com.example.cataloguemoviestorage.database;
+package com.example.cataloguemoviestorage.movie_database;
 
 import android.provider.BaseColumns;
 

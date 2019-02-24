@@ -3,7 +3,6 @@ package com.example.cataloguemoviestorage.fragment;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
@@ -13,7 +12,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,12 +23,11 @@ import com.example.cataloguemoviestorage.LoadFavoriteMoviesCallback;
 import com.example.cataloguemoviestorage.R;
 import com.example.cataloguemoviestorage.adapter.MovieAdapter;
 import com.example.cataloguemoviestorage.async.LoadFavoriteMoviesAsync;
-import com.example.cataloguemoviestorage.database.FavouriteMovieItemsHelper;
+import com.example.cataloguemoviestorage.movie_database.FavouriteMovieItemsHelper;
 import com.example.cataloguemoviestorage.item.MovieItems;
 import com.example.cataloguemoviestorage.model.NowPlayingViewModel;
 import com.example.cataloguemoviestorage.support.MovieItemClickSupport;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -60,8 +57,6 @@ public class NowPlayingMovieFragment extends Fragment implements LoadFavoriteMov
 	private FavouriteMovieItemsHelper favouriteMovieItemsHelper;
 	// Bikin linearlayout manager untuk dapat call onsaveinstancestate method
 	private LinearLayoutManager nowPlayingLinearLayoutManager;
-	// Array list untuk menyimpan data bedasarkan Database
-	private static ArrayList <MovieItems> favMovieListData;
 	
 	public NowPlayingMovieFragment(){
 		// Required empty public constructor
@@ -151,10 +146,10 @@ public class NowPlayingMovieFragment extends Fragment implements LoadFavoriteMov
 		int itemPosition = 0;
 		// if statement untuk tahu bahwa idnya itu termasuk d dalam tabel ato tidak, looping pake arraylist
 		// Cek jika size dari ArrayList itu lebih dari 0
-		if(favMovieListData.size() > 0){
-			for(int i = 0 ; i < favMovieListData.size() ; i++){
-				if(movieIdItem == favMovieListData.get(i).getId()){
-					favMovieListData.get(i).setFavoriteBooleanState(1);
+		if(FavoriteMovieFragment.favMovieListData.size() > 0){
+			for(int i = 0 ; i < FavoriteMovieFragment.favMovieListData.size() ; i++){
+				if(movieIdItem == FavoriteMovieFragment.favMovieListData.get(i).getId()){
+					FavoriteMovieFragment.favMovieListData.get(i).setFavoriteBooleanState(1);
 					// Dapatin position dari arraylist jika idnya itu sama kyk id yg tersedia
 					itemPosition = i;
 					break;
@@ -167,8 +162,8 @@ public class NowPlayingMovieFragment extends Fragment implements LoadFavoriteMov
 		intentWithMovieIdData.putExtra(MOVIE_ID_DATA , movieIdItem);
 		intentWithMovieIdData.putExtra(MOVIE_TITLE_DATA , movieTitleItem);
 		// Cek jika ArrayList ada data
-		if(favMovieListData.size() > 0){
-			intentWithMovieIdData.putExtra(MOVIE_BOOLEAN_STATE_DATA , favMovieListData.get(itemPosition).getFavoriteBooleanState());
+		if(FavoriteMovieFragment.favMovieListData.size() > 0){
+			intentWithMovieIdData.putExtra(MOVIE_BOOLEAN_STATE_DATA , FavoriteMovieFragment.favMovieListData.get(itemPosition).getFavoriteBooleanState());
 		}
 		// Start activity tujuan bedasarkan intent object
 		startActivityForResult(intentWithMovieIdData, DetailActivity.REQUEST_CHANGE);
@@ -211,7 +206,7 @@ public class NowPlayingMovieFragment extends Fragment implements LoadFavoriteMov
 	@Override
 	public void postExecute(ArrayList <MovieItems> movieItems){
 		// Bikin ArrayList global variable sama dengan hasil dari AsyncTask class
-		favMovieListData = movieItems;
+		FavoriteMovieFragment.favMovieListData = movieItems;
 	}
 	
 	@Override
