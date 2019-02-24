@@ -227,6 +227,14 @@ public class UpcomingMovieFragment extends Fragment implements LoadFavoriteMovie
 					if(changedDataState){
 						// Execute AsyncTask kembali
 						new LoadFavoriteMoviesAsync(favouriteMovieItemsHelper , this).execute();
+						if(getActivity().getSupportFragmentManager() != null){
+							FavoriteMovieFragment favoriteMovieFragment = (FavoriteMovieFragment) getActivity().getSupportFragmentManager().getFragments().get(2);
+							// Cek jika favoriteMovieFragment itu ada
+							if(favoriteMovieFragment != null){
+								// Komunikasi dengan FavoriteMovieFragment dengan memanggil onActivityResult method di FavoriteMovieFragment
+								favoriteMovieFragment.onActivityResult(requestCode, resultCode, data);
+							}
+						}
 					}
 				}
 			}

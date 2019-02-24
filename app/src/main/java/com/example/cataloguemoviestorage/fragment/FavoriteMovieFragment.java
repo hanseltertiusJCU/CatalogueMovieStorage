@@ -169,19 +169,12 @@ public class FavoriteMovieFragment extends Fragment implements LoadFavoriteMovie
 	public void postExecute(final ArrayList <MovieItems> movieItems){
 		favMovieListData = movieItems;
 		if(movieItems.size() > 0){
-			// Set LinearLayoutManager object value dengan memanggil LinearLayoutManager constructor
-			favoriteLinearLayoutManager = new LinearLayoutManager(getContext());
-			// Ukuran data recycler view sama
-			recyclerView.setHasFixedSize(true);
 			// Ketika data selesai di load, maka kita akan mendapatkan data dan menghilangkan progress bar
 			// yang menandakan bahwa loadingnya sudah selesai
 			progressBar.setVisibility(View.GONE);
 			recyclerView.setVisibility(View.VISIBLE);
-			// Set layout manager into recyclerview
-			recyclerView.setLayoutManager(favoriteLinearLayoutManager);
 			// Set data into adapter
 			movieAdapter.setData(movieItems);
-			recyclerView.setAdapter(movieAdapter);
 			// Set item click listener di dalam recycler view
 			MovieItemClickSupport.addSupportToView(recyclerView).setOnItemClickListener(new MovieItemClickSupport.OnItemClickListener(){
 				@Override

@@ -13,6 +13,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -224,8 +225,17 @@ public class NowPlayingMovieFragment extends Fragment implements LoadFavoriteMov
 					// Tambahkan item ke adapter dan reset scroll position ke paling atas
 					boolean changedDataState = data.getBooleanExtra(DetailActivity.EXTRA_MOVIE_CHANGED_STATE, false);
 					if(changedDataState){
-						// Execute AsyncTask kembali
-						new LoadFavoriteMoviesAsync(favouriteMovieItemsHelper , this).execute();
+						// Execute AsyncTask kembali (todo: perlu di lakukan ato tidak idk, mungkin perlu d rapiin)
+						new LoadFavoriteMoviesAsync(favouriteMovieItemsHelper, this).execute();
+						if(getActivity().getSupportFragmentManager() != null){
+							// Dapatin position fragment dari FavoriteMovieFragment di ViewPager since ViewPager menampung list dari Fragments
+							FavoriteMovieFragment favoriteMovieFragment = (FavoriteMovieFragment) getActivity().getSupportFragmentManager().getFragments().get(2);
+							// Cek jika favoriteMovieFragment itu ada
+							if(favoriteMovieFragment != null){
+								// Komunikasi dengan FavoriteMovieFragment dengan memanggil onActivityResult method di FavoriteMovieFragment
+								favoriteMovieFragment.onActivityResult(requestCode, resultCode, data);
+							}
+						}
 					}
 				}
 			}
