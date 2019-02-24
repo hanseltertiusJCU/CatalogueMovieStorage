@@ -96,16 +96,15 @@ public class DetailActivity extends AppCompatActivity{
 	// Request code
 	public static final int REQUEST_CHANGE = 100;
 	// Result code
-	public static final int RESULT_ADD = 200;
-	public static final int RESULT_DELETE = 201;
+	public static final int RESULT_CHANGE = 200;
 	
 	// Constant untuk dibawa ke FavoriteMovieFragment
-	public static final String EXTRA_MOVIE_ITEM = "extra_movie_item";
-	public static final String EXTRA_MOVIE_ITEM_POSITION = "extra_movie_item_position";
-	
-	private int movieItemPosition;
+	public static final String EXTRA_MOVIE_CHANGED_STATE = "extra_movie_changed_state";
 	
 	private Intent resultIntent;
+	
+	// Boolean untuk mengetahui apakah state dari movie item itu berganti atau tidak
+	private boolean changedState;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState){
@@ -123,7 +122,6 @@ public class DetailActivity extends AppCompatActivity{
 		detailedMovieId = getIntent().getIntExtra(NowPlayingMovieFragment.MOVIE_ID_DATA , 0);
 		detailedMovieTitle = getIntent().getStringExtra(NowPlayingMovieFragment.MOVIE_TITLE_DATA);
 		detailedMovieFavoriteState = getIntent().getIntExtra(NowPlayingMovieFragment.MOVIE_BOOLEAN_STATE_DATA , 0);
-		movieItemPosition = getIntent().getIntExtra(EXTRA_MOVIE_ITEM_POSITION, 0);
 		
 		// Cek jika savedInstanceState itu ada, jika iya, restore drawable marked as favorite icon state
 		if(savedInstanceState != null){
@@ -280,9 +278,6 @@ public class DetailActivity extends AppCompatActivity{
 	public boolean onOptionsItemSelected(MenuItem item){
 		// Create new Intent object
 		resultIntent = new Intent();
-		// Bawa nilai ke intent
-		resultIntent.putExtra(EXTRA_MOVIE_ITEM, detailedMovieItem);
-		resultIntent.putExtra(EXTRA_MOVIE_ITEM_POSITION, movieItemPosition);
 		switch(item.getItemId()){
 			case R.id.action_marked_as_favorite:
 				// Check for current state of drawable menu icon
@@ -294,12 +289,27 @@ public class DetailActivity extends AppCompatActivity{
 					detailedMovieItem.setDateAddedFavorite(getCurrentDate());
 					// Set boolean state value into MovieItem
 					detailedMovieItem.setFavoriteBooleanState(detailedMovieFavoriteState);
-					// Insert based on data
-					long newIdItem = favouriteMovieItemsHelper.insertFavouriteMovieItem(detailedMovieItem);
-					if(newIdItem > 0){
-						detailedMovieItem.setId((int) newIdItem); // set id untuk MovieItem dari insert method di Item Helper
-						setResult(RESULT_ADD, resultIntent); // Set result that brings result code and intent
+					// Samain state value dari intent yg dibawa
+					if(detailedMovieFavoriteState == getIntent().getIntExtra(NowPlayingMovieFragment.MOVIE_BOOLEAN_STATE_DATA , 0)){
+						changedState = false;
+					} else {
+						changedState = true;
 					}
+					
+					Log.d("Changed state", String.valueOf(changedState));
+					
+					// Cek jika ada pergantian state dari sebuah data
+					if(changedState){
+						// Insert based on data
+						long newIdItem = favouriteMovieItemsHelper.insertFavouriteMovieItem(detailedMovieItem);
+						if(newIdItem > 0){
+							// Bawa nilai ke intent
+							resultIntent.putExtra(EXTRA_MOVIE_CHANGED_STATE, changedState);
+							setResult(RESULT_CHANGE, resultIntent); // Set result that brings result code and intent
+							Log.d("Inserted data", "Insert to DB");
+						}
+					}
+					
 					// Update option menu
 					invalidateOptionsMenu();
 				} else{
@@ -308,13 +318,27 @@ public class DetailActivity extends AppCompatActivity{
 					detailedMovieFavoriteState = 0;
 					// Set boolean state value into MovieItem
 					detailedMovieItem.setFavoriteBooleanState(detailedMovieFavoriteState);
-					// Remove from database
-					long deletedIdItem = favouriteMovieItemsHelper.deleteFavouriteMovieItem(detailedMovieItem.getId());
-					if(deletedIdItem > 0){
-						setResult(RESULT_DELETE, resultIntent); // Set result that brings result code and intent
+					// Samain state value dari intent yg dibawa
+					if(detailedMovieFavoriteState == getIntent().getIntExtra(NowPlayingMovieFragment.MOVIE_BOOLEAN_STATE_DATA , 0)){
+						changedState = false;
+					} else {
+						changedState = true;
 					}
-					Log.d("Delete data from DB" , "Removed an item");
-					Log.d("Boolean value" , String.valueOf(detailedMovieFavoriteState));
+					
+					Log.d("Changed state", String.valueOf(changedState));
+					
+					// Cek jika ada pergantian state dari sebuah data
+					if(changedState){
+						// Remove from database
+						long deletedIdItem = favouriteMovieItemsHelper.deleteFavouriteMovieItem(detailedMovieItem.getId());
+						if(deletedIdItem > 0){
+							// Bawa nilai ke intent
+							resultIntent.putExtra(EXTRA_MOVIE_CHANGED_STATE, changedState);
+							setResult(RESULT_CHANGE, resultIntent); // Set result that brings result code and intent
+						}
+						Log.d("Deleted data", "Remove from DB");
+					}
+					
 					// Update option menu
 					invalidateOptionsMenu();
 				}

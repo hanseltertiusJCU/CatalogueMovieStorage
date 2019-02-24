@@ -4,7 +4,9 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -46,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // Set content activity to use layout xml file activity_main.xml
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main); // penyebab errornya
 
         ButterKnife.bind(this);
 
@@ -215,5 +217,4 @@ public class MainActivity extends AppCompatActivity {
         // Gunakan getSupportActionBar untuk backward compatibility
         getSupportActionBar().setTitle(title);
     }
-
 }
