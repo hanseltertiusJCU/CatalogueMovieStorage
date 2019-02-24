@@ -4,7 +4,7 @@ import android.os.AsyncTask;
 
 import com.example.cataloguemoviestorage.LoadFavoriteMoviesCallback;
 import com.example.cataloguemoviestorage.movie_database.FavouriteMovieItemsHelper;
-import com.example.cataloguemoviestorage.item.MovieItems;
+import com.example.cataloguemoviestorage.entity.MovieItems;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;

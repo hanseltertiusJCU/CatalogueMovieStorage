@@ -16,7 +16,7 @@ import android.widget.TextView;
 
 import com.example.cataloguemoviestorage.BuildConfig;
 import com.example.cataloguemoviestorage.R;
-import com.example.cataloguemoviestorage.item.MovieItems;
+import com.example.cataloguemoviestorage.entity.MovieItems;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;

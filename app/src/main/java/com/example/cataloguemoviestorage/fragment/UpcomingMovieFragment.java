@@ -25,7 +25,7 @@ import com.example.cataloguemoviestorage.R;
 import com.example.cataloguemoviestorage.adapter.MovieAdapter;
 import com.example.cataloguemoviestorage.async.LoadFavoriteMoviesAsync;
 import com.example.cataloguemoviestorage.movie_database.FavouriteMovieItemsHelper;
-import com.example.cataloguemoviestorage.item.MovieItems;
+import com.example.cataloguemoviestorage.entity.MovieItems;
 import com.example.cataloguemoviestorage.model.UpcomingViewModel;
 import com.example.cataloguemoviestorage.support.MovieItemClickSupport;
 

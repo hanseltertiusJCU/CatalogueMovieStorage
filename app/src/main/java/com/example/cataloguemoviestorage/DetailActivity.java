@@ -27,7 +27,7 @@ import android.widget.TextView;
 import com.example.cataloguemoviestorage.movie_database.FavouriteMovieItemsHelper;
 import com.example.cataloguemoviestorage.factory.DetailedMovieViewModelFactory;
 import com.example.cataloguemoviestorage.fragment.NowPlayingMovieFragment;
-import com.example.cataloguemoviestorage.item.MovieItems;
+import com.example.cataloguemoviestorage.entity.MovieItems;
 import com.example.cataloguemoviestorage.model.DetailedMovieViewModel;
 import com.squareup.picasso.Picasso;
 

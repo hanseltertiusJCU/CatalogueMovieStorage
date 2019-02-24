@@ -9,7 +9,7 @@ import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 
 import com.example.cataloguemoviestorage.BuildConfig;
-import com.example.cataloguemoviestorage.item.MovieItems;
+import com.example.cataloguemoviestorage.entity.MovieItems;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.SyncHttpClient;
 

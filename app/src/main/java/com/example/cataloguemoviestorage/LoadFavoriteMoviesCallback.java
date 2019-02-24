@@ -1,6 +1,6 @@
 package com.example.cataloguemoviestorage;
 
-import com.example.cataloguemoviestorage.item.MovieItems;
+import com.example.cataloguemoviestorage.entity.MovieItems;
 
 import java.util.ArrayList;
 

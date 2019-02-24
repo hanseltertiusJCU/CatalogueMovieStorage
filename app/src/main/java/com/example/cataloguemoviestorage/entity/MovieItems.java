@@ -1,4 +1,4 @@
-package com.example.cataloguemoviestorage.item;
+package com.example.cataloguemoviestorage.entity;
 
 import android.os.Parcel;
 import android.os.Parcelable;
