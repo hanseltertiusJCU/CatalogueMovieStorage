@@ -22,9 +22,9 @@ import cz.msebera.android.httpclient.Header;
 public class DetailedMovieViewModel extends AndroidViewModel {
 
     // Gunakan Build Config untuk melindungi credential
-    private String apiKey = BuildConfig.MOVIE_API_KEY;
+    private String apiKey = BuildConfig.API_KEY;
     private String detailedUrlBase = BuildConfig.BASE_MOVIE_DETAILED_URL;
-    private String apiKeyFiller = BuildConfig.DETAILED_MOVIE_API_KEY_FILLER;
+    private String apiKeyFiller = BuildConfig.DETAILED_ITEM_API_KEY_FILLER;
 
 
     private DetailedMovieLiveData detailedMovieLiveData;

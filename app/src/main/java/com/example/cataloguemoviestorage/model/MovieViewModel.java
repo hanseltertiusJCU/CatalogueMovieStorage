@@ -26,7 +26,7 @@ public class MovieViewModel extends AndroidViewModel {
     private MovieLiveData movieLiveData;
 
     // akses informasi penting dari BuildConfig untuk menjaga credential
-    private String apiKey = BuildConfig.MOVIE_API_KEY;
+    private String apiKey = BuildConfig.API_KEY;
     private String discoverMovieUrlBase = BuildConfig.BASE_DISCOVER_MOVIE_URL;
     private String languageUs = BuildConfig.LANGUAGE_US;
 

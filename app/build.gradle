@@ -9,7 +9,7 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        buildConfigField("String", "MOVIE_API_KEY" , "\"920c265d2e074ebf06d98bf438bded70\"")
+        buildConfigField("String", "API_KEY" , "\"920c265d2e074ebf06d98bf438bded70\"")
         buildConfigField("String", "BASE_DISCOVER_MOVIE_URL", "\"https://api.themoviedb.org/3/discover/movie?api_key=\"")
         buildConfigField("String", "BASE_DISCOVER_TV_SHOW_URL", "\"https://api.themoviedb.org/3/discover/tv?api_key=\"")
         buildConfigField("String", "BASE_MOVIE_NOW_PLAYING_URL", "\"https://api.themoviedb.org/3/movie/now_playing?api_key=\"")
@@ -17,7 +17,7 @@ android {
         buildConfigField("String", "BASE_MOVIE_SEARCH_URL", "\"https://api.themoviedb.org/3/search/movie?api_key=\"")
         buildConfigField("String", "BASE_MOVIE_DETAILED_URL", "\"https://api.themoviedb.org/3/movie/\"")
         buildConfigField("String", "BASE_TV_SHOW_DETAILED_URL", "\"https://api.themoviedb.org/3/tv/\"")
-        buildConfigField("String", "DETAILED_MOVIE_API_KEY_FILLER", "\"?api_key=\"")
+        buildConfigField("String", "DETAILED_ITEM_API_KEY_FILLER", "\"?api_key=\"")
         buildConfigField("String", "POSTER_IMAGE_ITEM_URL", "\"https://image.tmdb.org/t/p/w185\"")
         buildConfigField("String", "MOVIE_SEARCH_QUERY", "\"&query=\"")
         buildConfigField("String", "LANGUAGE_US", "\"&language=en-US\"")

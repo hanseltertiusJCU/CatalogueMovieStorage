@@ -6,84 +6,85 @@ import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.support.annotation.NonNull;
 
 import com.example.cataloguemoviestorage.BuildConfig;
 import com.example.cataloguemoviestorage.entity.TvShowItem;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.SyncHttpClient;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 
 import cz.msebera.android.httpclient.Header;
 
-public class TvShowViewModel extends AndroidViewModel{
+public class DetailedTvShowViewModel extends AndroidViewModel{
 	
-	// Create object yang mengextend LiveData<ArrayList<TvShowItem>>
-	private TvShowLiveData tvShowLiveData;
-	
-	// Beberapa informasi diakses dari BuildConfig untuk menjaga credential
+	// Gunakan Build Config untuk melindungi credential
 	private String apiKey = BuildConfig.API_KEY;
-	private String tvShowUrlBase = BuildConfig.BASE_DISCOVER_TV_SHOW_URL;
-	private String languageUs = BuildConfig.LANGUAGE_US;
+	private String detailedTvShowUrlBase = BuildConfig.BASE_TV_SHOW_DETAILED_URL;
+	private String apiKeyFiller = BuildConfig.DETAILED_ITEM_API_KEY_FILLER;
 	
-	public TvShowViewModel(@NonNull Application application){
+	private DetailedTvShowLiveData detailedTvShowLiveData;
+	
+	private int mDetailedTvShowId;
+	
+	public DetailedTvShowViewModel(Application application, int detailedTvShowId){
 		super(application);
-		tvShowLiveData = new TvShowLiveData(application);
+		this.mDetailedTvShowId = detailedTvShowId;
+		// Buat LiveData agar dapat di return ke getDetailedTvShow method
+		detailedTvShowLiveData = new DetailedTvShowLiveData(application, detailedTvShowId);
 	}
 	
-	public LiveData<ArrayList<TvShowItem>> getTvShows(){
-		return tvShowLiveData;
+	public LiveData<ArrayList<TvShowItem>> getDetailedTvShow(){
+		return detailedTvShowLiveData;
 	}
 	
-	public class TvShowLiveData extends LiveData<ArrayList<TvShowItem>>{
+	private class DetailedTvShowLiveData extends LiveData<ArrayList<TvShowItem>>{
 		private final Context context;
+		private final int id;
 		
-		public TvShowLiveData(Context context){
+		// Buat constructor untuk mengakomodasi parameter yang ada dari {@link DetailedTvShowViewModel}
+		private DetailedTvShowLiveData(Context context, int id){
 			this.context = context;
-			loadTvShowLiveData();
+			this.id = id;
+			loadDetailedTvShowLiveData();
 		}
 		
-		// Method tsb berguna untuk menjalankan tugas scr async sbg pengganti dari loadInBackground()
-		// di AsyncTaskLoader
 		@SuppressLint("StaticFieldLeak")
-		private void loadTvShowLiveData(){
+		private void loadDetailedTvShowLiveData(){
+			
 			new AsyncTask<Void, Void, ArrayList<TvShowItem>>(){
 				
 				@Override
 				protected ArrayList <TvShowItem> doInBackground(Void... voids){
 					
-					// Menginisiasikan SyncHttpClientObject krn Loader itu sudah berjalan pada background thread
 					SyncHttpClient syncHttpClient = new SyncHttpClient();
 					
 					final ArrayList<TvShowItem> tvShowItems = new ArrayList <>();
 					
-					String tvShowUrl = tvShowUrlBase + apiKey + languageUs;
-					syncHttpClient.get(tvShowUrl , new AsyncHttpResponseHandler(){
+					String detailedTvShowUrl = detailedTvShowUrlBase + mDetailedTvShowId + apiKeyFiller + apiKey;
+					
+					syncHttpClient.get(detailedTvShowUrl , new AsyncHttpResponseHandler(){
+						
+						@Override
+						public void onStart(){
+							super.onStart();
+							
+							setUseSynchronousMode(true);
+						}
+						
 						@Override
 						public void onSuccess(int statusCode , Header[] headers , byte[] responseBody){
-							try{
+							try {
 								String result = new String(responseBody);
 								JSONObject responseObject = new JSONObject(result);
-								JSONArray results = responseObject.getJSONArray("results");
-								// Iterate semua data yg ada dan tambahkan ke ArrayList
-								for (int i = 0; i < results.length(); i++) {
-									JSONObject tvShow = results.getJSONObject(i);
-									boolean detailedItem = false;
-									TvShowItem tvShowItem = new TvShowItem(tvShow, detailedItem);
-									// Cek jika posterPath itu tidak "null" karena null dr JSON itu berupa
-									// String, sehingga perlu menggunakan "" di dalam null
-									if (!tvShowItem.getTvShowPosterPath().equals("null")){
-										tvShowItems.add(tvShowItem);
-									}
-								}
+								boolean detailedItem = true;
+								TvShowItem tvShowItem = new TvShowItem(responseObject, detailedItem);
+								tvShowItems.add(tvShowItem);
 							} catch (Exception e){
 								e.printStackTrace();
 							}
-							
 						}
 						
 						@Override

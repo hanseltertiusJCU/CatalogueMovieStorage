@@ -26,7 +26,7 @@ public class UpcomingViewModel extends AndroidViewModel {
     private UpcomingMovieLiveData upcomingMovieLiveData;
 
     // Beberapa informasi diakses dari BuildConfig untuk menjaga credential
-    private String apiKey = BuildConfig.MOVIE_API_KEY;
+    private String apiKey = BuildConfig.API_KEY;
     private String upcomingUrlBase = BuildConfig.BASE_MOVIE_UPCOMING_URL;
     private String languageUs = BuildConfig.LANGUAGE_US;
 
