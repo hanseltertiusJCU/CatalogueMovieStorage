@@ -9,7 +9,7 @@ import com.example.cataloguemoviestorage.entity.MovieItems;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
-// Class tsb berguna untuk membaca data dari Database lalu mendisplay data yg ada di sana
+// Class tsb berguna untuk membaca data dari Database, specifically table movies, lalu mendisplay data yg ada di sana
 public class LoadFavoriteMoviesAsync extends AsyncTask<Void, Void, ArrayList<MovieItems>>{
 	// WeakReference digunakan karena AsyncTask akan dibuat dan dieksekusi scr bersamaan di method onCreate().
 	// Selain itu, ketika Activity destroyed, Activity tsb dapat dikumpulkan oleh GarbageCollector, sehingga
@@ -18,7 +18,7 @@ public class LoadFavoriteMoviesAsync extends AsyncTask<Void, Void, ArrayList<Mov
 	final WeakReference <LoadFavoriteMoviesCallback> weakCallback;
 	ArrayList<MovieItems> favoriteMovieItemList;
 	
-	public LoadFavoriteMoviesAsync(FavoriteItemsHelper favoriteItemsHelper , LoadFavoriteMoviesCallback callback){
+	public LoadFavoriteMoviesAsync(FavoriteItemsHelper favoriteItemsHelper, LoadFavoriteMoviesCallback callback){
 		weakFavoriteMovieItemsHelper = new WeakReference<>(favoriteItemsHelper);
 		weakCallback = new WeakReference <>(callback);
 	}
