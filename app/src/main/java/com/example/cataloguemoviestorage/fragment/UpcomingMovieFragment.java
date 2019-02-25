@@ -46,7 +46,7 @@ public class UpcomingMovieFragment extends Fragment implements LoadFavoriteMovie
 	public static final String MOVIE_BOOLEAN_STATE_DATA = "MOVIE_BOOLEAN_STATE_DATA";
 	// Bikin constant (key) yang merepresent Parcelable object
 	private static final String MOVIE_LIST_STATE = "movieListState";
-	@BindView(R.id.rv_list)
+	@BindView(R.id.rv_movie_item_list)
 	RecyclerView recyclerView;
 	private MovieAdapter movieAdapter;
 	@BindView(R.id.progress_bar)
