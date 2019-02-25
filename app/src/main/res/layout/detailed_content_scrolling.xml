@@ -11,14 +11,14 @@
     tools:showIn="@layout/activity_detail">
 
     <LinearLayout
-        android:id="@+id/detailed_content_movie"
+        android:id="@+id/detailed_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <include
-            android:id="@+id/include_detailed_movie_info"
-            layout="@layout/detailed_movie_info" />
+            android:id="@+id/include_detailed_info"
+            layout="@layout/detailed_info" />
 
     </LinearLayout>
 

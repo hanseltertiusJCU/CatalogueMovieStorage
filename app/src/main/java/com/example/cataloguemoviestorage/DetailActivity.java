@@ -44,32 +44,42 @@ public class DetailActivity extends AppCompatActivity{
 	// Setup views bedasarkan id yang ada di layout xml
 	@BindView(R.id.detailed_poster_image)
 	ImageView imageViewDetailedPosterImage;
-	@BindView(R.id.detailed_movie_title_text)
-	TextView textViewDetailedMovieTitle;
-	@BindView(R.id.detailed_movie_tagline_text)
-	TextView textViewDetailedMovieTagline;
-	@BindView(R.id.detailed_movie_status_text)
-	TextView textViewDetailedMovieStatus;
-	@BindView(R.id.detailed_movie_rating_text)
-	TextView textViewDetailedMovieRating;
-	@BindView(R.id.detailed_movie_languages_text)
-	TextView textViewDetailedMovieLanguage;
-	@BindView(R.id.detailed_movie_genres_text)
-	TextView textViewDetailedMovieGenres;
-	@BindView(R.id.detailed_movie_release_date_text)
-	TextView textViewDetailedMovieReleaseDate;
-	@BindView(R.id.detailed_movie_overview_text)
-	TextView textViewDetailedMovieOverview;
+	@BindView(R.id.detailed_first_info_text)
+	TextView textViewDetailedFirstInfoText;
+	@BindView(R.id.detailed_second_info_text)
+	TextView textViewDetailedSecondInfoText;
+	@BindView(R.id.detailed_third_info_text)
+	TextView textViewDetailedThirdInfoText;
+	@BindView(R.id.detailed_fourth_info_text)
+	TextView textViewDetailedFourthInfoText;
+	@BindView(R.id.detailed_fifth_info_title)
+	TextView textViewDetailedFifthInfoTitle;
+	@BindView(R.id.detailed_fifth_info_text)
+	TextView textViewDetailedFifthInfoText;
+	@BindView(R.id.detailed_sixth_info_title)
+	TextView textViewDetailedSixthInfoTitle;
+	@BindView(R.id.detailed_sixth_info_text)
+	TextView textViewDetailedSixthInfoText;
+	@BindView(R.id.detailed_seventh_info_title)
+	TextView textViewDetailedSeventhInfoTitle;
+	@BindView(R.id.detailed_seventh_info_text)
+	TextView textViewDetailedSeventhInfoText;
+	@BindView(R.id.detailed_eighth_info_title)
+	TextView textViewDetailedEighthInfoTitle;
+	@BindView(R.id.detailed_eighth_info_text)
+	TextView textViewDetailedEighthInfoText;
+	// Setup intent value
 	private int detailedMovieId;
 	private String detailedMovieTitle;
 	private int detailedMovieFavoriteState;
+	// Setup boolean menu clickable state
 	private boolean menuClickable = false;
 	// Set layout value untuk dapat menjalankan process loading data
 	@BindView(R.id.detailed_progress_bar)
 	ProgressBar detailedProgressBar;
 	
-	@BindView(R.id.detailed_content_movie)
-	LinearLayout detailedContentMovie;
+	@BindView(R.id.detailed_content)
+	LinearLayout detailedContent;
 	
 	@BindView(R.id.detailed_app_bar)
 	AppBarLayout detailedAppBarLayout;
@@ -89,7 +99,9 @@ public class DetailActivity extends AppCompatActivity{
 	// Drawable Global variable to handle orientation changes
 	private int drawableMenuMarkedAsFavouriteResourceId;
 	
+	// Initiate
 	private MovieItems detailedMovieItem;
+	// Initiate Item Helper (DML class)
 	private FavoriteItemsHelper favoriteItemsHelper;
 	
 	// Request code
@@ -126,6 +138,7 @@ public class DetailActivity extends AppCompatActivity{
 		
 		// Cek jika savedInstanceState itu ada, jika iya, restore drawable marked as favorite icon state
 		if(savedInstanceState != null){
+			// todo: if statement for handling get value from bundle mode
 			detailedMovieFavoriteState = savedInstanceState.getInt(KEY_DRAWABLE_MARKED_AS_FAVORITE_STATE);
 			
 		}
@@ -139,7 +152,7 @@ public class DetailActivity extends AppCompatActivity{
 		}
 		
 		// Set visiblity of views ketika sedang dalam meretrieve data
-		detailedContentMovie.setVisibility(View.INVISIBLE);
+		detailedContent.setVisibility(View.INVISIBLE);
 		detailedProgressBar.setVisibility(View.VISIBLE);
 		
 		// todo: pake if statement untuk mengakses view model yg berbeda untuk menangani tv show sm movie
@@ -186,56 +199,65 @@ public class DetailActivity extends AppCompatActivity{
 			public void onChanged(@Nullable ArrayList <MovieItems> detailedMovieItems){
 				// Ketika data selesai di load, maka kita akan mendapatkan data dan menghilangkan progress bar
 				// yang menandakan bahwa loadingnya sudah selesai
-				detailedContentMovie.setVisibility(View.VISIBLE);
+				detailedContent.setVisibility(View.VISIBLE);
 				detailedProgressBar.setVisibility(View.GONE);
 				
 				// Set semua data ke dalam detail activity
 				// Load image jika ada poster path
 				Picasso.get().load(baseImageUrl + detailedMovieItems.get(0).getMoviePosterPath()).into(imageViewDetailedPosterImage);
 				
-				textViewDetailedMovieTitle.setText(detailedMovieItems.get(0).getMovieTitle());
+				textViewDetailedFirstInfoText.setText(detailedMovieItems.get(0).getMovieTitle());
 				
-				textViewDetailedMovieTagline.setText("\"" + detailedMovieItems.get(0).getMovieTagline() + "\"");
+				textViewDetailedSecondInfoText.setText("\"" + detailedMovieItems.get(0).getMovieTagline() + "\"");
 				
 				// Set textview content in detailed movie runtime to contain a variety of different colors
 				Spannable statusWord = new SpannableString(getString(R.string.span_movie_detail_status) + " ");
 				statusWord.setSpan(new ForegroundColorSpan(Color.BLACK) , 0 , statusWord.length() , Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-				textViewDetailedMovieStatus.setText(statusWord);
+				textViewDetailedThirdInfoText.setText(statusWord);
 				Spannable statusDetailedMovie = new SpannableString(detailedMovieItems.get(0).getMovieStatus());
 				statusDetailedMovie.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorAccent)) , 0 , statusDetailedMovie.length() , Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-				textViewDetailedMovieStatus.append(statusDetailedMovie);
+				textViewDetailedThirdInfoText.append(statusDetailedMovie);
 				
 				// Set textview content in detailed movie rating to contain a variety of different colors
 				Spannable ratingWord = new SpannableString(getString(R.string.span_movie_detail_rating) + " ");
 				ratingWord.setSpan(new ForegroundColorSpan(Color.BLACK) , 0 , ratingWord.length() , Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-				textViewDetailedMovieRating.setText(ratingWord);
+				textViewDetailedFourthInfoText.setText(ratingWord);
 				Spannable ratingDetailedMovie = new SpannableString(detailedMovieItems.get(0).getMovieRatings());
 				ratingDetailedMovie.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorAccent)) , 0 , ratingDetailedMovie.length() , Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-				textViewDetailedMovieRating.append(ratingDetailedMovie);
+				textViewDetailedFourthInfoText.append(ratingDetailedMovie);
 				
 				Spannable ratingFromWord = new SpannableString(" " + getString(R.string.span_movie_detail_from) + " ");
 				ratingFromWord.setSpan(new ForegroundColorSpan(Color.BLACK) , 0 , ratingFromWord.length() , Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-				textViewDetailedMovieRating.append(ratingFromWord);
+				textViewDetailedFourthInfoText.append(ratingFromWord);
 				
 				Spannable ratingDetailedMovieVotes = new SpannableString(detailedMovieItems.get(0).getMovieRatingsVote());
 				ratingDetailedMovieVotes.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorAccent)) , 0 , ratingDetailedMovieVotes.length() , Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-				textViewDetailedMovieRating.append(ratingDetailedMovieVotes);
+				textViewDetailedFourthInfoText.append(ratingDetailedMovieVotes);
 				
 				Spannable ratingVotesWord = new SpannableString(" " + getString(R.string.span_movie_detail_votes));
 				ratingVotesWord.setSpan(new ForegroundColorSpan(Color.BLACK) , 0 , ratingVotesWord.length() , Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-				textViewDetailedMovieRating.append(ratingVotesWord);
+				textViewDetailedFourthInfoText.append(ratingVotesWord);
 				
-				textViewDetailedMovieLanguage.setText(detailedMovieItems.get(0).getMovieLanguages());
+				textViewDetailedFifthInfoTitle.setText(getString(R.string.detailed_movie_languages_title));
 				
-				textViewDetailedMovieGenres.setText(detailedMovieItems.get(0).getMovieGenres());
+				textViewDetailedFifthInfoText.setText(detailedMovieItems.get(0).getMovieLanguages());
 				
-				textViewDetailedMovieReleaseDate.setText(detailedMovieItems.get(0).getMovieReleaseDate());
+				textViewDetailedSixthInfoTitle.setText(getString(R.string.detailed_movie_genres_title));
 				
-				textViewDetailedMovieOverview.setText(detailedMovieItems.get(0).getMovieOverview());
+				textViewDetailedSixthInfoText.setText(detailedMovieItems.get(0).getMovieGenres());
+				
+				textViewDetailedSeventhInfoTitle.setText(getString(R.string.detailed_movie_release_date_title));
+				
+				textViewDetailedSeventhInfoText.setText(detailedMovieItems.get(0).getMovieReleaseDate());
+				
+				textViewDetailedEighthInfoTitle.setText(getString(R.string.detailed_movie_overview_title));
+				
+				textViewDetailedEighthInfoText.setText(detailedMovieItems.get(0).getMovieOverview());
 				
 				// Set value dari Item bedasarkan parameter lalu akses object pertama
 				detailedMovieItem = detailedMovieItems.get(0);
-				// Set menu clickable into true
+				// Set menu clickable into true, literally setelah asynctask kelar,
+				// maka menu bs d click
 				menuClickable = true;
 				// Update option menu to recall onPrepareOptionMenu method
 				invalidateOptionsMenu();
