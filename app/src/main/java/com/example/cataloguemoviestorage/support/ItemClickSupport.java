@@ -6,7 +6,7 @@ import android.view.View;
 
 import com.example.cataloguemoviestorage.R;
 
-public class MovieItemClickSupport {
+public class ItemClickSupport{
     private final RecyclerView mRecyclerView;
     private OnItemClickListener mOnItemClickListener;
 
@@ -39,17 +39,17 @@ public class MovieItemClickSupport {
 
     // Create constructor that set tag to recyclerview
     // as well as attach listener to recyclerview items
-    private MovieItemClickSupport(RecyclerView recyclerView) {
+    private ItemClickSupport(RecyclerView recyclerView) {
         mRecyclerView = recyclerView;
-        mRecyclerView.setTag(R.id.movie_item_click_support, this);
+        mRecyclerView.setTag(R.id.item_click_support , this);
         mRecyclerView.addOnChildAttachStateChangeListener(mAttachListener);
     }
 
     // Method to return support that attach support to the view
-    public static MovieItemClickSupport addSupportToView(RecyclerView view) {
-        MovieItemClickSupport support = (MovieItemClickSupport) view.getTag(R.id.movie_item_click_support);
+    public static ItemClickSupport addSupportToView(RecyclerView view) {
+        ItemClickSupport support = (ItemClickSupport) view.getTag(R.id.item_click_support);
         if (support == null) {
-            support = new MovieItemClickSupport(view);
+            support = new ItemClickSupport(view);
         }
         return support;
     }

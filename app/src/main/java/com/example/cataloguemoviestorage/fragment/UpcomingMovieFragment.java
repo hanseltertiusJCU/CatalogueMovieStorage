@@ -27,7 +27,7 @@ import com.example.cataloguemoviestorage.async.LoadFavoriteMoviesAsync;
 import com.example.cataloguemoviestorage.database.FavoriteItemsHelper;
 import com.example.cataloguemoviestorage.entity.MovieItems;
 import com.example.cataloguemoviestorage.model.UpcomingViewModel;
-import com.example.cataloguemoviestorage.support.MovieItemClickSupport;
+import com.example.cataloguemoviestorage.support.ItemClickSupport;
 
 import java.util.ArrayList;
 
@@ -251,7 +251,7 @@ public class UpcomingMovieFragment extends Fragment implements LoadFavoriteMovie
 				movieAdapter.setData(movieItems);
 				recyclerView.setAdapter(movieAdapter);
 				// Set item click listener di dalam recycler view
-				MovieItemClickSupport.addSupportToView(recyclerView).setOnItemClickListener(new MovieItemClickSupport.OnItemClickListener(){
+				ItemClickSupport.addSupportToView(recyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener(){
 					// Implement interface method
 					@Override
 					public void onItemClicked(RecyclerView recyclerView , int position , View view){

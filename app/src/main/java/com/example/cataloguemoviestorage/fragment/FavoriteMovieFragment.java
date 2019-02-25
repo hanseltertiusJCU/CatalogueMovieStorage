@@ -21,7 +21,7 @@ import com.example.cataloguemoviestorage.adapter.MovieAdapter;
 import com.example.cataloguemoviestorage.async.LoadFavoriteMoviesAsync;
 import com.example.cataloguemoviestorage.database.FavoriteItemsHelper;
 import com.example.cataloguemoviestorage.entity.MovieItems;
-import com.example.cataloguemoviestorage.support.MovieItemClickSupport;
+import com.example.cataloguemoviestorage.support.ItemClickSupport;
 
 import java.util.ArrayList;
 
@@ -106,7 +106,7 @@ public class FavoriteMovieFragment extends Fragment implements LoadFavoriteMovie
 					// Set data ke adapter
 					movieAdapter.setData(movieItemsList);
 					// Set item click listener di dalam recycler view agar item tsb dapat di click
-					MovieItemClickSupport.addSupportToView(recyclerView).setOnItemClickListener(new MovieItemClickSupport.OnItemClickListener(){
+					ItemClickSupport.addSupportToView(recyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener(){
 						@Override
 						public void onItemClicked(RecyclerView recyclerView , int position , View view){
 							// Panggil method showSelectedMovieItems untuk mengakses DetailActivity bedasarkan data yang ada
@@ -175,7 +175,7 @@ public class FavoriteMovieFragment extends Fragment implements LoadFavoriteMovie
 			// Set data into adapter
 			movieAdapter.setData(movieItems);
 			// Set item click listener di dalam recycler view
-			MovieItemClickSupport.addSupportToView(recyclerView).setOnItemClickListener(new MovieItemClickSupport.OnItemClickListener(){
+			ItemClickSupport.addSupportToView(recyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener(){
 				@Override
 				public void onItemClicked(RecyclerView recyclerView , int position , View view){
 					// Panggil method showSelectedMovieItems untuk mengakses DetailActivity bedasarkan data yang ada

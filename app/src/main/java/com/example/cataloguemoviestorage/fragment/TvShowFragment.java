@@ -2,6 +2,8 @@ package com.example.cataloguemoviestorage.fragment;
 
 
 import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
@@ -15,13 +17,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 
+import com.example.cataloguemoviestorage.DetailActivity;
+import com.example.cataloguemoviestorage.LoadFavoriteTvShowCallback;
 import com.example.cataloguemoviestorage.R;
 import com.example.cataloguemoviestorage.adapter.TvShowAdapter;
+import com.example.cataloguemoviestorage.async.LoadFavoriteTvShowAsync;
 import com.example.cataloguemoviestorage.database.FavoriteItemsHelper;
 import com.example.cataloguemoviestorage.entity.TvShowItem;
 import com.example.cataloguemoviestorage.model.TvShowViewModel;
+import com.example.cataloguemoviestorage.support.ItemClickSupport;
 
 import java.util.ArrayList;
 
@@ -32,12 +37,14 @@ import butterknife.ButterKnife;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class TvShowFragment extends Fragment{
+public class TvShowFragment extends Fragment implements LoadFavoriteTvShowCallback{
 	
 	// Key untuk membawa data ke intent (data tidak d private untuk dapat diapplikasikan di berbagai Fragments dan diakses ke {@link DetailActivity})
 	public static final String TV_SHOW_ID_DATA = "TV_SHOW_ID_DATA";
 	public static final String TV_SHOW_NAME_DATA = "TV_SHOW_NAME_DATA";
 	public static final String TV_SHOW_BOOLEAN_STATE_DATA = "TV_SHOW_BOOLEAN_STATE_DATA";
+	// Constant untuk represent mode agar membuka data tertentu
+	public static final String MODE_INTENT = "mode_intent";
 	// Bikin constant (key) yang merepresent Parcelable object
 	private static final String TV_SHOW_LIST_STATE = "tvShowListState";
 	@BindView(R.id.rv_tv_shows_item_list)
@@ -121,6 +128,115 @@ public class TvShowFragment extends Fragment{
 			mTvShowListState = savedInstanceState.getParcelable(TV_SHOW_LIST_STATE);
 		} else {
 			// Lakukan AsyncTask utk meretrieve ArrayList yg isinya data dari database (tv show table)
+			new LoadFavoriteTvShowAsync(favoriteItemsHelper, this).execute();
+		}
+		
+		// Dapatkan ViewModel yang tepat dari ViewModelProviders
+		tvShowViewModel = ViewModelProviders.of(this).get(TvShowViewModel.class);
+		
+		// Panggil method createObserver untuk return Observer object
+		tvShowObserver = createObserver();
+		
+		// Tempelkan Observer ke LiveData object
+		tvShowViewModel.getTvShows().observe(this, tvShowObserver);
+		
+	}
+	
+	private void showSelectedTvShowItems(TvShowItem tvShowItem){
+		// Dapatkan id dan title bedasarkan ListView item
+		int tvShowIdItem = tvShowItem.getId();
+		String tvShowNameItem = tvShowItem.getTvShowName();
+		// Item position untuk mengakses arraylist specific position
+		int itemPosition = 0;
+		// if statement untuk tahu bahwa idnya itu termasuk d dalam tabel ato tidak, looping pake arraylist
+		// Cek jika size dari ArrayList itu lebih dari 0
+		if(FavoriteTvShowFragment.favTvShowListData.size() > 0){
+			for(int i = 0; i < FavoriteTvShowFragment.favTvShowListData.size(); i++){
+				if(tvShowIdItem == FavoriteTvShowFragment.favTvShowListData.get(i).getId()){
+					FavoriteTvShowFragment.favTvShowListData.get(i).setFavoriteBooleanState(1);
+					// Dapatin position dari arraylist jika idnya itu sama kyk id yg tersedia
+					itemPosition = i;
+					break;
+				}
+			}
+		}
+		// Tentukan bahwa kita ingin membuka data TV Show
+		String modeItem = "open_tv_show_detail";
+		
+		Intent intentWithTvShowIdData = new Intent(getActivity(), DetailActivity.class);
+		// Bawa data untuk disampaikan ke {@link DetailActivity}
+		intentWithTvShowIdData.putExtra(TV_SHOW_ID_DATA, tvShowIdItem);
+		intentWithTvShowIdData.putExtra(TV_SHOW_NAME_DATA , tvShowNameItem);
+		// Cek jika ArrayList ada data
+		if(FavoriteTvShowFragment.favTvShowListData.size() > 0){
+			intentWithTvShowIdData.putExtra(TV_SHOW_BOOLEAN_STATE_DATA , FavoriteTvShowFragment.favTvShowListData.get(itemPosition).getFavoriteBooleanState());
+		}
+		intentWithTvShowIdData.putExtra(MODE_INTENT, modeItem);
+		// Start activity tujuan bedasarkan intent object dan bawa request code
+		// REQUEST_CHANGE untuk onActivityResult
+		startActivityForResult(intentWithTvShowIdData, DetailActivity.REQUEST_CHANGE);
+	}
+	
+	@Override
+	public void onResume(){
+		super.onResume();
+		// Cek jika Parcelable itu exist, jika iya, maka update layout manager dengan memasukkan
+		// Parcelable sebagai input parameter
+		if(mTvShowListState != null){
+			tvShowLinearLayoutManager.onRestoreInstanceState(mTvShowListState);
 		}
 	}
+	
+	@Override
+	public void onSaveInstanceState(@NonNull Bundle outState){
+		super.onSaveInstanceState(outState);
+		// Cek jika tvShowLinearLayoutManager itu ada, jika tidak maka tidak akan ngapa2in
+		// di onSaveInstanceState
+		if(tvShowLinearLayoutManager != null){
+			// Save list state/ scroll position dari list
+			mTvShowListState = tvShowLinearLayoutManager.onSaveInstanceState();
+			outState.putParcelable(TV_SHOW_LIST_STATE, mTvShowListState);
+		}
+	}
+	
+	// Callback method dari Interface LoadFavoriteTvShowsCallback
+	@Override
+	public void preExecute(){
+		// Method tsb tidak melakukan apa2
+	}
+	
+	@Override
+	public void postExecute(ArrayList <TvShowItem> tvShowItems){
+		// Bikin ArrayList global variable sama dengan hasil dari AsyncTask class
+		FavoriteTvShowFragment.favTvShowListData = tvShowItems;
+	}
+	
+	// Method tsb berguna untuk membuat observer
+	public Observer<ArrayList<TvShowItem>> createObserver(){
+		// Buat Observer yang gunanya untuk update UI
+		return new Observer <ArrayList <TvShowItem>>(){
+			@Override
+			public void onChanged(@Nullable final ArrayList <TvShowItem> tvShowItems){
+				// Set LinearLayoutManager object value dengan memanggil LinearLayoutManager constructor
+				tvShowLinearLayoutManager = new LinearLayoutManager(getContext());
+				// Kita menggunakan LinearLayoutManager berorientasi vertical untuk RecyclerView
+				recyclerView.setLayoutManager(tvShowLinearLayoutManager);
+				// Ketika data selesai di load, maka kita akan mendapatkan data dan menghilangkan progress bar
+				// yang menandakan bahwa loadingnya sudah selesai
+				recyclerView.setVisibility(View.VISIBLE);
+				progressBar.setVisibility(View.GONE);
+				tvShowAdapter.setTvShowData(tvShowItems);
+				recyclerView.setAdapter(tvShowAdapter);
+				// Set item click listener di dalam recycler view
+				ItemClickSupport.addSupportToView(recyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener(){
+					@Override
+					public void onItemClicked(RecyclerView recyclerView , int position , View view){
+						// Panggil method showSelectedMovieItems untuk mengakses DetailActivity bedasarkan data yang ada
+						showSelectedTvShowItems(tvShowItems.get(position));
+					}
+				});
+			}
+		};
+	}
+	
 }

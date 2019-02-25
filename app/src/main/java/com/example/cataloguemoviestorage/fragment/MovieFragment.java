@@ -26,7 +26,7 @@ import com.example.cataloguemoviestorage.async.LoadFavoriteMoviesAsync;
 import com.example.cataloguemoviestorage.database.FavoriteItemsHelper;
 import com.example.cataloguemoviestorage.entity.MovieItems;
 import com.example.cataloguemoviestorage.model.MovieViewModel;
-import com.example.cataloguemoviestorage.support.MovieItemClickSupport;
+import com.example.cataloguemoviestorage.support.ItemClickSupport;
 
 import java.util.ArrayList;
 
@@ -42,6 +42,8 @@ public class MovieFragment extends Fragment implements LoadFavoriteMoviesCallbac
 	public static final String MOVIE_ID_DATA = "MOVIE_ID_DATA";
 	public static final String MOVIE_TITLE_DATA = "MOVIE_TITLE_DATA";
 	public static final String MOVIE_BOOLEAN_STATE_DATA = "MOVIE_BOOLEAN_STATE_DATA";
+	// Constant untuk represent mode agar membuka data tertentu
+	public static final String MODE_INTENT = "mode_intent";
 	// Bikin constant (key) yang merepresent Parcelable object
 	private static final String MOVIE_LIST_STATE = "movieListState";
 	@BindView(R.id.rv_movie_item_list)
@@ -158,6 +160,8 @@ public class MovieFragment extends Fragment implements LoadFavoriteMoviesCallbac
 				}
 			}
 		}
+		// Tentukan bahwa kita ingin membuka data Movie
+		String modeItem = "open_movie_detail";
 		
 		Intent intentWithMovieIdData = new Intent(getActivity() , DetailActivity.class);
 		// Bawa data untuk disampaikan ke {@link DetailActivity}
@@ -167,7 +171,9 @@ public class MovieFragment extends Fragment implements LoadFavoriteMoviesCallbac
 		if(FavoriteMovieFragment.favMovieListData.size() > 0){
 			intentWithMovieIdData.putExtra(MOVIE_BOOLEAN_STATE_DATA , FavoriteMovieFragment.favMovieListData.get(itemPosition).getFavoriteBooleanState());
 		}
-		// Start activity tujuan bedasarkan intent object
+		intentWithMovieIdData.putExtra(MODE_INTENT, modeItem);
+		// Start activity tujuan bedasarkan intent object dan bawa request code
+		// REQUEST_CHANGE untuk onActivityResult
 		startActivityForResult(intentWithMovieIdData, DetailActivity.REQUEST_CHANGE);
 	}
 	
@@ -189,7 +195,7 @@ public class MovieFragment extends Fragment implements LoadFavoriteMoviesCallbac
 		if(movieLinearLayoutManager != null){
 			// Save list state/ scroll position dari list
 			mMovieListState = movieLinearLayoutManager.onSaveInstanceState();
-			outState.putParcelable(MOVIE_LIST_STATE , mMovieListState);
+			outState.putParcelable(MOVIE_LIST_STATE, mMovieListState);
 		}
 		
 	}
@@ -251,7 +257,7 @@ public class MovieFragment extends Fragment implements LoadFavoriteMoviesCallbac
 				movieAdapter.setData(movieItems);
 				recyclerView.setAdapter(movieAdapter);
 				// Set item click listener di dalam recycler view
-				MovieItemClickSupport.addSupportToView(recyclerView).setOnItemClickListener(new MovieItemClickSupport.OnItemClickListener(){
+				ItemClickSupport.addSupportToView(recyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener(){
 					// Implement interface method
 					@Override
 					public void onItemClicked(RecyclerView recyclerView , int position , View view){

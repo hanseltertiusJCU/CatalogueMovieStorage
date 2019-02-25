@@ -280,7 +280,7 @@ public class DetailActivity extends AppCompatActivity{
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu){
 		// Inflate menu
-		getMenuInflater().inflate(R.menu.menu_favourite , menu);
+		getMenuInflater().inflate(R.menu.menu_favorite , menu);
 		// Cek jika value boolean nya itu adalah true, yang berarti menandakan movie favorite
 		if(detailedMovieFavoriteState == 1){
 			// Set drawable resource
