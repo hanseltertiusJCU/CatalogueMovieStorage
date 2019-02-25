@@ -117,6 +117,8 @@ public class DetailActivity extends AppCompatActivity{
 		
 		setSupportActionBar(detailedToolbar);
 		
+		// todo: if statement for handling get intent value mode
+		
 		// Get intent untuk mendapatkan id dan title dari {@link MainActivity}
 		detailedMovieId = getIntent().getIntExtra(NowPlayingMovieFragment.MOVIE_ID_DATA , 0);
 		detailedMovieTitle = getIntent().getStringExtra(NowPlayingMovieFragment.MOVIE_TITLE_DATA);
@@ -140,11 +142,13 @@ public class DetailActivity extends AppCompatActivity{
 		detailedContentMovie.setVisibility(View.INVISIBLE);
 		detailedProgressBar.setVisibility(View.VISIBLE);
 		
+		// todo: pake if statement untuk mengakses view model yg berbeda untuk menangani tv show sm movie
+		
 		// Panggil MovieViewModel dengan menggunakan ViewModelFactory sebagai parameter tambahan (dan satu-satunya pilihan) selain activity
 		detailedMovieViewModel = ViewModelProviders.of(this , new DetailedMovieViewModelFactory(this.getApplication() , detailedMovieId)).get(DetailedMovieViewModel.class);
 		
 		// Buat observer object untuk mendisplay data ke UI
-		detailedMovieObserver = createObserver();
+		detailedMovieObserver = createDetailedMovieObserver();
 		
 		// Tempelkan Observer ke LiveData object
 		detailedMovieViewModel.getDetailedMovie().observe(this , detailedMovieObserver);
@@ -176,7 +180,7 @@ public class DetailActivity extends AppCompatActivity{
 		});
 	}
 	
-	private Observer <ArrayList <MovieItems>> createObserver(){
+	private Observer <ArrayList <MovieItems>> createDetailedMovieObserver(){
 		Observer <ArrayList <MovieItems>> observer = new Observer <ArrayList <MovieItems>>(){
 			@Override
 			public void onChanged(@Nullable ArrayList <MovieItems> detailedMovieItems){

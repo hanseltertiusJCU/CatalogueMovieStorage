@@ -38,7 +38,8 @@ public class MovieItems implements Parcelable{
                 String dataStatus = object.getString("status");
                 String dataVoteAverage = object.getString("vote_average");
                 String dataVoteCount = object.getString("vote_count");
-                // value tsb berguna untuk mentransfer ke MainActivity
+                // value tsb berguna untuk mentransfer ke MainActivity agar bisa mendisplay
+                // ke favorite movie item list
                 String dataOriginalLanguage = object.getString("original_language");
                 // Ubah language menjadi upper case
                 String displayed_language = dataOriginalLanguage.toUpperCase();
@@ -52,9 +53,11 @@ public class MovieItems implements Parcelable{
                         JSONObject languageObject = dataLanguageArray.getJSONObject(i);
                         String language = languageObject.getString("name");
                         if (i == 0)
-                            dataLanguages = language + " ";
+                            dataLanguages = language + ",";
+                        else if (i == dataLanguageArray.length())
+                            dataLanguages += language;
                         else
-                            dataLanguages += language + " ";
+                            dataLanguages += language + ",";
                     }
                 } else {
                     dataLanguages = "Language Unknown";

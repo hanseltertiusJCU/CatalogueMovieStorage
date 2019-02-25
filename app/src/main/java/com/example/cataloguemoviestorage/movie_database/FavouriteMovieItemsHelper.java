@@ -64,7 +64,7 @@ public class FavouriteMovieItemsHelper {
     public ArrayList<MovieItems> getAllFavouriteMovieItems(){
         ArrayList<MovieItems> favouriteMovieItemsArrayList = new ArrayList<>();
         
-        // Call SQLiteDatabase query method dgn sort ID in ascending order (lowest to highest), where clausenya itu booleannya itu true
+        // Call SQLiteDatabase query method dgn sort Date Added Column in descending order (most recent to least recent)
         Cursor cursor = favouriteMovieDatabase.query(DATABASE_TABLE,
                 null,
                 null,

@@ -179,11 +179,6 @@ public class UpcomingMovieFragment extends Fragment implements LoadFavoriteMovie
 		if(mUpcomingListState != null){
 			upcomingLinearLayoutManager.onRestoreInstanceState(mUpcomingListState);
 		}
-		// Lakukan AsyncTask kembali setelah berpindah dari {@link DetailActivity},
-		// karena ketika balik dr DetailActivity ke MainActivity,
-		// state Activity ke onResume = Fragment ke onResume juga.
-		// Hal tsb berguna agar bs load kembali ke DB
-//		new LoadFavoriteMoviesAsync(favouriteMovieItemsHelper , this).execute();
 	}
 	
 	@Override
