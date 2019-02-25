@@ -25,7 +25,7 @@ import com.example.cataloguemoviestorage.adapter.MovieAdapter;
 import com.example.cataloguemoviestorage.async.LoadFavoriteMoviesAsync;
 import com.example.cataloguemoviestorage.database.FavoriteItemsHelper;
 import com.example.cataloguemoviestorage.entity.MovieItems;
-import com.example.cataloguemoviestorage.model.NowPlayingViewModel;
+import com.example.cataloguemoviestorage.model.MovieViewModel;
 import com.example.cataloguemoviestorage.support.MovieItemClickSupport;
 
 import java.util.ArrayList;
@@ -36,7 +36,7 @@ import butterknife.ButterKnife;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class NowPlayingMovieFragment extends Fragment implements LoadFavoriteMoviesCallback{
+public class MovieFragment extends Fragment implements LoadFavoriteMoviesCallback{
 	
 	// Key untuk membawa data ke intent (data tidak d private untuk dapat diapplikasikan di berbagai Fragments dan diakses ke {@link DetailActivity})
 	public static final String MOVIE_ID_DATA = "MOVIE_ID_DATA";
@@ -49,16 +49,16 @@ public class NowPlayingMovieFragment extends Fragment implements LoadFavoriteMov
 	private MovieAdapter movieAdapter;
 	@BindView(R.id.progress_bar)
 	ProgressBar progressBar;
-	private Observer <ArrayList <MovieItems>> nowPlayingObserver;
-	private NowPlayingViewModel nowPlayingViewModel;
+	private Observer <ArrayList <MovieItems>> movieObserver;
+	private MovieViewModel movieViewModel;
 	// Bikin parcelable yang berguna untuk menyimpan lalu merestore position
-	private Parcelable mNowPlayingListState = null;
+	private Parcelable mMovieListState = null;
 	// Helper untuk membuka koneksi ke DB
 	private FavoriteItemsHelper favoriteItemsHelper;
 	// Bikin linearlayout manager untuk dapat call onsaveinstancestate method
-	private LinearLayoutManager nowPlayingLinearLayoutManager;
+	private LinearLayoutManager movieLinearLayoutManager;
 	
-	public NowPlayingMovieFragment(){
+	public MovieFragment(){
 		// Required empty public constructor
 	}
 	
@@ -86,15 +86,17 @@ public class NowPlayingMovieFragment extends Fragment implements LoadFavoriteMov
 	public void onViewCreated(View view , @Nullable Bundle savedInstanceState){
 		super.onViewCreated(view , savedInstanceState);
 		
+		// Initiate movie adapter
 		movieAdapter = new MovieAdapter(getContext());
+		// Notify when data changed into adapter
 		movieAdapter.notifyDataSetChanged();
 		
 		// Set LinearLayoutManager object value dengan memanggil LinearLayoutManager constructor
-		nowPlayingLinearLayoutManager = new LinearLayoutManager(getContext());
+		movieLinearLayoutManager = new LinearLayoutManager(getContext());
 		// Ukuran data recycler view sama
 		recyclerView.setHasFixedSize(true);
 		// Kita menggunakan LinearLayoutManager berorientasi vertical untuk RecyclerView
-		recyclerView.setLayoutManager(nowPlayingLinearLayoutManager);
+		recyclerView.setLayoutManager(movieLinearLayoutManager);
 		// Set empty adapter agar dapat di rotate
 		recyclerView.setAdapter(movieAdapter);
 		
@@ -121,20 +123,20 @@ public class NowPlayingMovieFragment extends Fragment implements LoadFavoriteMov
 		// Cek jika Bundle exist, jika iya maka kita metretrieve list state as well as
 		// list/item positions (scroll position)
 		if(savedInstanceState != null){
-			mNowPlayingListState = savedInstanceState.getParcelable(MOVIE_LIST_STATE);
+			mMovieListState = savedInstanceState.getParcelable(MOVIE_LIST_STATE);
 		} else{
-			// Lakukan AsyncTask utk meretrieve ArrayList yg isinya data dari database
+			// Lakukan AsyncTask utk meretrieve ArrayList yg isinya data dari database (table movie item)
 			new LoadFavoriteMoviesAsync(favoriteItemsHelper , this).execute();
 		}
 		
 		// Dapatkan ViewModel yang tepat dari ViewModelProviders
-		nowPlayingViewModel = ViewModelProviders.of(this).get(NowPlayingViewModel.class);
+		movieViewModel = ViewModelProviders.of(this).get(MovieViewModel.class);
 		
 		// Panggil method createObserver untuk return Observer object
-		nowPlayingObserver = createObserver();
+		movieObserver = createObserver();
 		
 		// Tempelkan Observer ke LiveData object
-		nowPlayingViewModel.getNowPlayingMovies().observe(this , nowPlayingObserver);
+		movieViewModel.getMovies().observe(this , movieObserver);
 		
 	}
 	
@@ -174,25 +176,20 @@ public class NowPlayingMovieFragment extends Fragment implements LoadFavoriteMov
 		super.onResume();
 		// Cek jika Parcelable itu exist, jika iya, maka update layout manager dengan memasukkan
 		// Parcelable sebagai input parameter
-		if(mNowPlayingListState != null){
-			nowPlayingLinearLayoutManager.onRestoreInstanceState(mNowPlayingListState);
+		if(mMovieListState != null){
+			movieLinearLayoutManager.onRestoreInstanceState(mMovieListState);
 		}
-		// Lakukan AsyncTask kembali setelah berpindah dari {@link DetailActivity},
-		// karena ketika balik dr DetailActivity ke MainActivity,
-		// state Activity ke onResume = Fragment ke onResume juga
-		// Hal tsb berguna agar bs load kembali ke DB
-//		new LoadFavoriteMoviesAsync(favoriteItemsHelper , this).execute();
 	}
 	
 	@Override
 	public void onSaveInstanceState(@NonNull Bundle outState){
 		super.onSaveInstanceState(outState);
-		// Cek jika nowPlayingLinearLayoutManager itu ada, jika tidak maka kita tidak akan ngapa2in
+		// Cek jika movieLinearLayoutManager itu ada, jika tidak maka kita tidak akan ngapa2in
 		// di onSaveInstanceState
-		if(nowPlayingLinearLayoutManager != null){
+		if(movieLinearLayoutManager != null){
 			// Save list state/ scroll position dari list
-			mNowPlayingListState = nowPlayingLinearLayoutManager.onSaveInstanceState();
-			outState.putParcelable(MOVIE_LIST_STATE , mNowPlayingListState);
+			mMovieListState = movieLinearLayoutManager.onSaveInstanceState();
+			outState.putParcelable(MOVIE_LIST_STATE , mMovieListState);
 		}
 		
 	}
@@ -219,9 +216,8 @@ public class NowPlayingMovieFragment extends Fragment implements LoadFavoriteMov
 				if(resultCode == DetailActivity.RESULT_CHANGE){
 					// Tambahkan item ke adapter dan reset scroll position ke paling atas
 					boolean changedDataState = data.getBooleanExtra(DetailActivity.EXTRA_MOVIE_CHANGED_STATE, false);
+					// Cek jika value dari changedDataState itu true
 					if(changedDataState){
-						// Execute AsyncTask kembali (todo: perlu di lakukan ato tidak idk, mungkin perlu d rapiin)
-						new LoadFavoriteMoviesAsync(favoriteItemsHelper , this).execute();
 						if(getActivity().getSupportFragmentManager() != null){
 							// Dapatin position fragment dari FavoriteMovieFragment di ViewPager since ViewPager menampung list dari Fragments
 							FavoriteMovieFragment favoriteMovieFragment = (FavoriteMovieFragment) getActivity().getSupportFragmentManager().getFragments().get(2);
@@ -245,9 +241,9 @@ public class NowPlayingMovieFragment extends Fragment implements LoadFavoriteMov
 			@Override
 			public void onChanged(@Nullable final ArrayList <MovieItems> movieItems){
 				// Set LinearLayoutManager object value dengan memanggil LinearLayoutManager constructor
-				nowPlayingLinearLayoutManager = new LinearLayoutManager(getContext());
+				movieLinearLayoutManager = new LinearLayoutManager(getContext());
 				// Kita menggunakan LinearLayoutManager berorientasi vertical untuk RecyclerView
-				recyclerView.setLayoutManager(nowPlayingLinearLayoutManager);
+				recyclerView.setLayoutManager(movieLinearLayoutManager);
 				// Ketika data selesai di load, maka kita akan mendapatkan data dan menghilangkan progress bar
 				// yang menandakan bahwa loadingnya sudah selesai
 				recyclerView.setVisibility(View.VISIBLE);

@@ -26,7 +26,7 @@ import android.widget.TextView;
 
 import com.example.cataloguemoviestorage.database.FavoriteItemsHelper;
 import com.example.cataloguemoviestorage.factory.DetailedMovieViewModelFactory;
-import com.example.cataloguemoviestorage.fragment.NowPlayingMovieFragment;
+import com.example.cataloguemoviestorage.fragment.MovieFragment;
 import com.example.cataloguemoviestorage.entity.MovieItems;
 import com.example.cataloguemoviestorage.model.DetailedMovieViewModel;
 import com.squareup.picasso.Picasso;
@@ -132,9 +132,9 @@ public class DetailActivity extends AppCompatActivity{
 		// todo: if statement for handling get intent value mode
 		
 		// Get intent untuk mendapatkan id dan title dari {@link MainActivity}
-		detailedMovieId = getIntent().getIntExtra(NowPlayingMovieFragment.MOVIE_ID_DATA , 0);
-		detailedMovieTitle = getIntent().getStringExtra(NowPlayingMovieFragment.MOVIE_TITLE_DATA);
-		detailedMovieFavoriteState = getIntent().getIntExtra(NowPlayingMovieFragment.MOVIE_BOOLEAN_STATE_DATA , 0);
+		detailedMovieId = getIntent().getIntExtra(MovieFragment.MOVIE_ID_DATA , 0);
+		detailedMovieTitle = getIntent().getStringExtra(MovieFragment.MOVIE_TITLE_DATA);
+		detailedMovieFavoriteState = getIntent().getIntExtra(MovieFragment.MOVIE_BOOLEAN_STATE_DATA , 0);
 		
 		// Cek jika savedInstanceState itu ada, jika iya, restore drawable marked as favorite icon state
 		if(savedInstanceState != null){
@@ -316,7 +316,7 @@ public class DetailActivity extends AppCompatActivity{
 					detailedMovieItem.setFavoriteBooleanState(detailedMovieFavoriteState);
 					
 					// Cek jika value dari detailedMovieFavoriteState sama dengan value bawaan intent dengan key MOVIE_BOOLEAN_STATE_EXTRA
-					if(detailedMovieFavoriteState == getIntent().getIntExtra(NowPlayingMovieFragment.MOVIE_BOOLEAN_STATE_DATA , 0)){
+					if(detailedMovieFavoriteState == getIntent().getIntExtra(MovieFragment.MOVIE_BOOLEAN_STATE_DATA , 0)){
 						// Set value changedState into false krn ga ad perubahan dengan state di bandingkan dengan value bawaan intent
 						changedState = false;
 					} else {
@@ -344,7 +344,7 @@ public class DetailActivity extends AppCompatActivity{
 					// Set boolean state value into MovieItem
 					detailedMovieItem.setFavoriteBooleanState(detailedMovieFavoriteState);
 					// Cek jika value dari detailedMovieFavoriteState sama dengan value bawaan intent dengan key MOVIE_BOOLEAN_STATE_EXTRA
-					if(detailedMovieFavoriteState == getIntent().getIntExtra(NowPlayingMovieFragment.MOVIE_BOOLEAN_STATE_DATA , 0)){
+					if(detailedMovieFavoriteState == getIntent().getIntExtra(MovieFragment.MOVIE_BOOLEAN_STATE_DATA , 0)){
 						changedState = false;
 					} else {
 						changedState = true;

@@ -20,40 +20,40 @@ import java.util.ArrayList;
 
 import cz.msebera.android.httpclient.Header;
 
-public class NowPlayingViewModel extends AndroidViewModel {
+public class MovieViewModel extends AndroidViewModel {
 
     // Create object yang mengextend LiveData<ArrayList<MovieItems>>
-    private NowPlayingMovieLiveData nowPlayingMovieLiveData;
+    private MovieLiveData movieLiveData;
 
     // akses informasi penting dari BuildConfig untuk menjaga credential
     private String apiKey = BuildConfig.MOVIE_API_KEY;
-    private String nowPlayingUrlBase = BuildConfig.BASE_MOVIE_NOW_PLAYING_URL;
+    private String discoverMovieUrlBase = BuildConfig.BASE_DISCOVER_MOVIE_URL;
     private String languageUs = BuildConfig.LANGUAGE_US;
 
-    public NowPlayingViewModel(@NonNull Application application) {
+    public MovieViewModel(@NonNull Application application) {
         super(application);
-        nowPlayingMovieLiveData = new NowPlayingMovieLiveData(application);
+        movieLiveData = new MovieLiveData(application);
     }
 
     // Getter method untuk mereturn LiveData yang berisi ArrayList<MovieItems>
-    public LiveData<ArrayList<MovieItems>> getNowPlayingMovies() {
-        return nowPlayingMovieLiveData;
+    public LiveData<ArrayList<MovieItems>> getMovies() {
+        return movieLiveData;
     }
 
     // Create class LiveData untuk menampung ViewModel
-    public class NowPlayingMovieLiveData extends LiveData<ArrayList<MovieItems>> {
+    public class MovieLiveData extends LiveData<ArrayList<MovieItems>> {
         private final Context context;
 
         // Set constructor dari LiveData
-        public NowPlayingMovieLiveData(Context context) {
+        public MovieLiveData(Context context) {
             this.context = context;
-            loadNowPlayingMovieLiveData();
+            loadMovieLiveData();
         }
 
         // Method tsb berguna untuk menjalankan tugas scr async sbg pengganti dari loadInBackground()
         // di AsyncTaskLoader
         @SuppressLint("StaticFieldLeak")
-        private void loadNowPlayingMovieLiveData() {
+        private void loadMovieLiveData() {
 
             new AsyncTask<Void, Void, ArrayList<MovieItems>>() {
                 @Override
@@ -64,8 +64,8 @@ public class NowPlayingViewModel extends AndroidViewModel {
 
                     final ArrayList<MovieItems> movieItemses = new ArrayList<>();
 
-                    String nowPlayingUrl = nowPlayingUrlBase + apiKey + languageUs;
-                    syncHttpClient.get(nowPlayingUrl, new AsyncHttpResponseHandler() {
+                    String movieUrl = discoverMovieUrlBase + apiKey + languageUs;
+                    syncHttpClient.get(movieUrl, new AsyncHttpResponseHandler() {
                         @Override
                         public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                             try {
@@ -90,7 +90,7 @@ public class NowPlayingViewModel extends AndroidViewModel {
 
                         @Override
                         public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                            // Do nothing jika responsenya itu tidak berhasil
+                            // Do nothing jika responsenya itu tidak berhasil (todo: mungkin show failure to load or something)
                         }
                     });
 

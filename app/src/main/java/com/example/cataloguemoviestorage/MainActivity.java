@@ -4,9 +4,7 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -17,7 +15,7 @@ import android.widget.TextView;
 
 import com.example.cataloguemoviestorage.adapter.MovieSectionsFragmentPagerAdapter;
 import com.example.cataloguemoviestorage.fragment.FavoriteMovieFragment;
-import com.example.cataloguemoviestorage.fragment.NowPlayingMovieFragment;
+import com.example.cataloguemoviestorage.fragment.MovieFragment;
 import com.example.cataloguemoviestorage.fragment.UpcomingMovieFragment;
 
 import butterknife.BindView;
@@ -189,7 +187,7 @@ public class MainActivity extends AppCompatActivity {
         movieSectionsFragmentPagerAdapter = new MovieSectionsFragmentPagerAdapter(this, getSupportFragmentManager());
 
         // Tambahkan fragment beserta title ke FragmentPagerAdapter
-        movieSectionsFragmentPagerAdapter.addMovieSectionFragment(new NowPlayingMovieFragment(), getString(R.string.now_playing));
+        movieSectionsFragmentPagerAdapter.addMovieSectionFragment(new MovieFragment(), getString(R.string.now_playing));
         movieSectionsFragmentPagerAdapter.addMovieSectionFragment(new UpcomingMovieFragment(), getString(R.string.upcoming));
         movieSectionsFragmentPagerAdapter.addMovieSectionFragment(new FavoriteMovieFragment(), getString(R.string.favorite));
 
