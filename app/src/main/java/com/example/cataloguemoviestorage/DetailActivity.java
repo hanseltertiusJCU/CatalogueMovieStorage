@@ -24,7 +24,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.example.cataloguemoviestorage.movie_database.FavouriteMovieItemsHelper;
+import com.example.cataloguemoviestorage.database.FavoriteItemsHelper;
 import com.example.cataloguemoviestorage.factory.DetailedMovieViewModelFactory;
 import com.example.cataloguemoviestorage.fragment.NowPlayingMovieFragment;
 import com.example.cataloguemoviestorage.entity.MovieItems;
@@ -90,7 +90,7 @@ public class DetailActivity extends AppCompatActivity{
 	private int drawableMenuMarkedAsFavouriteResourceId;
 	
 	private MovieItems detailedMovieItem;
-	private FavouriteMovieItemsHelper favouriteMovieItemsHelper;
+	private FavoriteItemsHelper favoriteItemsHelper;
 	
 	// Request code
 	public static final int REQUEST_CHANGE = 100;
@@ -113,7 +113,7 @@ public class DetailActivity extends AppCompatActivity{
 		ButterKnife.bind(this);
 		
 		// Create instance dari FavoriteMovieItemsHelper
-		favouriteMovieItemsHelper = FavouriteMovieItemsHelper.getInstance(getApplicationContext());
+		favoriteItemsHelper = FavoriteItemsHelper.getInstance(getApplicationContext());
 		
 		setSupportActionBar(detailedToolbar);
 		
@@ -305,7 +305,7 @@ public class DetailActivity extends AppCompatActivity{
 					// Cek jika ada pergantian state dari sebuah data
 					if(changedState){
 						// Insert based on data
-						long newIdItem = favouriteMovieItemsHelper.insertFavouriteMovieItem(detailedMovieItem);
+						long newIdItem = favoriteItemsHelper.insertFavoriteMovieItem(detailedMovieItem);
 						if(newIdItem > 0){
 							// Bawa nilai ke intent
 							resultIntent.putExtra(EXTRA_MOVIE_CHANGED_STATE, changedState);
@@ -331,7 +331,7 @@ public class DetailActivity extends AppCompatActivity{
 					// Cek jika ada pergantian state dari sebuah data
 					if(changedState){
 						// Remove from database
-						long deletedIdItem = favouriteMovieItemsHelper.deleteFavouriteMovieItem(detailedMovieItem.getId());
+						long deletedIdItem = favoriteItemsHelper.deleteFavoriteMovieItem(detailedMovieItem.getId());
 						if(deletedIdItem > 0){
 							// Bawa nilai ke intent
 							resultIntent.putExtra(EXTRA_MOVIE_CHANGED_STATE, changedState);

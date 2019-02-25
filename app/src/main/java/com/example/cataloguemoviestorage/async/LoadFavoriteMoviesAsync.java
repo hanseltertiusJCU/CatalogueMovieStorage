@@ -3,7 +3,7 @@ package com.example.cataloguemoviestorage.async;
 import android.os.AsyncTask;
 
 import com.example.cataloguemoviestorage.LoadFavoriteMoviesCallback;
-import com.example.cataloguemoviestorage.movie_database.FavouriteMovieItemsHelper;
+import com.example.cataloguemoviestorage.database.FavoriteItemsHelper;
 import com.example.cataloguemoviestorage.entity.MovieItems;
 
 import java.lang.ref.WeakReference;
@@ -14,12 +14,12 @@ public class LoadFavoriteMoviesAsync extends AsyncTask<Void, Void, ArrayList<Mov
 	// WeakReference digunakan karena AsyncTask akan dibuat dan dieksekusi scr bersamaan di method onCreate().
 	// Selain itu, ketika Activity destroyed, Activity tsb dapat dikumpulkan oleh GarbageCollector, sehingga
 	// dapat mencegah memory leak
-	final WeakReference <FavouriteMovieItemsHelper> weakFavoriteMovieItemsHelper;
+	final WeakReference <FavoriteItemsHelper> weakFavoriteMovieItemsHelper;
 	final WeakReference <LoadFavoriteMoviesCallback> weakCallback;
 	ArrayList<MovieItems> favoriteMovieItemList;
 	
-	public LoadFavoriteMoviesAsync(FavouriteMovieItemsHelper favouriteMovieItemsHelper , LoadFavoriteMoviesCallback callback){
-		weakFavoriteMovieItemsHelper = new WeakReference<>(favouriteMovieItemsHelper);
+	public LoadFavoriteMoviesAsync(FavoriteItemsHelper favoriteItemsHelper , LoadFavoriteMoviesCallback callback){
+		weakFavoriteMovieItemsHelper = new WeakReference<>(favoriteItemsHelper);
 		weakCallback = new WeakReference <>(callback);
 	}
 	
@@ -31,8 +31,8 @@ public class LoadFavoriteMoviesAsync extends AsyncTask<Void, Void, ArrayList<Mov
 	
 	@Override
 	protected ArrayList <MovieItems> doInBackground(Void... voids){
-		favoriteMovieItemList = weakFavoriteMovieItemsHelper.get().getAllFavouriteMovieItems();
-		return favoriteMovieItemList; // Memanggil query method dari {@link FavouriteMovieItemsHelper}
+		favoriteMovieItemList = weakFavoriteMovieItemsHelper.get().getAllFavoriteMovieItems();
+		return favoriteMovieItemList; // Memanggil query method dari {@link FavoriteItemsHelper}
 	}
 	
 	@Override

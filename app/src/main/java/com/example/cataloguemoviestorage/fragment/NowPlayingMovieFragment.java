@@ -23,7 +23,7 @@ import com.example.cataloguemoviestorage.LoadFavoriteMoviesCallback;
 import com.example.cataloguemoviestorage.R;
 import com.example.cataloguemoviestorage.adapter.MovieAdapter;
 import com.example.cataloguemoviestorage.async.LoadFavoriteMoviesAsync;
-import com.example.cataloguemoviestorage.movie_database.FavouriteMovieItemsHelper;
+import com.example.cataloguemoviestorage.database.FavoriteItemsHelper;
 import com.example.cataloguemoviestorage.entity.MovieItems;
 import com.example.cataloguemoviestorage.model.NowPlayingViewModel;
 import com.example.cataloguemoviestorage.support.MovieItemClickSupport;
@@ -54,7 +54,7 @@ public class NowPlayingMovieFragment extends Fragment implements LoadFavoriteMov
 	// Bikin parcelable yang berguna untuk menyimpan lalu merestore position
 	private Parcelable mNowPlayingListState = null;
 	// Helper untuk membuka koneksi ke DB
-	private FavouriteMovieItemsHelper favouriteMovieItemsHelper;
+	private FavoriteItemsHelper favoriteItemsHelper;
 	// Bikin linearlayout manager untuk dapat call onsaveinstancestate method
 	private LinearLayoutManager nowPlayingLinearLayoutManager;
 	
@@ -67,8 +67,8 @@ public class NowPlayingMovieFragment extends Fragment implements LoadFavoriteMov
 		super.onCreate(savedInstanceState);
 		
 		if(getActivity().getApplicationContext() != null){
-			favouriteMovieItemsHelper = FavouriteMovieItemsHelper.getInstance(getActivity().getApplicationContext());
-			favouriteMovieItemsHelper.open();
+			favoriteItemsHelper = FavoriteItemsHelper.getInstance(getActivity().getApplicationContext());
+			favoriteItemsHelper.open();
 		}
 		
 	}
@@ -124,7 +124,7 @@ public class NowPlayingMovieFragment extends Fragment implements LoadFavoriteMov
 			mNowPlayingListState = savedInstanceState.getParcelable(MOVIE_LIST_STATE);
 		} else{
 			// Lakukan AsyncTask utk meretrieve ArrayList yg isinya data dari database
-			new LoadFavoriteMoviesAsync(favouriteMovieItemsHelper , this).execute();
+			new LoadFavoriteMoviesAsync(favoriteItemsHelper , this).execute();
 		}
 		
 		// Dapatkan ViewModel yang tepat dari ViewModelProviders
@@ -181,7 +181,7 @@ public class NowPlayingMovieFragment extends Fragment implements LoadFavoriteMov
 		// karena ketika balik dr DetailActivity ke MainActivity,
 		// state Activity ke onResume = Fragment ke onResume juga
 		// Hal tsb berguna agar bs load kembali ke DB
-//		new LoadFavoriteMoviesAsync(favouriteMovieItemsHelper , this).execute();
+//		new LoadFavoriteMoviesAsync(favoriteItemsHelper , this).execute();
 	}
 	
 	@Override
@@ -221,7 +221,7 @@ public class NowPlayingMovieFragment extends Fragment implements LoadFavoriteMov
 					boolean changedDataState = data.getBooleanExtra(DetailActivity.EXTRA_MOVIE_CHANGED_STATE, false);
 					if(changedDataState){
 						// Execute AsyncTask kembali (todo: perlu di lakukan ato tidak idk, mungkin perlu d rapiin)
-						new LoadFavoriteMoviesAsync(favouriteMovieItemsHelper, this).execute();
+						new LoadFavoriteMoviesAsync(favoriteItemsHelper , this).execute();
 						if(getActivity().getSupportFragmentManager() != null){
 							// Dapatin position fragment dari FavoriteMovieFragment di ViewPager since ViewPager menampung list dari Fragments
 							FavoriteMovieFragment favoriteMovieFragment = (FavoriteMovieFragment) getActivity().getSupportFragmentManager().getFragments().get(2);

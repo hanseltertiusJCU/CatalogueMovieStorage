@@ -24,7 +24,7 @@ import com.example.cataloguemoviestorage.LoadFavoriteMoviesCallback;
 import com.example.cataloguemoviestorage.R;
 import com.example.cataloguemoviestorage.adapter.MovieAdapter;
 import com.example.cataloguemoviestorage.async.LoadFavoriteMoviesAsync;
-import com.example.cataloguemoviestorage.movie_database.FavouriteMovieItemsHelper;
+import com.example.cataloguemoviestorage.database.FavoriteItemsHelper;
 import com.example.cataloguemoviestorage.entity.MovieItems;
 import com.example.cataloguemoviestorage.model.UpcomingViewModel;
 import com.example.cataloguemoviestorage.support.MovieItemClickSupport;
@@ -57,7 +57,7 @@ public class UpcomingMovieFragment extends Fragment implements LoadFavoriteMovie
 	// Bikin linearlayout manager untuk dapat call onsaveinstancestate dan onrestoreinstancestate method
 	private LinearLayoutManager upcomingLinearLayoutManager;
 	// Helper untuk membuka koneksi ke DB
-	private FavouriteMovieItemsHelper favouriteMovieItemsHelper;
+	private FavoriteItemsHelper favoriteItemsHelper;
 	private Observer <ArrayList <MovieItems>> upcomingObserver;
 	
 	public UpcomingMovieFragment(){
@@ -69,8 +69,8 @@ public class UpcomingMovieFragment extends Fragment implements LoadFavoriteMovie
 		super.onCreate(savedInstanceState);
 		
 		if(getActivity().getApplicationContext() != null){
-			favouriteMovieItemsHelper = FavouriteMovieItemsHelper.getInstance(getActivity().getApplicationContext());
-			favouriteMovieItemsHelper.open();
+			favoriteItemsHelper = FavoriteItemsHelper.getInstance(getActivity().getApplicationContext());
+			favoriteItemsHelper.open();
 		}
 	}
 	
@@ -126,7 +126,7 @@ public class UpcomingMovieFragment extends Fragment implements LoadFavoriteMovie
 			mUpcomingListState = savedInstanceState.getParcelable(MOVIE_LIST_STATE);
 		} else{
 			// Lakukan AsyncTask utk meretrieve ArrayList yg isinya data dari database
-			new LoadFavoriteMoviesAsync(favouriteMovieItemsHelper , this).execute();
+			new LoadFavoriteMoviesAsync(favoriteItemsHelper , this).execute();
 		}
 		
 		// Dapatkan ViewModel yang tepat dari ViewModelProviders

@@ -19,7 +19,7 @@ import com.example.cataloguemoviestorage.LoadFavoriteMoviesCallback;
 import com.example.cataloguemoviestorage.R;
 import com.example.cataloguemoviestorage.adapter.MovieAdapter;
 import com.example.cataloguemoviestorage.async.LoadFavoriteMoviesAsync;
-import com.example.cataloguemoviestorage.movie_database.FavouriteMovieItemsHelper;
+import com.example.cataloguemoviestorage.database.FavoriteItemsHelper;
 import com.example.cataloguemoviestorage.entity.MovieItems;
 import com.example.cataloguemoviestorage.support.MovieItemClickSupport;
 
@@ -42,7 +42,7 @@ public class FavoriteMovieFragment extends Fragment implements LoadFavoriteMovie
 	@BindView(R.id.progress_bar)
 	ProgressBar progressBar;
 	// Helper untuk membuka koneksi ke DB (mesti public biar bs akses ke fragment lainnya)
-	FavouriteMovieItemsHelper favouriteMovieItemsHelper;
+	FavoriteItemsHelper favoriteItemsHelper;
 	// Array list untuk menyimpan data bedasarkan Database
 	static ArrayList <MovieItems> favMovieListData;
 	
@@ -51,8 +51,8 @@ public class FavoriteMovieFragment extends Fragment implements LoadFavoriteMovie
 		super.onCreate(savedInstanceState);
 		// Buka koneksi terhadap database ketika Fragment dibuat
 		if(getActivity().getApplicationContext() != null){
-			favouriteMovieItemsHelper = FavouriteMovieItemsHelper.getInstance(getActivity().getApplicationContext());
-			favouriteMovieItemsHelper.open();
+			favoriteItemsHelper = FavoriteItemsHelper.getInstance(getActivity().getApplicationContext());
+			favoriteItemsHelper.open();
 		}
 	}
 	
@@ -118,7 +118,7 @@ public class FavoriteMovieFragment extends Fragment implements LoadFavoriteMovie
 			}
 		} else{
 			// Lakukan AsyncTask utk meretrieve ArrayList yg isinya data dari database
-			new LoadFavoriteMoviesAsync(favouriteMovieItemsHelper , this).execute();
+			new LoadFavoriteMoviesAsync(favoriteItemsHelper , this).execute();
 		}
 	}
 	
@@ -213,7 +213,7 @@ public class FavoriteMovieFragment extends Fragment implements LoadFavoriteMovie
 					// Cek jika ada perubahan di movie item data state
 					if(changedDataState){
 						// Execute AsyncTask kembali
-						new LoadFavoriteMoviesAsync(favouriteMovieItemsHelper , this).execute();
+						new LoadFavoriteMoviesAsync(favoriteItemsHelper , this).execute();
 						// Reset scroll position ke paling atas
 						recyclerView.smoothScrollToPosition(0);
 					}
@@ -226,6 +226,6 @@ public class FavoriteMovieFragment extends Fragment implements LoadFavoriteMovie
 	public void onDestroy(){
 		super.onDestroy();
 		// Menutup koneksi terhadap SQL
-		favouriteMovieItemsHelper.close();
+		favoriteItemsHelper.close();
 	}
 }
