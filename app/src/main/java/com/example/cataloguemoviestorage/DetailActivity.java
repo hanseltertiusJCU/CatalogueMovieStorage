@@ -77,7 +77,7 @@ public class DetailActivity extends AppCompatActivity{
 	Toolbar detailedToolbar;
 	
 	// Gunakan BuildConfig untuk menjaga credential
-	private String baseImageUrl = BuildConfig.IMAGE_MOVIE_URL;
+	private String baseImageUrl = BuildConfig.POSTER_IMAGE_ITEM_URL;
 	
 	private DetailedMovieViewModel detailedMovieViewModel;
 	
@@ -184,7 +184,6 @@ public class DetailActivity extends AppCompatActivity{
 		Observer <ArrayList <MovieItems>> observer = new Observer <ArrayList <MovieItems>>(){
 			@Override
 			public void onChanged(@Nullable ArrayList <MovieItems> detailedMovieItems){
-				// todo: create if statement to handle movies and tv show
 				// Ketika data selesai di load, maka kita akan mendapatkan data dan menghilangkan progress bar
 				// yang menandakan bahwa loadingnya sudah selesai
 				detailedContentMovie.setVisibility(View.VISIBLE);
@@ -305,6 +304,7 @@ public class DetailActivity extends AppCompatActivity{
 					// Cek jika ada pergantian state dari sebuah data
 					if(changedState){
 						// Insert based on data
+						// todo: handle for movie and tv show
 						long newIdItem = favoriteItemsHelper.insertFavoriteMovieItem(detailedMovieItem);
 						if(newIdItem > 0){
 							// Bawa nilai ke intent
@@ -331,6 +331,7 @@ public class DetailActivity extends AppCompatActivity{
 					// Cek jika ada pergantian state dari sebuah data
 					if(changedState){
 						// Remove from database
+						// todo: handle for movie and tv show
 						long deletedIdItem = favoriteItemsHelper.deleteFavoriteMovieItem(detailedMovieItem.getId());
 						if(deletedIdItem > 0){
 							// Bawa nilai ke intent

@@ -11,6 +11,12 @@
     <string name="movie_release_date_text">Tanggal Rilis</string>
     <string name="movie_language_text">Bahasa</string>
 
+    <!-- Set values for TV Show data placeholder -->
+    <string name="tv_show_name_text">Nama Acara TV</string>
+    <string name="tv_show_ratings_text">Nilai</string>
+    <string name="tv_show_first_air_date_text">Tanggal Pertama Kali Keluar</string>
+    <string name="tv_show_language_text">Bahasa</string>
+
     <!-- Set action bar title -->
     <string name="search_movie">Pencarian Film</string>
     <string name="now_playing">Sedang Tayang</string>

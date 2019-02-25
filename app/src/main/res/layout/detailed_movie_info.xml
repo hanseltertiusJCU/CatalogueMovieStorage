@@ -22,8 +22,8 @@
 
     <TextView
         android:id="@+id/detailed_movie_title_text"
-        style="@style/DetailedMovieText"
-        android:textSize="@dimen/movie_detailed_title"
+        style="@style/DetailedText"
+        android:textSize="@dimen/item_detailed_title"
         android:textStyle="bold"
         android:layout_marginLeft="@dimen/inner_view_margin"
         android:layout_marginRight="@dimen/inner_view_margin"
@@ -38,7 +38,7 @@
 
     <TextView
         android:id="@+id/detailed_movie_tagline_text"
-        style="@style/DetailedMovieText"
+        style="@style/DetailedText"
         android:layout_marginLeft="@dimen/inner_view_margin"
         android:layout_marginRight="@dimen/inner_view_margin"
         android:layout_marginTop="@dimen/text_margin"
@@ -52,7 +52,7 @@
 
     <TextView
         android:id="@+id/detailed_movie_status_text"
-        style="@style/DetailedMovieText"
+        style="@style/DetailedText"
         android:layout_marginLeft="@dimen/inner_view_margin"
         android:layout_marginRight="@dimen/inner_view_margin"
         android:layout_marginTop="@dimen/text_margin"
@@ -66,7 +66,7 @@
 
     <TextView
         android:id="@+id/detailed_movie_rating_text"
-        style="@style/DetailedMovieText"
+        style="@style/DetailedText"
         android:layout_marginLeft="@dimen/inner_view_margin"
         android:layout_marginTop="@dimen/text_margin"
         android:layout_marginRight="@dimen/inner_view_margin"
@@ -82,7 +82,7 @@
 
     <TextView
         android:id="@+id/languages_spoken"
-        style="@style/DetailedMovieScrollViewTitleText"
+        style="@style/DetailedScrollViewTitleText"
         android:layout_marginStart="@dimen/inner_view_margin"
         android:layout_marginEnd="@dimen/inner_view_margin"
         android:layout_marginTop="@dimen/text_margin"
@@ -95,7 +95,7 @@
 
     <TextView
         android:id="@+id/detailed_movie_languages_text"
-        style="@style/DetailedMovieScrollViewContentText"
+        style="@style/DetailedScrollViewContentText"
         android:layout_marginStart="@dimen/inner_view_margin"
         android:layout_marginEnd="@dimen/inner_view_margin"
         android:layout_marginTop="@dimen/text_margin"
@@ -108,7 +108,7 @@
 
     <TextView
         android:id="@+id/genres"
-        style="@style/DetailedMovieScrollViewTitleText"
+        style="@style/DetailedScrollViewTitleText"
         android:layout_marginStart="@dimen/inner_view_margin"
         android:layout_marginEnd="@dimen/inner_view_margin"
         android:layout_marginTop="@dimen/text_margin"
@@ -121,7 +121,7 @@
 
     <TextView
         android:id="@+id/detailed_movie_genres_text"
-        style="@style/DetailedMovieScrollViewContentText"
+        style="@style/DetailedScrollViewContentText"
         android:layout_marginStart="@dimen/inner_view_margin"
         android:layout_marginEnd="@dimen/inner_view_margin"
         android:layout_marginTop="@dimen/text_margin"
@@ -134,7 +134,7 @@
 
     <TextView
         android:id="@+id/release_date"
-        style="@style/DetailedMovieScrollViewTitleText"
+        style="@style/DetailedScrollViewTitleText"
         android:layout_marginStart="@dimen/inner_view_margin"
         android:layout_marginEnd="@dimen/inner_view_margin"
         android:layout_marginTop="@dimen/text_margin"
@@ -147,7 +147,7 @@
 
     <TextView
         android:id="@+id/detailed_movie_release_date_text"
-        style="@style/DetailedMovieScrollViewContentText"
+        style="@style/DetailedScrollViewContentText"
         android:layout_marginStart="@dimen/inner_view_margin"
         android:layout_marginEnd="@dimen/inner_view_margin"
         android:layout_marginTop="@dimen/text_margin"
@@ -160,7 +160,7 @@
 
     <TextView
         android:id="@+id/overview"
-        style="@style/DetailedMovieScrollViewTitleText"
+        style="@style/DetailedScrollViewTitleText"
         android:layout_marginStart="@dimen/inner_view_margin"
         android:layout_marginEnd="@dimen/inner_view_margin"
         android:layout_marginTop="@dimen/text_margin"
@@ -173,7 +173,7 @@
 
     <TextView
         android:id="@+id/detailed_movie_overview_text"
-        style="@style/DetailedMovieScrollViewContentText"
+        style="@style/DetailedScrollViewContentText"
         android:layout_marginStart="@dimen/inner_view_margin"
         android:layout_marginTop="@dimen/text_margin"
         android:layout_marginEnd="@dimen/inner_view_margin"

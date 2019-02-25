@@ -30,7 +30,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
     private Context context;
 
     // Gunakan BuildConfig untuk menjaga credential
-    private String baseImageUrl = BuildConfig.IMAGE_MOVIE_URL;
+    private String baseImageUrl = BuildConfig.POSTER_IMAGE_ITEM_URL;
 
     public MovieAdapter(Context context) {
         this.context = context;
