@@ -239,4 +239,38 @@ public class TvShowFragment extends Fragment implements LoadFavoriteTvShowCallba
 		};
 	}
 	
+	@Override
+	public void onActivityResult(int requestCode , int resultCode , Intent data){
+		super.onActivityResult(requestCode , resultCode , data);
+		if(data != null){
+			// Check for correct request code
+			if(requestCode == DetailActivity.REQUEST_CHANGE){
+				// Check for result code
+				if(resultCode == DetailActivity.RESULT_CHANGE){
+					// Tambahkan item ke adapter dan reset scroll position ke paling atas
+					boolean changedDataState = data.getBooleanExtra(DetailActivity.EXTRA_CHANGED_STATE , false);
+					// Cek jika value dari changedDataState itu true
+					if(changedDataState){
+						if(getActivity().getSupportFragmentManager() != null){
+							// Dapatin position fragment dari FavoriteTvShowFragment di ViewPager since ViewPager menampung list dari Fragments
+							FavoriteTvShowFragment favoriteTvShowFragment = (FavoriteTvShowFragment) getActivity().getSupportFragmentManager().getFragments().get(3);
+							// Cek jika favoriteTvShowFragment itu ada
+							if(favoriteTvShowFragment != null){
+								// Komunikasi dengan FavoriteMovieFragment dengan memanggil onActivityResult method di FavoriteTvShowFragment
+								favoriteTvShowFragment.onActivityResult(requestCode, resultCode, data);
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	@Override
+	public void onDestroy(){
+		super.onDestroy();
+		// Menutup koneksi terhadap SQL
+		favoriteItemsHelper.close();
+	}
+	
 }

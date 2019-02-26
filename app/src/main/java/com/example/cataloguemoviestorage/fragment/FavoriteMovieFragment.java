@@ -34,6 +34,8 @@ public class FavoriteMovieFragment extends Fragment implements LoadFavoriteMovie
 	public static final String MOVIE_ID_DATA = "MOVIE_ID_DATA";
 	public static final String MOVIE_TITLE_DATA = "MOVIE_TITLE_DATA";
 	public static final String MOVIE_BOOLEAN_STATE_DATA = "MOVIE_BOOLEAN_STATE_DATA";
+	// Constant untuk represent mode agar membuka data tertentu
+	public static final String MODE_INTENT = "mode_intent";
 	// Bikin constant (key) yang merepresent Parcelable object
 	private static final String MOVIE_LIST_STATE = "movieListState";
 	@BindView(R.id.rv_movie_item_list)
@@ -41,7 +43,7 @@ public class FavoriteMovieFragment extends Fragment implements LoadFavoriteMovie
 	MovieAdapter movieAdapter;
 	@BindView(R.id.progress_bar)
 	ProgressBar progressBar;
-	// Helper untuk membuka koneksi ke DB (mesti public biar bs akses ke fragment lainnya)
+	// Helper untuk membuka koneksi ke DB
 	FavoriteItemsHelper favoriteItemsHelper;
 	// Array list untuk menyimpan data bedasarkan Database
 	static ArrayList <MovieItems> favMovieListData;
@@ -142,6 +144,9 @@ public class FavoriteMovieFragment extends Fragment implements LoadFavoriteMovie
 				}
 			}
 		}
+		// Tentukan bahwa kita ingin membuka data Movie
+		String modeItem = "open_movie_detail";
+		
 		// Initiate intent
 		Intent intentWithMovieIdData = new Intent(getActivity() , DetailActivity.class);
 		// Bawa data untuk disampaikan ke {@link DetailActivity}
@@ -151,6 +156,7 @@ public class FavoriteMovieFragment extends Fragment implements LoadFavoriteMovie
 		if(favMovieListData.size() > 0){
 			intentWithMovieIdData.putExtra(MOVIE_BOOLEAN_STATE_DATA, favMovieListData.get(itemPosition).getFavoriteBooleanState());
 		}
+		intentWithMovieIdData.putExtra(MODE_INTENT, modeItem);
 		// Start activity tujuan bedasarkan intent object
 		startActivityForResult(intentWithMovieIdData, DetailActivity.REQUEST_CHANGE);
 	}
