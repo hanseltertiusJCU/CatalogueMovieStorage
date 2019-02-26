@@ -42,7 +42,7 @@ public class TvShowViewModel extends AndroidViewModel{
 	public class TvShowLiveData extends LiveData <ArrayList <TvShowItem>>{
 		private final Context context;
 		
-		public TvShowLiveData(Context context){
+		TvShowLiveData(Context context){
 			this.context = context;
 			loadTvShowLiveData();
 		}

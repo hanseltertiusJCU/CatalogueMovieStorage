@@ -6,9 +6,20 @@ import android.os.Parcelable;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-public class MovieItems implements Parcelable {
+public class MovieItem implements Parcelable {
 	
-	// Nilai dari value untuk MovieItems
+	public static final Creator<MovieItem> CREATOR = new Creator<MovieItem>() {
+		@Override
+		public MovieItem createFromParcel(Parcel in) {
+			return new MovieItem(in);
+		}
+		
+		@Override
+		public MovieItem[] newArray(int size) {
+			return new MovieItem[size];
+		}
+	};
+	// Nilai dari value untuk MovieItem
 	private int id;
 	private String movieTitle;
 	private String movieTagline;
@@ -27,8 +38,7 @@ public class MovieItems implements Parcelable {
 	private boolean isMovieFavorite;
 	private int favoriteBooleanState;
 	
-	
-	public MovieItems(JSONObject object, boolean isMovieDetailed) {
+	public MovieItem(JSONObject object, boolean isMovieDetailed) {
 		// Cek jika app berada di section DetailActivity agar dapat mengakses URL Movie Details
 		if(isMovieDetailed) {
 			try {
@@ -142,8 +152,26 @@ public class MovieItems implements Parcelable {
 		}
 	}
 	
-	public MovieItems() {
+	public MovieItem() {
 	
+	}
+	
+	protected MovieItem(Parcel in) {
+		id = in.readInt();
+		movieTitle = in.readString();
+		movieTagline = in.readString();
+		movieStatus = in.readString();
+		movieRatings = in.readString();
+		movieRatingsVote = in.readString();
+		movieOriginalLanguage = in.readString();
+		movieLanguages = in.readString();
+		movieGenres = in.readString();
+		movieReleaseDate = in.readString();
+		movieOverview = in.readString();
+		moviePosterPath = in.readString();
+		dateAddedFavorite = in.readString();
+		isMovieFavorite = in.readByte() != 0;
+		favoriteBooleanState = in.readInt();
 	}
 	
 	public int getId() {
@@ -303,34 +331,4 @@ public class MovieItems implements Parcelable {
 		dest.writeByte((byte) (isMovieFavorite?1:0));
 		dest.writeInt(favoriteBooleanState);
 	}
-	
-	protected MovieItems(Parcel in) {
-		id = in.readInt();
-		movieTitle = in.readString();
-		movieTagline = in.readString();
-		movieStatus = in.readString();
-		movieRatings = in.readString();
-		movieRatingsVote = in.readString();
-		movieOriginalLanguage = in.readString();
-		movieLanguages = in.readString();
-		movieGenres = in.readString();
-		movieReleaseDate = in.readString();
-		movieOverview = in.readString();
-		moviePosterPath = in.readString();
-		dateAddedFavorite = in.readString();
-		isMovieFavorite = in.readByte() != 0;
-		favoriteBooleanState = in.readInt();
-	}
-	
-	public static final Creator<MovieItems> CREATOR = new Creator<MovieItems>() {
-		@Override
-		public MovieItems createFromParcel(Parcel in) {
-			return new MovieItems(in);
-		}
-		
-		@Override
-		public MovieItems[] newArray(int size) {
-			return new MovieItems[size];
-		}
-	};
 }

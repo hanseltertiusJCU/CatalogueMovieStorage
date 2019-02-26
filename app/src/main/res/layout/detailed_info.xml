@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -23,16 +22,16 @@
     <TextView
         android:id="@+id/detailed_first_info_text"
         style="@style/DetailedText"
+        android:layout_marginLeft="@dimen/inner_view_margin"
+        android:layout_marginTop="@dimen/text_margin"
+        android:layout_marginRight="@dimen/inner_view_margin"
         android:textSize="@dimen/item_detailed_title"
         android:textStyle="bold"
-        android:layout_marginLeft="@dimen/inner_view_margin"
-        android:layout_marginRight="@dimen/inner_view_margin"
-        android:layout_marginTop="@dimen/text_margin"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/detailed_poster_image"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/detailed_second_info_text"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/detailed_poster_image"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_weight="1"
         tools:text="@string/detailed_movie_title_text" />
 
@@ -40,13 +39,13 @@
         android:id="@+id/detailed_second_info_text"
         style="@style/DetailedText"
         android:layout_marginLeft="@dimen/inner_view_margin"
-        android:layout_marginRight="@dimen/inner_view_margin"
         android:layout_marginTop="@dimen/text_margin"
-        app:layout_constraintTop_toBottomOf="@+id/detailed_first_info_text"
-        app:layout_constraintStart_toEndOf="@+id/detailed_poster_image"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginRight="@dimen/inner_view_margin"
         app:layout_constraintBottom_toTopOf="@+id/detailed_third_info_text"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/detailed_poster_image"
+        app:layout_constraintTop_toBottomOf="@+id/detailed_first_info_text"
         app:layout_constraintVertical_weight="1"
         tools:text="@string/detailed_movie_tagline_text" />
 
@@ -54,13 +53,13 @@
         android:id="@+id/detailed_third_info_text"
         style="@style/DetailedText"
         android:layout_marginLeft="@dimen/inner_view_margin"
-        android:layout_marginRight="@dimen/inner_view_margin"
         android:layout_marginTop="@dimen/text_margin"
-        app:layout_constraintTop_toBottomOf="@+id/detailed_second_info_text"
-        app:layout_constraintStart_toEndOf="@+id/detailed_poster_image"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginRight="@dimen/inner_view_margin"
         app:layout_constraintBottom_toTopOf="@+id/detailed_fourth_info_text"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/detailed_poster_image"
+        app:layout_constraintTop_toBottomOf="@+id/detailed_second_info_text"
         app:layout_constraintVertical_weight="1"
         tools:text="@string/detailed_movie_status_text" />
 
@@ -84,21 +83,21 @@
         android:id="@+id/detailed_fifth_info_title"
         style="@style/DetailedScrollViewTitleText"
         android:layout_marginStart="@dimen/inner_view_margin"
-        android:layout_marginEnd="@dimen/inner_view_margin"
         android:layout_marginTop="@dimen/text_margin"
-        tools:text="@string/detailed_movie_languages_title"
+        android:layout_marginEnd="@dimen/inner_view_margin"
         app:layout_constraintBottom_toTopOf="@+id/detailed_fifth_info_text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/detailed_poster_image" />
+        app:layout_constraintTop_toBottomOf="@+id/detailed_poster_image"
+        tools:text="@string/detailed_movie_languages_title" />
 
     <TextView
         android:id="@+id/detailed_fifth_info_text"
         style="@style/DetailedScrollViewContentText"
         android:layout_marginStart="@dimen/inner_view_margin"
-        android:layout_marginEnd="@dimen/inner_view_margin"
         android:layout_marginTop="@dimen/text_margin"
+        android:layout_marginEnd="@dimen/inner_view_margin"
         app:layout_constraintBottom_toTopOf="@+id/detailed_sixth_info_title"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -110,21 +109,21 @@
         android:id="@+id/detailed_sixth_info_title"
         style="@style/DetailedScrollViewTitleText"
         android:layout_marginStart="@dimen/inner_view_margin"
-        android:layout_marginEnd="@dimen/inner_view_margin"
         android:layout_marginTop="@dimen/text_margin"
-        tools:text="@string/detailed_movie_genres_title"
+        android:layout_marginEnd="@dimen/inner_view_margin"
         app:layout_constraintBottom_toTopOf="@+id/detailed_sixth_info_text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/detailed_fifth_info_text" />
+        app:layout_constraintTop_toBottomOf="@+id/detailed_fifth_info_text"
+        tools:text="@string/detailed_movie_genres_title" />
 
     <TextView
         android:id="@+id/detailed_sixth_info_text"
         style="@style/DetailedScrollViewContentText"
         android:layout_marginStart="@dimen/inner_view_margin"
-        android:layout_marginEnd="@dimen/inner_view_margin"
         android:layout_marginTop="@dimen/text_margin"
+        android:layout_marginEnd="@dimen/inner_view_margin"
         app:layout_constraintBottom_toTopOf="@+id/detailed_seventh_info_title"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -136,21 +135,21 @@
         android:id="@+id/detailed_seventh_info_title"
         style="@style/DetailedScrollViewTitleText"
         android:layout_marginStart="@dimen/inner_view_margin"
-        android:layout_marginEnd="@dimen/inner_view_margin"
         android:layout_marginTop="@dimen/text_margin"
-        tools:text="@string/detailed_movie_release_date_title"
+        android:layout_marginEnd="@dimen/inner_view_margin"
         app:layout_constraintBottom_toTopOf="@+id/detailed_seventh_info_text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/detailed_sixth_info_text" />
+        app:layout_constraintTop_toBottomOf="@+id/detailed_sixth_info_text"
+        tools:text="@string/detailed_movie_release_date_title" />
 
     <TextView
         android:id="@+id/detailed_seventh_info_text"
         style="@style/DetailedScrollViewContentText"
         android:layout_marginStart="@dimen/inner_view_margin"
-        android:layout_marginEnd="@dimen/inner_view_margin"
         android:layout_marginTop="@dimen/text_margin"
+        android:layout_marginEnd="@dimen/inner_view_margin"
         app:layout_constraintBottom_toTopOf="@+id/detailed_eighth_info_title"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -162,14 +161,14 @@
         android:id="@+id/detailed_eighth_info_title"
         style="@style/DetailedScrollViewTitleText"
         android:layout_marginStart="@dimen/inner_view_margin"
-        android:layout_marginEnd="@dimen/inner_view_margin"
         android:layout_marginTop="@dimen/text_margin"
-        tools:text="@string/detailed_movie_overview_title"
+        android:layout_marginEnd="@dimen/inner_view_margin"
         app:layout_constraintBottom_toTopOf="@+id/detailed_eighth_info_text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/detailed_seventh_info_text" />
+        app:layout_constraintTop_toBottomOf="@+id/detailed_seventh_info_text"
+        tools:text="@string/detailed_movie_overview_title" />
 
     <TextView
         android:id="@+id/detailed_eighth_info_text"

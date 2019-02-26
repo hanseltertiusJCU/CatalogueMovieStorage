@@ -16,7 +16,7 @@ import android.widget.TextView;
 
 import com.example.cataloguemoviestorage.BuildConfig;
 import com.example.cataloguemoviestorage.R;
-import com.example.cataloguemoviestorage.entity.MovieItems;
+import com.example.cataloguemoviestorage.entity.MovieItem;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -26,17 +26,14 @@ import butterknife.ButterKnife;
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> {
 	
-	private ArrayList<MovieItems> mMovieData = new ArrayList<>();
+	private ArrayList<MovieItem> mMovieData = new ArrayList<>();
 	private Context context;
-	
-	// Gunakan BuildConfig untuk menjaga credential
-	private String baseImageUrl = BuildConfig.POSTER_IMAGE_ITEM_URL;
 	
 	public MovieAdapter(Context context) {
 		this.context = context;
 	}
 	
-	public ArrayList<MovieItems> getmMovieData() {
+	public ArrayList<MovieItem> getmMovieData() {
 		return mMovieData;
 	}
 	
@@ -44,7 +41,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
 		return context;
 	}
 	
-	public void setData(ArrayList<MovieItems> mData) {
+	public void setData(ArrayList<MovieItem> mData) {
 		
 		// Jika ada data di parameter, maka clear isi data di ArrayList global variable
 		if(mData.size() > 0) {
@@ -74,6 +71,8 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
 	@Override
 	public void onBindViewHolder(@NonNull MovieViewHolder movieViewHolder, int position) {
 		// Load image jika ada poster path
+		// Gunakan BuildConfig untuk menjaga credential
+		String baseImageUrl = BuildConfig.POSTER_IMAGE_ITEM_URL;
 		Picasso.get().load(baseImageUrl + mMovieData.get(position).getMoviePosterPath()).into(movieViewHolder.imageViewMoviePoster);
 		
 		movieViewHolder.textViewMovieTitle.setText(mMovieData.get(position).getMovieTitle());
@@ -115,7 +114,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
 	}
 	
 	// Kelas ini berguna untuk menampung view yang ada tanpa mendeclare view di sebuah Adapter
-	public class MovieViewHolder extends RecyclerView.ViewHolder {
+	class MovieViewHolder extends RecyclerView.ViewHolder {
 		@BindView(R.id.poster_image)
 		ImageView imageViewMoviePoster;
 		@BindView(R.id.movie_title_text)
@@ -128,7 +127,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
 		TextView textViewMovieOriginalLanguage;
 		
 		// Assign view di dalam constructor
-		public MovieViewHolder(@NonNull View itemView) {
+		MovieViewHolder(@NonNull View itemView) {
 			super(itemView);
 			ButterKnife.bind(this, itemView);
 		}

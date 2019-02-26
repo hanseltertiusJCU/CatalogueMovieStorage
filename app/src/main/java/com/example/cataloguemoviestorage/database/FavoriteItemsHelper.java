@@ -7,7 +7,7 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.example.cataloguemoviestorage.entity.MovieItems;
+import com.example.cataloguemoviestorage.entity.MovieItem;
 import com.example.cataloguemoviestorage.entity.TvShowItem;
 
 import java.util.ArrayList;
@@ -26,7 +26,7 @@ public class FavoriteItemsHelper {
 	private static SQLiteDatabase favoriteDatabase;
 	
 	// Constructor untuk FavoriteItemsHelper
-	public FavoriteItemsHelper(Context context) {
+	private FavoriteItemsHelper(Context context) {
 		favoriteDatabaseHelper = new FavoriteDatabaseHelper(context);
 	}
 	
@@ -57,8 +57,8 @@ public class FavoriteItemsHelper {
 	}
 	
 	// Method untuk read data dari DB dengan menggunakan SQLiteDatabase query method (table movie item)
-	public ArrayList<MovieItems> getAllFavoriteMovieItems() {
-		ArrayList<MovieItems> favoriteMovieItemsArrayList = new ArrayList<>();
+	public ArrayList<MovieItem> getAllFavoriteMovieItems() {
+		ArrayList<MovieItem> favoriteMovieItemArrayList = new ArrayList<>();
 		
 		// Call SQLiteDatabase query method dgn sort Date Added Column in descending order (most recent to least recent)
 		Cursor cursor = favoriteDatabase.query(DATABASE_MOVIE_TABLE,
@@ -71,22 +71,22 @@ public class FavoriteItemsHelper {
 				null);
 		// Memindahkan Cursor ke baris pertama
 		cursor.moveToFirst();
-		// Initialize variable yg return MovieItems
-		MovieItems movieItems;
+		// Initialize variable yg return MovieItem
+		MovieItem movieItem;
 		if(cursor.getCount() > 0) {
 			do {
-				movieItems = new MovieItems();
-				// Insert value ke MovieItems bedasarkan table yg ada di FavoriteMovieItemColumns
-				movieItems.setId(cursor.getInt(cursor.getColumnIndexOrThrow(FavoriteDatabaseContract.FavoriteMovieItemColumns._ID)));
-				movieItems.setMovieTitle(cursor.getString(cursor.getColumnIndexOrThrow(FavoriteDatabaseContract.FavoriteMovieItemColumns.TITLE_COLUMN)));
-				movieItems.setMovieRatings(cursor.getString(cursor.getColumnIndexOrThrow(FavoriteDatabaseContract.FavoriteMovieItemColumns.RATINGS_COLUMN)));
-				movieItems.setMovieOriginalLanguage(cursor.getString(cursor.getColumnIndexOrThrow(FavoriteDatabaseContract.FavoriteMovieItemColumns.ORIGINAL_LANGUAGE_COLUMN)));
-				movieItems.setMovieReleaseDate(cursor.getString(cursor.getColumnIndexOrThrow(FavoriteDatabaseContract.FavoriteMovieItemColumns.RELEASE_DATE_COLUMN)));
-				movieItems.setMoviePosterPath(cursor.getString(cursor.getColumnIndexOrThrow(FavoriteDatabaseContract.FavoriteMovieItemColumns.FILE_PATH_COLUMN)));
-				movieItems.setDateAddedFavorite(cursor.getString(cursor.getColumnIndexOrThrow(FavoriteDatabaseContract.FavoriteMovieItemColumns.DATE_ADDED_COLUMN)));
-				movieItems.setMovieFavorite(cursor.getInt(cursor.getColumnIndexOrThrow(FavoriteDatabaseContract.FavoriteMovieItemColumns.FAVORITE_COLUMN)) == movieItems.getFavoriteBooleanState()); // movieitems getfavoritestate
+				movieItem = new MovieItem();
+				// Insert value ke MovieItem bedasarkan table yg ada di FavoriteMovieItemColumns
+				movieItem.setId(cursor.getInt(cursor.getColumnIndexOrThrow(FavoriteDatabaseContract.FavoriteMovieItemColumns._ID)));
+				movieItem.setMovieTitle(cursor.getString(cursor.getColumnIndexOrThrow(FavoriteDatabaseContract.FavoriteMovieItemColumns.TITLE_COLUMN)));
+				movieItem.setMovieRatings(cursor.getString(cursor.getColumnIndexOrThrow(FavoriteDatabaseContract.FavoriteMovieItemColumns.RATINGS_COLUMN)));
+				movieItem.setMovieOriginalLanguage(cursor.getString(cursor.getColumnIndexOrThrow(FavoriteDatabaseContract.FavoriteMovieItemColumns.ORIGINAL_LANGUAGE_COLUMN)));
+				movieItem.setMovieReleaseDate(cursor.getString(cursor.getColumnIndexOrThrow(FavoriteDatabaseContract.FavoriteMovieItemColumns.RELEASE_DATE_COLUMN)));
+				movieItem.setMoviePosterPath(cursor.getString(cursor.getColumnIndexOrThrow(FavoriteDatabaseContract.FavoriteMovieItemColumns.FILE_PATH_COLUMN)));
+				movieItem.setDateAddedFavorite(cursor.getString(cursor.getColumnIndexOrThrow(FavoriteDatabaseContract.FavoriteMovieItemColumns.DATE_ADDED_COLUMN)));
+				movieItem.setMovieFavorite(cursor.getInt(cursor.getColumnIndexOrThrow(FavoriteDatabaseContract.FavoriteMovieItemColumns.FAVORITE_COLUMN)) == movieItem.getFavoriteBooleanState()); // movieitems getfavoritestate
 				// Add movie item data ke ArrayList
-				favoriteMovieItemsArrayList.add(movieItems);
+				favoriteMovieItemArrayList.add(movieItem);
 				// Memindahkan Cursor ke baris selanjutnya
 				cursor.moveToNext();
 				
@@ -96,22 +96,22 @@ public class FavoriteItemsHelper {
 		
 		// Close the Cursor
 		cursor.close();
-		return favoriteMovieItemsArrayList;
+		return favoriteMovieItemArrayList;
 	}
 	
 	// Method untuk insert data ke DB dengan menggunakan SQLiteDatabase insert method (table movie item)
-	public long insertFavoriteMovieItem(MovieItems movieItems) {
+	public long insertFavoriteMovieItem(MovieItem movieItem) {
 		// Create ContentValues object
 		ContentValues movieItemValues = new ContentValues();
 		// Insert value ke ContentValues object
-		movieItemValues.put(FavoriteDatabaseContract.FavoriteMovieItemColumns._ID, movieItems.getId());
-		movieItemValues.put(FavoriteDatabaseContract.FavoriteMovieItemColumns.TITLE_COLUMN, movieItems.getMovieTitle());
-		movieItemValues.put(FavoriteDatabaseContract.FavoriteMovieItemColumns.RATINGS_COLUMN, movieItems.getMovieRatings());
-		movieItemValues.put(FavoriteDatabaseContract.FavoriteMovieItemColumns.ORIGINAL_LANGUAGE_COLUMN, movieItems.getMovieOriginalLanguage());
-		movieItemValues.put(FavoriteDatabaseContract.FavoriteMovieItemColumns.RELEASE_DATE_COLUMN, movieItems.getMovieReleaseDate());
-		movieItemValues.put(FavoriteDatabaseContract.FavoriteMovieItemColumns.FILE_PATH_COLUMN, movieItems.getMoviePosterPath());
-		movieItemValues.put(FavoriteDatabaseContract.FavoriteMovieItemColumns.DATE_ADDED_COLUMN, movieItems.getDateAddedFavorite());
-		movieItemValues.put(FavoriteDatabaseContract.FavoriteMovieItemColumns.FAVORITE_COLUMN, movieItems.getFavoriteBooleanState());
+		movieItemValues.put(FavoriteDatabaseContract.FavoriteMovieItemColumns._ID, movieItem.getId());
+		movieItemValues.put(FavoriteDatabaseContract.FavoriteMovieItemColumns.TITLE_COLUMN, movieItem.getMovieTitle());
+		movieItemValues.put(FavoriteDatabaseContract.FavoriteMovieItemColumns.RATINGS_COLUMN, movieItem.getMovieRatings());
+		movieItemValues.put(FavoriteDatabaseContract.FavoriteMovieItemColumns.ORIGINAL_LANGUAGE_COLUMN, movieItem.getMovieOriginalLanguage());
+		movieItemValues.put(FavoriteDatabaseContract.FavoriteMovieItemColumns.RELEASE_DATE_COLUMN, movieItem.getMovieReleaseDate());
+		movieItemValues.put(FavoriteDatabaseContract.FavoriteMovieItemColumns.FILE_PATH_COLUMN, movieItem.getMoviePosterPath());
+		movieItemValues.put(FavoriteDatabaseContract.FavoriteMovieItemColumns.DATE_ADDED_COLUMN, movieItem.getDateAddedFavorite());
+		movieItemValues.put(FavoriteDatabaseContract.FavoriteMovieItemColumns.FAVORITE_COLUMN, movieItem.getFavoriteBooleanState());
 		// Execute SQLiteDatabase insert method
 		return favoriteDatabase.insert(DATABASE_MOVIE_TABLE, null, movieItemValues);
 	}

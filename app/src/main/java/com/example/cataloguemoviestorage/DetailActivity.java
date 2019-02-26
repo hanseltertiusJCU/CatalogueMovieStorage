@@ -16,7 +16,6 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,11 +25,11 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.cataloguemoviestorage.database.FavoriteItemsHelper;
+import com.example.cataloguemoviestorage.entity.MovieItem;
 import com.example.cataloguemoviestorage.entity.TvShowItem;
 import com.example.cataloguemoviestorage.factory.DetailedMovieViewModelFactory;
 import com.example.cataloguemoviestorage.factory.DetailedTvShowViewModelFactory;
 import com.example.cataloguemoviestorage.fragment.MovieFragment;
-import com.example.cataloguemoviestorage.entity.MovieItems;
 import com.example.cataloguemoviestorage.fragment.TvShowFragment;
 import com.example.cataloguemoviestorage.model.DetailedMovieViewModel;
 import com.example.cataloguemoviestorage.model.DetailedTvShowViewModel;
@@ -97,14 +96,6 @@ public class DetailActivity extends AppCompatActivity{
 	
 	// Gunakan BuildConfig untuk menjaga credential
 	private String baseImageUrl = BuildConfig.POSTER_IMAGE_ITEM_URL;
-	// Buat ViewModel untuk detailedMovieInfo
-	private DetailedMovieViewModel detailedMovieViewModel;
-	// Buat Observer untuk detailedMovieInfo
-	private Observer <ArrayList <MovieItems>> detailedMovieObserver;
-	// Buat ViewModel untuk detailedTvShowInfo
-	private DetailedTvShowViewModel detailedTvShowViewModel;
-	// Buat Observer untuk detailedTvShowInfo
-	private Observer <ArrayList <TvShowItem>> detailedTvShowObserver;
 	
 	// Constant untuk key dri drawable dan boolean state
 	private static final String KEY_DRAWABLE_MARKED_AS_FAVORITE_STATE = "drawable_favorite_state";
@@ -112,8 +103,8 @@ public class DetailActivity extends AppCompatActivity{
 	// Drawable Global variable to handle orientation changes
 	private int drawableMenuMarkedAsFavouriteResourceId;
 	
-	// Initiate MovieItems class untuk mengotak-atik value dr sebuah item di MovieItems class
-	private MovieItems detailedMovieItem;
+	// Initiate MovieItem class untuk mengotak-atik value dr sebuah item di MovieItem class
+	private MovieItem detailedMovieItem;
 	// Initiate TvShowItem class untuk mengotak-atik value dr sebuah item di TvShowItem class
 	private TvShowItem detailedTvShowItem;
 	
@@ -127,11 +118,6 @@ public class DetailActivity extends AppCompatActivity{
 	
 	// Constant untuk dibawa ke FavoriteMovieFragment ataupun FavoriteTvShowFragment
 	public static final String EXTRA_CHANGED_STATE = "extra_changed_state";
-	
-	private Intent resultIntent;
-	
-	// Boolean untuk mengetahui apakah state dari movie item itu berganti atau tidak
-	private boolean changedState;
 	
 	// String value untuk mengetahui mode data yg dibuka
 	private String accessItemMode;
@@ -192,16 +178,20 @@ public class DetailActivity extends AppCompatActivity{
 		// Mode untuk menangani ViewModel yg berbeda
 		if(accessItemMode.equals("open_movie_detail")){
 			// Panggil MovieViewModel dengan menggunakan ViewModelFactory sebagai parameter tambahan (dan satu-satunya pilihan) selain activity
-			detailedMovieViewModel = ViewModelProviders.of(this , new DetailedMovieViewModelFactory(this.getApplication() , detailedMovieId)).get(DetailedMovieViewModel.class);
+			// Buat ViewModel untuk detailedMovieInfo
+			DetailedMovieViewModel detailedMovieViewModel = ViewModelProviders.of(this, new DetailedMovieViewModelFactory(this.getApplication(), detailedMovieId)).get(DetailedMovieViewModel.class);
 			// Buat observer object untuk mendisplay data ke UI
-			detailedMovieObserver = createDetailedMovieObserver();
+			// Buat Observer untuk detailedMovieInfo
+			Observer<ArrayList<MovieItem>> detailedMovieObserver = createDetailedMovieObserver();
 			// Tempelkan Observer ke LiveData object
 			detailedMovieViewModel.getDetailedMovie().observe(this , detailedMovieObserver);
 		} else if(accessItemMode.equals("open_tv_show_detail")){
 			// Panggil MovieViewModel dengan menggunakan ViewModelFactory sebagai parameter tambahan (dan satu-satunya pilihan) selain activity
-			detailedTvShowViewModel = ViewModelProviders.of(this , new DetailedTvShowViewModelFactory(this.getApplication() , detailedTvShowId)).get(DetailedTvShowViewModel.class);
+			// Buat ViewModel untuk detailedTvShowInfo
+			DetailedTvShowViewModel detailedTvShowViewModel = ViewModelProviders.of(this, new DetailedTvShowViewModelFactory(this.getApplication(), detailedTvShowId)).get(DetailedTvShowViewModel.class);
 			// Buat observer object untuk mendisplay data ke UI
-			detailedTvShowObserver = createDetailedTvShowObserver();
+			// Buat Observer untuk detailedTvShowInfo
+			Observer<ArrayList<TvShowItem>> detailedTvShowObserver = createDetailedTvShowObserver();
 			// Tempelkan Observer ke LiveData object
 			detailedTvShowViewModel.getDetailedTvShow().observe(this , detailedTvShowObserver);
 			
@@ -234,81 +224,83 @@ public class DetailActivity extends AppCompatActivity{
 		});
 	}
 	
-	private Observer <ArrayList <MovieItems>> createDetailedMovieObserver(){
-		Observer <ArrayList <MovieItems>> observer = new Observer <ArrayList <MovieItems>>(){
+	private Observer <ArrayList <MovieItem>> createDetailedMovieObserver(){
+		return new Observer <ArrayList <MovieItem>>(){
 			@Override
-			public void onChanged(@Nullable ArrayList <MovieItems> detailedMovieItems){
+			public void onChanged(@Nullable ArrayList <MovieItem> detailedMovieItems){
 				// Ketika data selesai di load, maka kita akan mendapatkan data dan menghilangkan progress bar
 				// yang menandakan bahwa loadingnya sudah selesai
 				detailedContent.setVisibility(View.VISIBLE);
 				detailedProgressBar.setVisibility(View.GONE);
 				
-				// Set semua data ke dalam detail activity
-				// Load image jika ada poster path
-				Picasso.get().load(baseImageUrl + detailedMovieItems.get(0).getMoviePosterPath()).into(imageViewDetailedPosterImage);
-				
-				textViewDetailedFirstInfoText.setText(detailedMovieItems.get(0).getMovieTitle());
-				
-				textViewDetailedSecondInfoText.setText("\"" + detailedMovieItems.get(0).getMovieTagline() + "\"");
-				
-				// Set textview content in detailed movie runtime to contain a variety of different colors
-				Spannable statusWord = new SpannableString(getString(R.string.span_movie_detail_status) + " ");
-				statusWord.setSpan(new ForegroundColorSpan(Color.BLACK) , 0 , statusWord.length() , Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-				textViewDetailedThirdInfoText.setText(statusWord);
-				Spannable statusDetailedMovie = new SpannableString(detailedMovieItems.get(0).getMovieStatus());
-				statusDetailedMovie.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorAccent)) , 0 , statusDetailedMovie.length() , Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-				textViewDetailedThirdInfoText.append(statusDetailedMovie);
-				
-				// Set textview content in detailed movie rating to contain a variety of different colors
-				Spannable ratingWord = new SpannableString(getString(R.string.span_movie_detail_rating) + " ");
-				ratingWord.setSpan(new ForegroundColorSpan(Color.BLACK) , 0 , ratingWord.length() , Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-				textViewDetailedFourthInfoText.setText(ratingWord);
-				Spannable ratingDetailedMovie = new SpannableString(detailedMovieItems.get(0).getMovieRatings());
-				ratingDetailedMovie.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorAccent)) , 0 , ratingDetailedMovie.length() , Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-				textViewDetailedFourthInfoText.append(ratingDetailedMovie);
-				
-				Spannable ratingFromWord = new SpannableString(" " + getString(R.string.span_movie_detail_from) + " ");
-				ratingFromWord.setSpan(new ForegroundColorSpan(Color.BLACK) , 0 , ratingFromWord.length() , Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-				textViewDetailedFourthInfoText.append(ratingFromWord);
-				
-				Spannable ratingDetailedMovieVotes = new SpannableString(detailedMovieItems.get(0).getMovieRatingsVote());
-				ratingDetailedMovieVotes.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorAccent)) , 0 , ratingDetailedMovieVotes.length() , Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-				textViewDetailedFourthInfoText.append(ratingDetailedMovieVotes);
-				
-				Spannable ratingVotesWord = new SpannableString(" " + getString(R.string.span_movie_detail_votes));
-				ratingVotesWord.setSpan(new ForegroundColorSpan(Color.BLACK) , 0 , ratingVotesWord.length() , Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-				textViewDetailedFourthInfoText.append(ratingVotesWord);
-				
-				textViewDetailedFifthInfoTitle.setText(getString(R.string.detailed_movie_languages_title));
-				
-				textViewDetailedFifthInfoText.setText(detailedMovieItems.get(0).getMovieLanguages());
-				
-				textViewDetailedSixthInfoTitle.setText(getString(R.string.detailed_movie_genres_title));
-				
-				textViewDetailedSixthInfoText.setText(detailedMovieItems.get(0).getMovieGenres());
-				
-				textViewDetailedSeventhInfoTitle.setText(getString(R.string.detailed_movie_release_date_title));
-				
-				textViewDetailedSeventhInfoText.setText(detailedMovieItems.get(0).getMovieReleaseDate());
-				
-				textViewDetailedEighthInfoTitle.setText(getString(R.string.detailed_movie_overview_title));
-				
-				textViewDetailedEighthInfoText.setText(detailedMovieItems.get(0).getMovieOverview());
-				
-				// Set value dari Item bedasarkan parameter lalu akses object pertama
-				detailedMovieItem = detailedMovieItems.get(0);
-				// Set menu clickable into true, literally setelah asynctask kelar,
-				// maka menu bs d click
-				menuClickable = true;
-				// Update option menu to recall onPrepareOptionMenu method
-				invalidateOptionsMenu();
+				if(detailedMovieItems != null){
+					// Set semua data ke dalam detail activity
+					// Load image jika ada poster path
+					Picasso.get().load(baseImageUrl + detailedMovieItems.get(0).getMoviePosterPath()).into(imageViewDetailedPosterImage);
+					
+					textViewDetailedFirstInfoText.setText(detailedMovieItems.get(0).getMovieTitle());
+					
+					textViewDetailedSecondInfoText.setText("\"" + detailedMovieItems.get(0).getMovieTagline() + "\"");
+					
+					// Set textview content in detailed movie runtime to contain a variety of different colors
+					Spannable statusWord = new SpannableString(getString(R.string.span_movie_detail_status) + " ");
+					statusWord.setSpan(new ForegroundColorSpan(Color.BLACK) , 0 , statusWord.length() , Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+					textViewDetailedThirdInfoText.setText(statusWord);
+					Spannable statusDetailedMovie = new SpannableString(detailedMovieItems.get(0).getMovieStatus());
+					statusDetailedMovie.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorAccent)) , 0 , statusDetailedMovie.length() , Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+					textViewDetailedThirdInfoText.append(statusDetailedMovie);
+					
+					// Set textview content in detailed movie rating to contain a variety of different colors
+					Spannable ratingWord = new SpannableString(getString(R.string.span_movie_detail_rating) + " ");
+					ratingWord.setSpan(new ForegroundColorSpan(Color.BLACK) , 0 , ratingWord.length() , Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+					textViewDetailedFourthInfoText.setText(ratingWord);
+					Spannable ratingDetailedMovie = new SpannableString(detailedMovieItems.get(0).getMovieRatings());
+					ratingDetailedMovie.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorAccent)) , 0 , ratingDetailedMovie.length() , Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+					textViewDetailedFourthInfoText.append(ratingDetailedMovie);
+					
+					Spannable ratingFromWord = new SpannableString(" " + getString(R.string.span_movie_detail_from) + " ");
+					ratingFromWord.setSpan(new ForegroundColorSpan(Color.BLACK) , 0 , ratingFromWord.length() , Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+					textViewDetailedFourthInfoText.append(ratingFromWord);
+					
+					Spannable ratingDetailedMovieVotes = new SpannableString(detailedMovieItems.get(0).getMovieRatingsVote());
+					ratingDetailedMovieVotes.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorAccent)) , 0 , ratingDetailedMovieVotes.length() , Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+					textViewDetailedFourthInfoText.append(ratingDetailedMovieVotes);
+					
+					Spannable ratingVotesWord = new SpannableString(" " + getString(R.string.span_movie_detail_votes));
+					ratingVotesWord.setSpan(new ForegroundColorSpan(Color.BLACK) , 0 , ratingVotesWord.length() , Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+					textViewDetailedFourthInfoText.append(ratingVotesWord);
+					
+					textViewDetailedFifthInfoTitle.setText(getString(R.string.detailed_movie_languages_title));
+					
+					textViewDetailedFifthInfoText.setText(detailedMovieItems.get(0).getMovieLanguages());
+					
+					textViewDetailedSixthInfoTitle.setText(getString(R.string.detailed_movie_genres_title));
+					
+					textViewDetailedSixthInfoText.setText(detailedMovieItems.get(0).getMovieGenres());
+					
+					textViewDetailedSeventhInfoTitle.setText(getString(R.string.detailed_movie_release_date_title));
+					
+					textViewDetailedSeventhInfoText.setText(detailedMovieItems.get(0).getMovieReleaseDate());
+					
+					textViewDetailedEighthInfoTitle.setText(getString(R.string.detailed_movie_overview_title));
+					
+					textViewDetailedEighthInfoText.setText(detailedMovieItems.get(0).getMovieOverview());
+					
+					// Set value dari Item bedasarkan parameter lalu akses object pertama
+					detailedMovieItem = detailedMovieItems.get(0);
+					// Set menu clickable into true, literally setelah asynctask kelar,
+					// maka menu bs d click
+					menuClickable = true;
+					// Update option menu to recall onPrepareOptionMenu method
+					invalidateOptionsMenu();
+				}
 			}
 		};
-		return observer;
 	}
 	
 	private Observer <ArrayList <TvShowItem>> createDetailedTvShowObserver(){
-		Observer <ArrayList <TvShowItem>> observer = new Observer <ArrayList <TvShowItem>>(){
+		
+		return new Observer <ArrayList <TvShowItem>>(){
 			@Override
 			public void onChanged(@Nullable ArrayList <TvShowItem> detailedTvShowItems){
 				// Ketika data selesai di load, maka kita akan mendapatkan data dan menghilangkan progress bar
@@ -316,67 +308,67 @@ public class DetailActivity extends AppCompatActivity{
 				detailedContent.setVisibility(View.VISIBLE);
 				detailedProgressBar.setVisibility(View.GONE);
 				
-				// Set semua data ke dalam detail activity
-				// Load image jika ada poster path
-				Picasso.get().load(baseImageUrl + detailedTvShowItems.get(0).getTvShowPosterPath()).into(imageViewDetailedPosterImage);
-				
-				textViewDetailedFirstInfoText.setText(detailedTvShowItems.get(0).getTvShowName());
-				
-				Spannable seasonsWord = new SpannableString(getString(R.string.span_tv_show_detail_number_of_seasons) + " ");
-				seasonsWord.setSpan(new ForegroundColorSpan(Color.BLACK) , 0 , seasonsWord.length() , Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-				textViewDetailedSecondInfoText.setText(seasonsWord);
-				Spannable seasonsDetailedTvShow = new SpannableString(detailedTvShowItems.get(0).getTvShowSeasons());
-				seasonsDetailedTvShow.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorAccent)) , 0 , seasonsDetailedTvShow.length() , Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-				textViewDetailedSecondInfoText.append(seasonsDetailedTvShow);
-				
-				// Set textview content in detailed movie runtime to contain a variety of different colors
-				Spannable episodesWord = new SpannableString(getString(R.string.span_tv_show_detail_number_of_episodes) + " ");
-				episodesWord.setSpan(new ForegroundColorSpan(Color.BLACK) , 0 , episodesWord.length() , Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-				textViewDetailedThirdInfoText.setText(episodesWord);
-				Spannable episodesDetailedMovie = new SpannableString(detailedTvShowItems.get(0).getTvShowEpisodes());
-				episodesDetailedMovie.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorAccent)) , 0 , episodesDetailedMovie.length() , Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-				textViewDetailedThirdInfoText.append(episodesDetailedMovie);
-				
-				// Set textview content in detailed movie rating to contain a variety of different colors
-				Spannable ratingWord = new SpannableString(getString(R.string.span_tv_show_detail_rating) + " ");
-				ratingWord.setSpan(new ForegroundColorSpan(Color.BLACK) , 0 , ratingWord.length() , Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-				textViewDetailedFourthInfoText.setText(ratingWord);
-				Spannable tvShowDetailedMovie = new SpannableString(detailedTvShowItems.get(0).getTvShowRatings());
-				tvShowDetailedMovie.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorAccent)) , 0 , tvShowDetailedMovie.length() , Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-				textViewDetailedFourthInfoText.append(tvShowDetailedMovie);
-				Spannable ratingFromWord = new SpannableString(" " + getString(R.string.span_tv_show_detail_from) + " ");
-				ratingFromWord.setSpan(new ForegroundColorSpan(Color.BLACK) , 0 , ratingFromWord.length() , Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-				textViewDetailedFourthInfoText.append(ratingFromWord);
-				Spannable ratingDetailedTvShowVotes = new SpannableString(detailedTvShowItems.get(0).getTvShowRatingsVote());
-				ratingDetailedTvShowVotes.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorAccent)) , 0 , ratingDetailedTvShowVotes.length() , Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-				textViewDetailedFourthInfoText.append(ratingDetailedTvShowVotes);
-				Spannable ratingVotesWord = new SpannableString(" " + getString(R.string.span_tv_show_detail_votes));
-				ratingVotesWord.setSpan(new ForegroundColorSpan(Color.BLACK) , 0 , ratingVotesWord.length() , Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-				textViewDetailedFourthInfoText.append(ratingVotesWord);
-				
-				textViewDetailedFifthInfoTitle.setText(getString(R.string.detailed_tv_show_networks_title));
-				textViewDetailedFifthInfoText.setText(detailedTvShowItems.get(0).getTvShowNetworks());
-				
-				textViewDetailedSixthInfoTitle.setText(getString(R.string.detailed_tv_show_genres_title));
-				textViewDetailedSixthInfoText.setText(detailedTvShowItems.get(0).getTvShowGenres());
-				
-				textViewDetailedSeventhInfoTitle.setText(getString(R.string.detailed_tv_show_first_air_date_title));
-				textViewDetailedSeventhInfoText.setText(detailedTvShowItems.get(0).getTvShowFirstAirDate());
-				
-				textViewDetailedEighthInfoTitle.setText(getString(R.string.detailed_tv_show_overview_title));
-				textViewDetailedEighthInfoText.setText(detailedTvShowItems.get(0).getTvShowOverview());
-				
-				// Set value dari Item bedasarkan parameter lalu akses object pertama
-				detailedTvShowItem = detailedTvShowItems.get(0);
-				// Set menu clickable into true, literally setelah asynctask kelar,
-				// maka menu bs d click
-				menuClickable = true;
-				// Update option menu to recall onPrepareOptionMenu method
-				invalidateOptionsMenu();
+				if(detailedTvShowItems != null){
+					// Set semua data ke dalam detail activity
+					// Load image jika ada poster path
+					Picasso.get().load(baseImageUrl + detailedTvShowItems.get(0).getTvShowPosterPath()).into(imageViewDetailedPosterImage);
+					
+					textViewDetailedFirstInfoText.setText(detailedTvShowItems.get(0).getTvShowName());
+					
+					Spannable seasonsWord = new SpannableString(getString(R.string.span_tv_show_detail_number_of_seasons) + " ");
+					seasonsWord.setSpan(new ForegroundColorSpan(Color.BLACK) , 0 , seasonsWord.length() , Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+					textViewDetailedSecondInfoText.setText(seasonsWord);
+					Spannable seasonsDetailedTvShow = new SpannableString(detailedTvShowItems.get(0).getTvShowSeasons());
+					seasonsDetailedTvShow.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorAccent)) , 0 , seasonsDetailedTvShow.length() , Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+					textViewDetailedSecondInfoText.append(seasonsDetailedTvShow);
+					
+					// Set textview content in detailed movie runtime to contain a variety of different colors
+					Spannable episodesWord = new SpannableString(getString(R.string.span_tv_show_detail_number_of_episodes) + " ");
+					episodesWord.setSpan(new ForegroundColorSpan(Color.BLACK) , 0 , episodesWord.length() , Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+					textViewDetailedThirdInfoText.setText(episodesWord);
+					Spannable episodesDetailedMovie = new SpannableString(detailedTvShowItems.get(0).getTvShowEpisodes());
+					episodesDetailedMovie.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorAccent)) , 0 , episodesDetailedMovie.length() , Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+					textViewDetailedThirdInfoText.append(episodesDetailedMovie);
+					
+					// Set textview content in detailed movie rating to contain a variety of different colors
+					Spannable ratingWord = new SpannableString(getString(R.string.span_tv_show_detail_rating) + " ");
+					ratingWord.setSpan(new ForegroundColorSpan(Color.BLACK) , 0 , ratingWord.length() , Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+					textViewDetailedFourthInfoText.setText(ratingWord);
+					Spannable tvShowDetailedMovie = new SpannableString(detailedTvShowItems.get(0).getTvShowRatings());
+					tvShowDetailedMovie.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorAccent)) , 0 , tvShowDetailedMovie.length() , Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+					textViewDetailedFourthInfoText.append(tvShowDetailedMovie);
+					Spannable ratingFromWord = new SpannableString(" " + getString(R.string.span_tv_show_detail_from) + " ");
+					ratingFromWord.setSpan(new ForegroundColorSpan(Color.BLACK) , 0 , ratingFromWord.length() , Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+					textViewDetailedFourthInfoText.append(ratingFromWord);
+					Spannable ratingDetailedTvShowVotes = new SpannableString(detailedTvShowItems.get(0).getTvShowRatingsVote());
+					ratingDetailedTvShowVotes.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorAccent)) , 0 , ratingDetailedTvShowVotes.length() , Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+					textViewDetailedFourthInfoText.append(ratingDetailedTvShowVotes);
+					Spannable ratingVotesWord = new SpannableString(" " + getString(R.string.span_tv_show_detail_votes));
+					ratingVotesWord.setSpan(new ForegroundColorSpan(Color.BLACK) , 0 , ratingVotesWord.length() , Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+					textViewDetailedFourthInfoText.append(ratingVotesWord);
+					
+					textViewDetailedFifthInfoTitle.setText(getString(R.string.detailed_tv_show_networks_title));
+					textViewDetailedFifthInfoText.setText(detailedTvShowItems.get(0).getTvShowNetworks());
+					
+					textViewDetailedSixthInfoTitle.setText(getString(R.string.detailed_tv_show_genres_title));
+					textViewDetailedSixthInfoText.setText(detailedTvShowItems.get(0).getTvShowGenres());
+					
+					textViewDetailedSeventhInfoTitle.setText(getString(R.string.detailed_tv_show_first_air_date_title));
+					textViewDetailedSeventhInfoText.setText(detailedTvShowItems.get(0).getTvShowFirstAirDate());
+					
+					textViewDetailedEighthInfoTitle.setText(getString(R.string.detailed_tv_show_overview_title));
+					textViewDetailedEighthInfoText.setText(detailedTvShowItems.get(0).getTvShowOverview());
+					
+					// Set value dari Item bedasarkan parameter lalu akses object pertama
+					detailedTvShowItem = detailedTvShowItems.get(0);
+					// Set menu clickable into true, literally setelah asynctask kelar,
+					// maka menu bs d click
+					menuClickable = true;
+					// Update option menu to recall onPrepareOptionMenu method
+					invalidateOptionsMenu();
+				}
 			}
 		};
-		
-		return observer;
 	}
 	
 	@Override
@@ -426,7 +418,9 @@ public class DetailActivity extends AppCompatActivity{
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item){
 		// Create new Intent object
-		resultIntent = new Intent();
+		Intent resultIntent = new Intent();
+		// Boolean untuk mengetahui apakah state dari movie item itu berganti atau tidak
+		boolean changedState;
 		switch(item.getItemId()){
 			case R.id.action_marked_as_favorite:
 				if(accessItemMode.equals("open_movie_detail")){ // Cek jika mode yg dibuka itu berada di Movie

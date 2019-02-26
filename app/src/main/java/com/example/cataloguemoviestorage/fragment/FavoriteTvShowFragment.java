@@ -41,11 +41,11 @@ public class FavoriteTvShowFragment extends Fragment implements LoadFavoriteTvSh
 	static ArrayList<TvShowItem> favTvShowListData;
 	@BindView(R.id.rv_tv_shows_item_list)
 	RecyclerView recyclerView;
-	private TvShowAdapter tvShowAdapter;
 	@BindView(R.id.progress_bar)
 	ProgressBar progressBar;
+	private TvShowAdapter tvShowAdapter;
 	// Helper untuk membuka koneksi ke DB
-	FavoriteItemsHelper favoriteItemsHelper;
+	private FavoriteItemsHelper favoriteItemsHelper;
 	
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -101,7 +101,7 @@ public class FavoriteTvShowFragment extends Fragment implements LoadFavoriteTvSh
 		super.onActivityCreated(savedInstanceState);
 		// Cek jika bundle savedInstanceState itu ada
 		if(savedInstanceState != null) {
-			// Retrieve array list parcelable
+			// Retrieve array list parcelable untuk retrieve scroll position
 			final ArrayList<TvShowItem> tvShowItemsList = savedInstanceState.getParcelableArrayList(TV_SHOW_LIST_STATE);
 			
 			if(tvShowItemsList != null) {
@@ -162,9 +162,9 @@ public class FavoriteTvShowFragment extends Fragment implements LoadFavoriteTvSh
 		} else {
 			// Ketika tidak ada data untuk display, set RecyclerView ke
 			// invisible dan progress bar menjadi tidak ada
-			tvShowAdapter.setTvShowData(tvShowItems);
-			recyclerView.setVisibility(View.INVISIBLE);
 			progressBar.setVisibility(View.GONE);
+			recyclerView.setVisibility(View.INVISIBLE);
+			tvShowAdapter.setTvShowData(tvShowItems);
 		}
 	}
 	
@@ -205,7 +205,6 @@ public class FavoriteTvShowFragment extends Fragment implements LoadFavoriteTvSh
 		// REQUEST_CHANGE untuk onActivityResult
 		startActivityForResult(intentWithTvShowIdData, DetailActivity.REQUEST_CHANGE);
 	}
-	
 	
 	
 	@Override

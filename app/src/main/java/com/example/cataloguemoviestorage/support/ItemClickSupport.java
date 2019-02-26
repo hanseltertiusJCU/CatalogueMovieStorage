@@ -22,26 +22,25 @@ public class ItemClickSupport{
 		}
 	};
 	
-	// Attach on click listener to recyclerview
-	private RecyclerView.OnChildAttachStateChangeListener mAttachListener = new RecyclerView.OnChildAttachStateChangeListener(){
-		@Override
-		public void onChildViewAttachedToWindow(@NonNull View view){
-			if(mOnItemClickListener != null){
-				view.setOnClickListener(mOnClickListener);
-			}
-		}
-		
-		@Override
-		public void onChildViewDetachedFromWindow(@NonNull View view){
-		
-		}
-	};
-	
 	// Create constructor that set tag to recyclerview
 	// as well as attach listener to recyclerview items
 	private ItemClickSupport(RecyclerView recyclerView){
 		mRecyclerView = recyclerView;
 		mRecyclerView.setTag(R.id.item_click_support , this);
+		// Attach on click listener to recyclerview
+		RecyclerView.OnChildAttachStateChangeListener mAttachListener = new RecyclerView.OnChildAttachStateChangeListener() {
+			@Override
+			public void onChildViewAttachedToWindow(@NonNull View view) {
+				if(mOnItemClickListener != null) {
+					view.setOnClickListener(mOnClickListener);
+				}
+			}
+			
+			@Override
+			public void onChildViewDetachedFromWindow(@NonNull View view) {
+			
+			}
+		};
 		mRecyclerView.addOnChildAttachStateChangeListener(mAttachListener);
 	}
 	

@@ -9,7 +9,7 @@ import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 
 import com.example.cataloguemoviestorage.BuildConfig;
-import com.example.cataloguemoviestorage.entity.MovieItems;
+import com.example.cataloguemoviestorage.entity.MovieItem;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.SyncHttpClient;
 
@@ -22,7 +22,7 @@ import cz.msebera.android.httpclient.Header;
 
 public class MovieViewModel extends AndroidViewModel{
 	
-	// Create object yang mengextend LiveData<ArrayList<MovieItems>>
+	// Create object yang mengextend LiveData<ArrayList<MovieItem>>
 	private MovieLiveData movieLiveData;
 	
 	// akses informasi penting dari BuildConfig untuk menjaga credential
@@ -35,17 +35,17 @@ public class MovieViewModel extends AndroidViewModel{
 		movieLiveData = new MovieLiveData(application);
 	}
 	
-	// Getter method untuk mereturn LiveData yang berisi ArrayList<MovieItems>
-	public LiveData <ArrayList <MovieItems>> getMovies(){
+	// Getter method untuk mereturn LiveData yang berisi ArrayList<MovieItem>
+	public LiveData <ArrayList <MovieItem>> getMovies(){
 		return movieLiveData;
 	}
 	
 	// Create class LiveData untuk menampung ViewModel
-	public class MovieLiveData extends LiveData <ArrayList <MovieItems>>{
+	public class MovieLiveData extends LiveData <ArrayList <MovieItem>>{
 		private final Context context;
 		
 		// Set constructor dari LiveData
-		public MovieLiveData(Context context){
+		MovieLiveData(Context context){
 			this.context = context;
 			loadMovieLiveData();
 		}
@@ -55,14 +55,14 @@ public class MovieViewModel extends AndroidViewModel{
 		@SuppressLint("StaticFieldLeak")
 		private void loadMovieLiveData(){
 			
-			new AsyncTask <Void, Void, ArrayList <MovieItems>>(){
+			new AsyncTask <Void, Void, ArrayList <MovieItem>>(){
 				@Override
-				protected ArrayList <MovieItems> doInBackground(Void... voids){
+				protected ArrayList <MovieItem> doInBackground(Void... voids){
 					
 					// Menginisiasikan SyncHttpClientObject krn Loader itu sudah berjalan pada background thread
 					SyncHttpClient syncHttpClient = new SyncHttpClient();
 					
-					final ArrayList <MovieItems> movieItemses = new ArrayList <>();
+					final ArrayList <MovieItem> movieItemses = new ArrayList <>();
 					
 					String movieUrl = discoverMovieUrlBase + apiKey + languageUs;
 					syncHttpClient.get(movieUrl , new AsyncHttpResponseHandler(){
@@ -76,11 +76,11 @@ public class MovieViewModel extends AndroidViewModel{
 								for(int i = 0 ; i < results.length() ; i++){
 									JSONObject movie = results.getJSONObject(i);
 									boolean detailedItem = false;
-									MovieItems movieItems = new MovieItems(movie , detailedItem);
+									MovieItem movieItem = new MovieItem(movie , detailedItem);
 									// Cek jika posterPath itu tidak "null" karena null dr JSON itu berupa
 									// String, sehingga perlu menggunakan "" di dalam null
-									if(! movieItems.getMoviePosterPath().equals("null")){
-										movieItemses.add(movieItems);
+									if(! movieItem.getMoviePosterPath().equals("null")){
+										movieItemses.add(movieItem);
 									}
 								}
 							} catch(Exception e){
@@ -90,7 +90,7 @@ public class MovieViewModel extends AndroidViewModel{
 						
 						@Override
 						public void onFailure(int statusCode , Header[] headers , byte[] responseBody , Throwable error){
-							// Do nothing jika responsenya itu tidak berhasil (todo: mungkin show failure to load or something)
+							// Do nothing jika responsenya itu tidak berhasil
 						}
 					});
 					
@@ -98,7 +98,7 @@ public class MovieViewModel extends AndroidViewModel{
 				}
 				
 				@Override
-				protected void onPostExecute(ArrayList <MovieItems> movieItems){
+				protected void onPostExecute(ArrayList <MovieItem> movieItems){
 					// Set value dari Observer yang berisi ArrayList yang merupakan
 					// hasil dari doInBackground method
 					setValue(movieItems);

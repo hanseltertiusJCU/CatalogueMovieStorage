@@ -20,10 +20,11 @@ import com.example.cataloguemoviestorage.R;
 import com.example.cataloguemoviestorage.adapter.MovieAdapter;
 import com.example.cataloguemoviestorage.async.LoadFavoriteMoviesAsync;
 import com.example.cataloguemoviestorage.database.FavoriteItemsHelper;
-import com.example.cataloguemoviestorage.entity.MovieItems;
+import com.example.cataloguemoviestorage.entity.MovieItem;
 import com.example.cataloguemoviestorage.support.ItemClickSupport;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -39,7 +40,7 @@ public class FavoriteMovieFragment extends Fragment implements LoadFavoriteMovie
 	// Bikin constant (key) yang merepresent Parcelable object
 	private static final String MOVIE_LIST_STATE = "movieListState";
 	// Array list untuk menyimpan data bedasarkan Database
-	static ArrayList<MovieItems> favMovieListData;
+	static ArrayList<MovieItem> favMovieListData;
 	@BindView(R.id.rv_movie_item_list)
 	RecyclerView recyclerView;
 	MovieAdapter movieAdapter;
@@ -52,7 +53,7 @@ public class FavoriteMovieFragment extends Fragment implements LoadFavoriteMovie
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		// Buka koneksi terhadap database ketika Fragment dibuat
-		if(getActivity().getApplicationContext() != null) {
+		if(Objects.requireNonNull(getActivity()).getApplicationContext() != null) {
 			favoriteItemsHelper = FavoriteItemsHelper.getInstance(getActivity().getApplicationContext());
 			favoriteItemsHelper.open();
 		}
@@ -90,7 +91,7 @@ public class FavoriteMovieFragment extends Fragment implements LoadFavoriteMovie
 		if(getContext() != null) {
 			// Buat object DividerItemDecoration dan set drawable untuk DividerItemDecoration
 			DividerItemDecoration itemDecorator = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
-			itemDecorator.setDrawable(ContextCompat.getDrawable(getContext(), R.drawable.item_divider));
+			itemDecorator.setDrawable(Objects.requireNonNull(ContextCompat.getDrawable(getContext(), R.drawable.item_divider)));
 			// Set divider untuk RecyclerView items
 			recyclerView.addItemDecoration(itemDecorator);
 		}
@@ -102,27 +103,27 @@ public class FavoriteMovieFragment extends Fragment implements LoadFavoriteMovie
 		// Cek jika bundle savedInstanceState itu ada
 		if(savedInstanceState != null) {
 			// Retrieve array list parcelable
-			final ArrayList<MovieItems> movieItemsList = savedInstanceState.getParcelableArrayList(MOVIE_LIST_STATE);
+			final ArrayList<MovieItem> movieItemList = savedInstanceState.getParcelableArrayList(MOVIE_LIST_STATE);
 			
-			if(movieItemsList != null) {
-				if(movieItemsList.size() > 0) {
+			if(movieItemList != null) {
+				if(movieItemList.size() > 0) {
 					// Hilangkan progress bar agar tidak ada progress bar lagi setelah d rotate
 					progressBar.setVisibility(View.GONE);
 					recyclerView.setVisibility(View.VISIBLE);
 					// Set data ke adapter
-					movieAdapter.setData(movieItemsList);
+					movieAdapter.setData(movieItemList);
 					// Set item click listener di dalam recycler view agar item tsb dapat di click
 					ItemClickSupport.addSupportToView(recyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
 						@Override
 						public void onItemClicked(RecyclerView recyclerView, int position, View view) {
 							// Panggil method showSelectedMovieItems untuk mengakses DetailActivity bedasarkan data yang ada
-							showSelectedMovieItems(movieItemsList.get(position));
+							showSelectedMovieItems(movieItemList.get(position));
 						}
 					});
 				} else {
 					// Ketika tidak ada data untuk display, set RecyclerView ke
 					// invisible dan progress bar menjadi tidak ada
-					movieAdapter.setData(movieItemsList);
+					movieAdapter.setData(movieItemList);
 					progressBar.setVisibility(View.GONE);
 					recyclerView.setVisibility(View.INVISIBLE);
 				}
@@ -134,10 +135,10 @@ public class FavoriteMovieFragment extends Fragment implements LoadFavoriteMovie
 	}
 	
 	// Method tsb berguna untuk membawa value dari Intent ke Activity tujuan serta memanggil Activity tujuan
-	private void showSelectedMovieItems(MovieItems movieItems) {
+	private void showSelectedMovieItems(MovieItem movieItem) {
 		// Dapatkan id dan title bedasarkan item di ArrayList
-		int movieIdItem = movieItems.getId();
-		String movieTitleItem = movieItems.getMovieTitle();
+		int movieIdItem = movieItem.getId();
+		String movieTitleItem = movieItem.getMovieTitle();
 		// Item position untuk mengakses arraylist specific position
 		int itemPosition = 0;
 		
@@ -180,7 +181,7 @@ public class FavoriteMovieFragment extends Fragment implements LoadFavoriteMovie
 	}
 	
 	@Override
-	public void postExecute(final ArrayList<MovieItems> movieItems) {
+	public void postExecute(final ArrayList<MovieItem> movieItems) {
 		// Bikin ArrayList global variable sama dengan hasil dari AsyncTask class
 		favMovieListData = movieItems;
 		if(movieItems.size() > 0) {

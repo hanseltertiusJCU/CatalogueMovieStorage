@@ -17,18 +17,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
-
 import com.example.cataloguemoviestorage.DetailActivity;
 import com.example.cataloguemoviestorage.LoadFavoriteMoviesCallback;
 import com.example.cataloguemoviestorage.R;
 import com.example.cataloguemoviestorage.adapter.MovieAdapter;
 import com.example.cataloguemoviestorage.async.LoadFavoriteMoviesAsync;
 import com.example.cataloguemoviestorage.database.FavoriteItemsHelper;
-import com.example.cataloguemoviestorage.entity.MovieItems;
+import com.example.cataloguemoviestorage.entity.MovieItem;
 import com.example.cataloguemoviestorage.model.MovieViewModel;
 import com.example.cataloguemoviestorage.support.ItemClickSupport;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -48,11 +48,9 @@ public class MovieFragment extends Fragment implements LoadFavoriteMoviesCallbac
 	private static final String MOVIE_LIST_STATE = "movieListState";
 	@BindView(R.id.rv_movie_item_list)
 	RecyclerView recyclerView;
-	private MovieAdapter movieAdapter;
 	@BindView(R.id.progress_bar)
 	ProgressBar progressBar;
-	private Observer<ArrayList<MovieItems>> movieObserver;
-	private MovieViewModel movieViewModel;
+	private MovieAdapter movieAdapter;
 	// Bikin parcelable yang berguna untuk menyimpan lalu merestore position
 	private Parcelable mMovieListState = null;
 	// Helper untuk membuka koneksi ke DB
@@ -67,8 +65,8 @@ public class MovieFragment extends Fragment implements LoadFavoriteMoviesCallbac
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
-		if(getActivity().getApplicationContext() != null) {
+		// Cek jika ada ApplicationContext, jika ada maka buka koneksi ke ItemHelper
+		if(Objects.requireNonNull(getActivity()).getApplicationContext() != null) {
 			favoriteItemsHelper = FavoriteItemsHelper.getInstance(getActivity().getApplicationContext());
 			favoriteItemsHelper.open();
 		}
@@ -76,7 +74,7 @@ public class MovieFragment extends Fragment implements LoadFavoriteMoviesCallbac
 	}
 	
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
 							 Bundle savedInstanceState) {
 		// Inflate the layout for this fragment
 		View view = inflater.inflate(R.layout.fragment_movie, container, false);
@@ -85,13 +83,8 @@ public class MovieFragment extends Fragment implements LoadFavoriteMoviesCallbac
 	}
 	
 	@Override
-	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-		
-		// Initiate movie adapter
-		movieAdapter = new MovieAdapter(getContext());
-		// Notify when data changed into adapter
-		movieAdapter.notifyDataSetChanged();
 		
 		// Set LinearLayoutManager object value dengan memanggil LinearLayoutManager constructor
 		movieLinearLayoutManager = new LinearLayoutManager(getContext());
@@ -99,6 +92,12 @@ public class MovieFragment extends Fragment implements LoadFavoriteMoviesCallbac
 		recyclerView.setHasFixedSize(true);
 		// Kita menggunakan LinearLayoutManager berorientasi vertical untuk RecyclerView
 		recyclerView.setLayoutManager(movieLinearLayoutManager);
+		
+		// Initiate movie adapter
+		movieAdapter = new MovieAdapter(getContext());
+		// Notify when data changed into adapter
+		movieAdapter.notifyDataSetChanged();
+		
 		// Set empty adapter agar dapat di rotate
 		recyclerView.setAdapter(movieAdapter);
 		
@@ -108,7 +107,7 @@ public class MovieFragment extends Fragment implements LoadFavoriteMoviesCallbac
 		if(getContext() != null) {
 			// Buat object DividerItemDecoration dan set drawable untuk DividerItemDecoration
 			DividerItemDecoration itemDecorator = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
-			itemDecorator.setDrawable(ContextCompat.getDrawable(getContext(), R.drawable.item_divider));
+			itemDecorator.setDrawable(Objects.requireNonNull(ContextCompat.getDrawable(getContext(), R.drawable.item_divider)));
 			// Set divider untuk RecyclerView items
 			recyclerView.addItemDecoration(itemDecorator);
 		}
@@ -132,20 +131,20 @@ public class MovieFragment extends Fragment implements LoadFavoriteMoviesCallbac
 		}
 		
 		// Dapatkan ViewModel yang tepat dari ViewModelProviders
-		movieViewModel = ViewModelProviders.of(this).get(MovieViewModel.class);
+		MovieViewModel movieViewModel = ViewModelProviders.of(this).get(MovieViewModel.class);
 		
 		// Panggil method createObserver untuk return Observer object
-		movieObserver = createObserver();
+		Observer<ArrayList<MovieItem>> movieObserver = createObserver();
 		
 		// Tempelkan Observer ke LiveData object
 		movieViewModel.getMovies().observe(this, movieObserver);
 		
 	}
 	
-	private void showSelectedMovieItems(MovieItems movieItems) {
+	private void showSelectedMovieItems(MovieItem movieItem) {
 		// Dapatkan id dan title bedasarkan ListView item
-		int movieIdItem = movieItems.getId();
-		String movieTitleItem = movieItems.getMovieTitle();
+		int movieIdItem = movieItem.getId();
+		String movieTitleItem = movieItem.getMovieTitle();
 		// Item position untuk mengakses arraylist specific position
 		int itemPosition = 0;
 		// if statement untuk tahu bahwa idnya itu termasuk d dalam tabel ato tidak, looping pake arraylist
@@ -207,7 +206,7 @@ public class MovieFragment extends Fragment implements LoadFavoriteMoviesCallbac
 	}
 	
 	@Override
-	public void postExecute(ArrayList<MovieItems> movieItems) {
+	public void postExecute(ArrayList<MovieItem> movieItems) {
 		// Bikin ArrayList global variable sama dengan hasil dari AsyncTask class
 		FavoriteMovieFragment.favMovieListData = movieItems;
 	}
@@ -224,7 +223,7 @@ public class MovieFragment extends Fragment implements LoadFavoriteMoviesCallbac
 					boolean changedDataState = data.getBooleanExtra(DetailActivity.EXTRA_CHANGED_STATE, false);
 					// Cek jika value dari changedDataState itu true
 					if(changedDataState) {
-						if(getActivity().getSupportFragmentManager() != null) {
+						if(Objects.requireNonNull(getActivity()).getSupportFragmentManager() != null) {
 							// Dapatin position fragment dari FavoriteMovieFragment di ViewPager since ViewPager menampung list dari Fragments
 							FavoriteMovieFragment favoriteMovieFragment = (FavoriteMovieFragment) getActivity().getSupportFragmentManager().getFragments().get(2);
 							// Cek jika favoriteMovieFragment itu ada
@@ -241,28 +240,26 @@ public class MovieFragment extends Fragment implements LoadFavoriteMoviesCallbac
 	
 	
 	// Method tsb berguna untuk membuat observer
-	public Observer<ArrayList<MovieItems>> createObserver() {
+	public Observer<ArrayList<MovieItem>> createObserver() {
 		// Buat Observer yang gunanya untuk update UI
-		return new Observer<ArrayList<MovieItems>>() {
+		return new Observer<ArrayList<MovieItem>>() {
 			@Override
-			public void onChanged(@Nullable final ArrayList<MovieItems> movieItems) {
-				// Set LinearLayoutManager object value dengan memanggil LinearLayoutManager constructor
-				movieLinearLayoutManager = new LinearLayoutManager(getContext());
-				// Kita menggunakan LinearLayoutManager berorientasi vertical untuk RecyclerView
-				recyclerView.setLayoutManager(movieLinearLayoutManager);
+			public void onChanged(@Nullable final ArrayList<MovieItem> movieItems) {
 				// Ketika data selesai di load, maka kita akan mendapatkan data dan menghilangkan progress bar
 				// yang menandakan bahwa loadingnya sudah selesai
 				recyclerView.setVisibility(View.VISIBLE);
 				progressBar.setVisibility(View.GONE);
+				// Set data ke adapter
 				movieAdapter.setData(movieItems);
-				recyclerView.setAdapter(movieAdapter);
 				// Set item click listener di dalam recycler view
 				ItemClickSupport.addSupportToView(recyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
 					// Implement interface method
 					@Override
 					public void onItemClicked(RecyclerView recyclerView, int position, View view) {
 						// Panggil method showSelectedMovieItems untuk mengakses DetailActivity bedasarkan data yang ada
-						showSelectedMovieItems(movieItems.get(position));
+						if(movieItems != null) {
+							showSelectedMovieItems(movieItems.get(position));
+						}
 					}
 				});
 			}

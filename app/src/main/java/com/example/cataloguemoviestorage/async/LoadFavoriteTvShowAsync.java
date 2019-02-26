@@ -14,9 +14,8 @@ public class LoadFavoriteTvShowAsync extends AsyncTask<Void, Void, ArrayList<TvS
 	// WeakReference digunakan karena AsyncTask akan dibuat dan dieksekusi scr bersamaan di method onCreate().
 	// Selain itu, ketika Activity destroyed, Activity tsb dapat dikumpulkan oleh GarbageCollector, sehingga
 	// dapat mencegah memory leak
-	final WeakReference<FavoriteItemsHelper> weakFavoriteTvShowItemsHelper;
-	final WeakReference<LoadFavoriteTvShowCallback> weakCallback;
-	ArrayList<TvShowItem> favoriteTvShowItemList;
+	private final WeakReference<FavoriteItemsHelper> weakFavoriteTvShowItemsHelper;
+	private final WeakReference<LoadFavoriteTvShowCallback> weakCallback;
 	
 	public LoadFavoriteTvShowAsync(FavoriteItemsHelper favoriteItemsHelper, LoadFavoriteTvShowCallback callback) {
 		weakFavoriteTvShowItemsHelper = new WeakReference<>(favoriteItemsHelper);
@@ -31,8 +30,7 @@ public class LoadFavoriteTvShowAsync extends AsyncTask<Void, Void, ArrayList<TvS
 	
 	@Override
 	protected ArrayList<TvShowItem> doInBackground(Void... voids) {
-		favoriteTvShowItemList = weakFavoriteTvShowItemsHelper.get().getAllFavoriteTvShowItems();
-		return favoriteTvShowItemList; // Memanggil query method dari {@link FavoriteItemsHelper}
+		return weakFavoriteTvShowItemsHelper.get().getAllFavoriteTvShowItems(); // Memanggil query method dari {@link FavoriteItemsHelper}
 	}
 	
 	@Override

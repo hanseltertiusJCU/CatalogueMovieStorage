@@ -45,7 +45,7 @@ public class DetailedTvShowViewModel extends AndroidViewModel{
 		private final int id;
 		
 		// Buat constructor untuk mengakomodasi parameter yang ada dari {@link DetailedTvShowViewModel}
-		private DetailedTvShowLiveData(Context context , int id){
+		DetailedTvShowLiveData(Context context , int id){
 			this.context = context;
 			this.id = id;
 			loadDetailedTvShowLiveData();

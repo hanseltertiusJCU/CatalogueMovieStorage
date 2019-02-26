@@ -29,9 +29,6 @@ public class TvShowAdapter extends RecyclerView.Adapter<TvShowAdapter.TvShowView
 	private ArrayList<TvShowItem> mTvShowData = new ArrayList<>();
 	private Context context;
 	
-	// Gunakan BuildConfig untuk menjaga credential
-	private String baseImageUrl = BuildConfig.POSTER_IMAGE_ITEM_URL;
-	
 	public TvShowAdapter(Context context) {
 		this.context = context;
 	}
@@ -75,6 +72,8 @@ public class TvShowAdapter extends RecyclerView.Adapter<TvShowAdapter.TvShowView
 	@Override
 	public void onBindViewHolder(@NonNull TvShowViewHolder tvShowViewHolder, int position) {
 		// Load image jika ada poster path
+		// Gunakan BuildConfig untuk menjaga credential
+		String baseImageUrl = BuildConfig.POSTER_IMAGE_ITEM_URL;
 		Picasso.get().load(baseImageUrl + mTvShowData.get(position).getTvShowPosterPath()).into(tvShowViewHolder.imageViewTvShowPoster);
 		
 		tvShowViewHolder.textViewTvShowName.setText(mTvShowData.get(position).getTvShowName());
@@ -115,7 +114,7 @@ public class TvShowAdapter extends RecyclerView.Adapter<TvShowAdapter.TvShowView
 		return getTvShowData().size();
 	}
 	
-	public class TvShowViewHolder extends RecyclerView.ViewHolder {
+	class TvShowViewHolder extends RecyclerView.ViewHolder {
 		@BindView(R.id.poster_image)
 		ImageView imageViewTvShowPoster;
 		@BindView(R.id.tv_show_name_text)
@@ -127,7 +126,7 @@ public class TvShowAdapter extends RecyclerView.Adapter<TvShowAdapter.TvShowView
 		@BindView(R.id.tv_show_language_text)
 		TextView textViewTvShowOriginalLanguage;
 		
-		public TvShowViewHolder(@NonNull View itemView) {
+		TvShowViewHolder(@NonNull View itemView) {
 			super(itemView);
 			ButterKnife.bind(this, itemView);
 		}

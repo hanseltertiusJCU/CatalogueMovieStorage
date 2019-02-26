@@ -35,7 +35,7 @@
         app:layout_constraintStart_toEndOf="@+id/poster_image"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_weight="1"
-        tools:text="@string/tv_show_name_text"/>
+        tools:text="@string/tv_show_name_text" />
 
     <TextView
         android:id="@+id/tv_show_ratings_text"

@@ -9,7 +9,7 @@ import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 
 import com.example.cataloguemoviestorage.BuildConfig;
-import com.example.cataloguemoviestorage.entity.MovieItems;
+import com.example.cataloguemoviestorage.entity.MovieItem;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.SyncHttpClient;
 
@@ -38,16 +38,16 @@ public class DetailedMovieViewModel extends AndroidViewModel{
 		detailedMovieLiveData = new DetailedMovieLiveData(application , detailedMovieId);
 	}
 	
-	public LiveData <ArrayList <MovieItems>> getDetailedMovie(){
+	public LiveData <ArrayList <MovieItem>> getDetailedMovie(){
 		return detailedMovieLiveData;
 	}
 	
-	private class DetailedMovieLiveData extends LiveData <ArrayList <MovieItems>>{
+	private class DetailedMovieLiveData extends LiveData <ArrayList <MovieItem>>{
 		private final Context context;
 		private final int id;
 		
 		// Buat constructor untuk mengakomodasi parameter yang ada dari {@link DetailedMovieViewModel}
-		public DetailedMovieLiveData(Context context , int id){
+		DetailedMovieLiveData(Context context, int id){
 			this.context = context;
 			this.id = id;
 			loadDetailedMovieLiveData();
@@ -56,14 +56,14 @@ public class DetailedMovieViewModel extends AndroidViewModel{
 		@SuppressLint("StaticFieldLeak")
 		private void loadDetailedMovieLiveData(){
 			
-			new AsyncTask <Void, Void, ArrayList <MovieItems>>(){
+			new AsyncTask <Void, Void, ArrayList <MovieItem>>(){
 				
 				@Override
-				protected ArrayList <MovieItems> doInBackground(Void... voids){
+				protected ArrayList <MovieItem> doInBackground(Void... voids){
 					
 					SyncHttpClient syncHttpClient = new SyncHttpClient();
 					
-					final ArrayList <MovieItems> movieItemses = new ArrayList <>();
+					final ArrayList <MovieItem> movieItemses = new ArrayList <>();
 					
 					String detailedMovieUrl = detailedUrlBase + mDetailedMovieId + apiKeyFiller + apiKey;
 					
@@ -82,8 +82,8 @@ public class DetailedMovieViewModel extends AndroidViewModel{
 								String result = new String(responseBody);
 								JSONObject responseObject = new JSONObject(result);
 								boolean detailedItem = true;
-								MovieItems movieItems = new MovieItems(responseObject , detailedItem);
-								movieItemses.add(movieItems);
+								MovieItem movieItem = new MovieItem(responseObject , detailedItem);
+								movieItemses.add(movieItem);
 							} catch(Exception e){
 								e.printStackTrace();
 							}
@@ -99,7 +99,7 @@ public class DetailedMovieViewModel extends AndroidViewModel{
 				}
 				
 				@Override
-				protected void onPostExecute(ArrayList <MovieItems> movieItems){
+				protected void onPostExecute(ArrayList <MovieItem> movieItems){
 					// Set value dari Observer yang berisi ArrayList yang merupakan
 					// hasil dari doInBackground method
 					setValue(movieItems);

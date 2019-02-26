@@ -29,6 +29,7 @@ import com.example.cataloguemoviestorage.model.TvShowViewModel;
 import com.example.cataloguemoviestorage.support.ItemClickSupport;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -51,14 +52,12 @@ public class TvShowFragment extends Fragment implements LoadFavoriteTvShowCallba
 	@BindView(R.id.progress_bar)
 	ProgressBar progressBar;
 	private TvShowAdapter tvShowAdapter;
-	private TvShowViewModel tvShowViewModel;
 	// Bikin parcelable yang berguna untuk menyimpan lalu merestore position
 	private Parcelable mTvShowListState = null;
 	// Bikin linearlayout manager untuk dapat call onsaveinstancestate dan onrestoreinstancestate method
 	private LinearLayoutManager tvShowLinearLayoutManager;
 	// Helper untuk membuka koneksi ke DB
 	private FavoriteItemsHelper favoriteItemsHelper;
-	private Observer<ArrayList<TvShowItem>> tvShowObserver;
 	
 	
 	public TvShowFragment() {
@@ -69,14 +68,14 @@ public class TvShowFragment extends Fragment implements LoadFavoriteTvShowCallba
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		if(getActivity().getApplicationContext() != null) {
+		if(Objects.requireNonNull(getActivity()).getApplicationContext() != null) {
 			favoriteItemsHelper = FavoriteItemsHelper.getInstance(getActivity().getApplicationContext());
 			favoriteItemsHelper.open();
 		}
 	}
 	
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
 							 Bundle savedInstanceState) {
 		// Inflate the layout for this fragment
 		View view = inflater.inflate(R.layout.fragment_tv_show, container, false);
@@ -106,7 +105,7 @@ public class TvShowFragment extends Fragment implements LoadFavoriteTvShowCallba
 		if(getContext() != null) {
 			// Buat object DividerItemDecoration dan set drawable untuk DividerItemDecoration
 			DividerItemDecoration itemDecorator = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
-			itemDecorator.setDrawable(ContextCompat.getDrawable(getContext(), R.drawable.item_divider));
+			itemDecorator.setDrawable(Objects.requireNonNull(ContextCompat.getDrawable(getContext(), R.drawable.item_divider)));
 			
 			// Set divider untuk RecyclerView items
 			recyclerView.addItemDecoration(itemDecorator);
@@ -131,10 +130,10 @@ public class TvShowFragment extends Fragment implements LoadFavoriteTvShowCallba
 		}
 		
 		// Dapatkan ViewModel yang tepat dari ViewModelProviders
-		tvShowViewModel = ViewModelProviders.of(this).get(TvShowViewModel.class);
+		TvShowViewModel tvShowViewModel = ViewModelProviders.of(this).get(TvShowViewModel.class);
 		
 		// Panggil method createObserver untuk return Observer object
-		tvShowObserver = createObserver();
+		Observer<ArrayList<TvShowItem>> tvShowObserver = createObserver();
 		
 		// Tempelkan Observer ke LiveData object
 		tvShowViewModel.getTvShows().observe(this, tvShowObserver);
@@ -216,22 +215,20 @@ public class TvShowFragment extends Fragment implements LoadFavoriteTvShowCallba
 		return new Observer<ArrayList<TvShowItem>>() {
 			@Override
 			public void onChanged(@Nullable final ArrayList<TvShowItem> tvShowItems) {
-				// Set LinearLayoutManager object value dengan memanggil LinearLayoutManager constructor
-				tvShowLinearLayoutManager = new LinearLayoutManager(getContext());
-				// Kita menggunakan LinearLayoutManager berorientasi vertical untuk RecyclerView
-				recyclerView.setLayoutManager(tvShowLinearLayoutManager);
 				// Ketika data selesai di load, maka kita akan mendapatkan data dan menghilangkan progress bar
 				// yang menandakan bahwa loadingnya sudah selesai
 				recyclerView.setVisibility(View.VISIBLE);
 				progressBar.setVisibility(View.GONE);
+				// Set data ke Adapter
 				tvShowAdapter.setTvShowData(tvShowItems);
-				recyclerView.setAdapter(tvShowAdapter);
 				// Set item click listener di dalam recycler view
 				ItemClickSupport.addSupportToView(recyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
 					@Override
 					public void onItemClicked(RecyclerView recyclerView, int position, View view) {
-						// Panggil method showSelectedMovieItems untuk mengakses DetailActivity bedasarkan data yang ada
-						showSelectedTvShowItems(tvShowItems.get(position));
+						if(tvShowItems != null) {
+							// Panggil method showSelectedMovieItems untuk mengakses DetailActivity bedasarkan data yang ada
+							showSelectedTvShowItems(tvShowItems.get(position));
+						}
 					}
 				});
 			}
@@ -250,12 +247,12 @@ public class TvShowFragment extends Fragment implements LoadFavoriteTvShowCallba
 					boolean changedDataState = data.getBooleanExtra(DetailActivity.EXTRA_CHANGED_STATE, false);
 					// Cek jika value dari changedDataState itu true
 					if(changedDataState) {
-						if(getActivity().getSupportFragmentManager() != null) {
+						if(Objects.requireNonNull(getActivity()).getSupportFragmentManager() != null) {
 							// Dapatin position fragment dari FavoriteTvShowFragment di ViewPager since ViewPager menampung list dari Fragments
 							FavoriteTvShowFragment favoriteTvShowFragment = (FavoriteTvShowFragment) getActivity().getSupportFragmentManager().getFragments().get(3);
 							// Cek jika favoriteTvShowFragment itu ada
 							if(favoriteTvShowFragment != null) {
-								// Komunikasi dengan FavoriteMovieFragment dengan memanggil onActivityResult method di FavoriteTvShowFragment
+								// Komunikasi dengan FavoriteTvShowFragment dengan memanggil onActivityResult method di FavoriteTvShowFragment
 								favoriteTvShowFragment.onActivityResult(requestCode, resultCode, data);
 							}
 						}
