@@ -16,6 +16,7 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -494,7 +495,9 @@ public class DetailActivity extends AppCompatActivity{
 						// Change icon into marked as favourite
 						drawableMenuMarkedAsFavouriteResourceId = R.drawable.ic_favourite_on;
 						detailedTvShowFavoriteState = 1;
-						// Set current date value into TvShowItem, where TvShowItem added into Favorite
+						// Set current date value into TV Show item, where MovieItem added into Favorite
+						detailedTvShowItem.setDateAddedFavorite(getCurrentDate());
+						// Set boolean state value into TV Show item
 						detailedTvShowItem.setFavoriteBooleanState(detailedTvShowFavoriteState);
 						// Cek jika value dari detailedTvShowFavoriteState sama dengan value
 						// bawaan intent dengan key TV_SHOW_BOOLEAN_STATE_EXTRA
@@ -509,6 +512,8 @@ public class DetailActivity extends AppCompatActivity{
 						if(changedState){
 							// Insert based on data
 							long newIdItem = favoriteItemsHelper.insertFavoriteTvShowItem(detailedTvShowItem);
+							// todo: pake get current date
+							Log.d("Insert TV Show data", "Insert TV Show Data into DB");
 							if(newIdItem > 0){
 								// Bawa nilai ke intent
 								resultIntent.putExtra(EXTRA_CHANGED_STATE , changedState);
@@ -536,6 +541,7 @@ public class DetailActivity extends AppCompatActivity{
 						if(changedState){
 							// Remove from database
 							long deletedIdItem = favoriteItemsHelper.deleteFavoriteTvShowItem(detailedTvShowItem.getId());
+							Log.d("Delete TV Show data", "Delete TV Show Data from DB");
 							if(deletedIdItem > 0){
 								// Bawa nilai ke intent
 								resultIntent.putExtra(EXTRA_CHANGED_STATE , changedState);

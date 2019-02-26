@@ -13,10 +13,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-import com.example.cataloguemoviestorage.adapter.MovieSectionsFragmentPagerAdapter;
+import com.example.cataloguemoviestorage.adapter.ItemSectionsFragmentPagerAdapter;
 import com.example.cataloguemoviestorage.fragment.FavoriteMovieFragment;
+import com.example.cataloguemoviestorage.fragment.FavoriteTvShowFragment;
 import com.example.cataloguemoviestorage.fragment.MovieFragment;
-import com.example.cataloguemoviestorage.fragment.UpcomingMovieFragment;
+import com.example.cataloguemoviestorage.fragment.TvShowFragment;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -24,21 +25,24 @@ import butterknife.ButterKnife;
 public class MainActivity extends AppCompatActivity {
 
     // Create ViewPager untuk swipe Fragments
-    @BindView(R.id.movie_viewPager) ViewPager viewPager;
+    @BindView(R.id.item_viewPager) ViewPager viewPager;
     // Assign TabLayout
     @BindView(R.id.menu_tabs) TabLayout tabLayout;
-    private MovieSectionsFragmentPagerAdapter movieSectionsFragmentPagerAdapter;
+    private ItemSectionsFragmentPagerAdapter itemSectionsFragmentPagerAdapter;
 
-    private TextView tabNowPlaying;
-    private TextView tabUpcoming;
-    private TextView tabFavorite;
+    private TextView tabMovie;
+    private TextView tabTvShow;
+    private TextView tabFavoriteMovie;
+    private TextView tabFavoriteTvShow;
 
-    private Drawable[] nowPlayingDrawables;
-    private Drawable nowPlayingDrawable;
-    private Drawable[] upcomingDrawables;
-    private Drawable upcomingDrawable;
-    private Drawable[] favoriteDrawables;
-    private Drawable favoriteDrawable;
+    private Drawable[] movieDrawables;
+    private Drawable movieDrawable;
+    private Drawable[] tvShowDrawables;
+    private Drawable tvShowDrawable;
+    private Drawable[] favoriteMovieDrawables;
+    private Drawable favoriteMovieDrawable;
+    private Drawable[] favoriteTvShowDrawables;
+    private Drawable favoriteTvShowDrawable;
 
     @BindView(R.id.main_toolbar) Toolbar mainToolbar;
 
@@ -54,15 +58,15 @@ public class MainActivity extends AppCompatActivity {
 
         // Cek kalo ada action bar
         if(getSupportActionBar() != null){
-            // Set default action bar title, yaitu "Now Playing"
-            getSupportActionBar().setTitle(getString(R.string.now_playing));
+            // Set default action bar title, yaitu "Movie"
+            getSupportActionBar().setTitle(getString(R.string.movie));
         }
 
         // Panggil method ini untuk saving Fragment state di ViewPager, kesannya kyk simpen
         // fragment ketika sebuah fragment sedang tidak di display.
-        // Kita menggunakan value 2 sebagai parameter karena kita punya 3 fragments, dan kita
-        // hanya butuh simpan 2 fragments (1 lg untuk display).
-        viewPager.setOffscreenPageLimit(2);
+        // Kita menggunakan value 3 sebagai parameter karena kita punya 4 fragments, dan kita
+        // hanya butuh simpan 3 fragments (1 lg untuk display).
+        viewPager.setOffscreenPageLimit(3);
 
         // Panggil method tsb untuk membuat fragment yang akan disimpan ke ViewPager
         createViewPagerContent(viewPager);
@@ -80,27 +84,33 @@ public class MainActivity extends AppCompatActivity {
             public void onTabSelected(TabLayout.Tab tab) {
                 int position = tab.getPosition();
                 // Cast getPageTitle return ke String dari CharSequence (return type yang semula)
-                setActionBarTitle((String) movieSectionsFragmentPagerAdapter.getPageTitle(position));
+                setActionBarTitle((String) itemSectionsFragmentPagerAdapter.getPageTitle(position));
                 // Ubah text color dan drawable tint menjadi colorAccent, yang menandakan bahwa itemnya
                 // sedang dipilih
                 switch (position){
                     case 0:
-                        tabNowPlaying.setTextColor(getResources().getColor(R.color.colorAccent));
-                        nowPlayingDrawables = tabNowPlaying.getCompoundDrawables();
-                        nowPlayingDrawable = nowPlayingDrawables[1];
-                        nowPlayingDrawable.setTint(getResources().getColor(R.color.colorAccent));
+                        tabMovie.setTextColor(getResources().getColor(R.color.colorAccent));
+                        movieDrawables = tabMovie.getCompoundDrawables();
+                        movieDrawable = movieDrawables[1];
+                        movieDrawable.setTint(getResources().getColor(R.color.colorAccent));
                         break;
                     case 1:
-                        tabUpcoming.setTextColor(getResources().getColor(R.color.colorAccent));
-                        upcomingDrawables = tabUpcoming.getCompoundDrawables();
-                        upcomingDrawable = upcomingDrawables[1];
-                        upcomingDrawable.setTint(getResources().getColor(R.color.colorAccent));
+                        tabTvShow.setTextColor(getResources().getColor(R.color.colorAccent));
+                        tvShowDrawables = tabTvShow.getCompoundDrawables();
+                        tvShowDrawable = tvShowDrawables[1];
+                        tvShowDrawable.setTint(getResources().getColor(R.color.colorAccent));
                         break;
                     case 2:
-                        tabFavorite.setTextColor(getResources().getColor(R.color.colorAccent));
-                        favoriteDrawables = tabFavorite.getCompoundDrawables();
-                        favoriteDrawable = favoriteDrawables[1];
-                        favoriteDrawable.setTint(getResources().getColor(R.color.colorAccent));
+                        tabFavoriteMovie.setTextColor(getResources().getColor(R.color.colorAccent));
+                        favoriteMovieDrawables = tabFavoriteMovie.getCompoundDrawables();
+                        favoriteMovieDrawable = favoriteMovieDrawables[1];
+                        favoriteMovieDrawable.setTint(getResources().getColor(R.color.colorAccent));
+                        break;
+                    case 3:
+                        tabFavoriteTvShow.setTextColor(getResources().getColor(R.color.colorAccent));
+                        favoriteTvShowDrawables = tabFavoriteTvShow.getCompoundDrawables();
+                        favoriteTvShowDrawable = favoriteTvShowDrawables[1];
+                        favoriteTvShowDrawable.setTint(getResources().getColor(R.color.colorAccent));
                         break;
                     default:
                         break;
@@ -115,22 +125,28 @@ public class MainActivity extends AppCompatActivity {
                 // sedang tidak dipilih
                 switch (position){
                     case 0:
-                        tabNowPlaying.setTextColor(getResources().getColor(R.color.colorBlack));
-                        nowPlayingDrawables = tabNowPlaying.getCompoundDrawables();
-                        nowPlayingDrawable = nowPlayingDrawables[1];
-                        nowPlayingDrawable.setTint(getResources().getColor(R.color.colorBlack));
+                        tabMovie.setTextColor(getResources().getColor(R.color.colorBlack));
+                        movieDrawables = tabMovie.getCompoundDrawables();
+                        movieDrawable = movieDrawables[1];
+                        movieDrawable.setTint(getResources().getColor(R.color.colorBlack));
                         break;
                     case 1:
-                        tabUpcoming.setTextColor(getResources().getColor(R.color.colorBlack));
-                        upcomingDrawables = tabUpcoming.getCompoundDrawables();
-                        upcomingDrawable = upcomingDrawables[1];
-                        upcomingDrawable.setTint(getResources().getColor(R.color.colorBlack));
+                        tabTvShow.setTextColor(getResources().getColor(R.color.colorBlack));
+                        tvShowDrawables = tabTvShow.getCompoundDrawables();
+                        tvShowDrawable = tvShowDrawables[1];
+                        tvShowDrawable.setTint(getResources().getColor(R.color.colorBlack));
                         break;
                     case 2:
-                        tabFavorite.setTextColor(getResources().getColor(R.color.colorBlack));
-                        favoriteDrawables = tabFavorite.getCompoundDrawables();
-                        favoriteDrawable = favoriteDrawables[1];
-                        favoriteDrawable.setTint(getResources().getColor(R.color.colorBlack));
+                        tabFavoriteMovie.setTextColor(getResources().getColor(R.color.colorBlack));
+                        favoriteMovieDrawables = tabFavoriteMovie.getCompoundDrawables();
+                        favoriteMovieDrawable = favoriteMovieDrawables[1];
+                        favoriteMovieDrawable.setTint(getResources().getColor(R.color.colorBlack));
+                    case 3:
+                        tabFavoriteTvShow.setTextColor(getResources().getColor(R.color.colorBlack));
+                        favoriteTvShowDrawables = tabFavoriteTvShow.getCompoundDrawables();
+                        favoriteTvShowDrawable = favoriteTvShowDrawables[1];
+                        favoriteTvShowDrawable.setTint(getResources().getColor(R.color.colorBlack));
+                        break;
                     default:
                         break;
                 }
@@ -147,52 +163,54 @@ public class MainActivity extends AppCompatActivity {
 
     // Method tsb berguna untuk membuat icons beserta isinya di Tab
     private void createTabIcons(){
-        tabNowPlaying = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
+        tabMovie = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
         // Set isi dari text di sebuah tab
-        tabNowPlaying.setText(getString(R.string.now_playing));
+        tabMovie.setText(getString(R.string.movie));
         // Set default text color yang menandakan bahwa tabnya itu sedang d select
-        tabNowPlaying.setTextColor(getResources().getColor(R.color.colorAccent));
+        tabMovie.setTextColor(getResources().getColor(R.color.colorAccent));
         // Set icon di atas text
-        tabNowPlaying.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_now_playing, 0, 0);
+        tabMovie.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_movie, 0, 0);
         // Dapatkan getCompoundDrawable dari setCompoundDrawablesWithIntrinsicBounds
-        nowPlayingDrawables = tabNowPlaying.getCompoundDrawables();
+        movieDrawables = tabMovie.getCompoundDrawables();
         // Akses drawableTop, which is in this case kita mengakses element ke 2 (index value: 1)
         // dari Drawable[]
-        nowPlayingDrawable = nowPlayingDrawables[1];
+        movieDrawable = movieDrawables[1];
         // Set default tint untuk drawable yang menandakan bahwa tabnya itu sedang d select
-        nowPlayingDrawable.setTint(getResources().getColor(R.color.colorAccent));
+        movieDrawable.setTint(getResources().getColor(R.color.colorAccent));
 
         // Inflate custom_tab.xml ke dalam TabLayout
-        tabLayout.getTabAt(0).setCustomView(tabNowPlaying);
+        tabLayout.getTabAt(0).setCustomView(tabMovie);
 
-        tabUpcoming = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
-        tabUpcoming.setText(getString(R.string.upcoming));
-        tabUpcoming.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_upcoming, 0,0);
-        tabLayout.getTabAt(1).setCustomView(tabUpcoming);
+        tabTvShow = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
+        tabTvShow.setText(getString(R.string.tv_show));
+        tabTvShow.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_tv_show, 0,0);
+        tabLayout.getTabAt(1).setCustomView(tabTvShow);
         
-        tabFavorite = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
-        tabFavorite.setText(getString(R.string.favorite));
-        tabFavorite.setCompoundDrawablesRelativeWithIntrinsicBounds(0, R.drawable.ic_favourite_off, 0, 0);
-        // Make the color black as the default tint color in drawable is white
-        favoriteDrawables = tabFavorite.getCompoundDrawables();
-        favoriteDrawable = favoriteDrawables[1];
-        favoriteDrawable.setTint(getResources().getColor(R.color.colorBlack));
-        tabLayout.getTabAt(2).setCustomView(tabFavorite);
+        tabFavoriteMovie = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
+        tabFavoriteMovie.setText(getString(R.string.favorite_movie));
+        tabFavoriteMovie.setCompoundDrawablesRelativeWithIntrinsicBounds(0, R.drawable.ic_movie_favorite, 0, 0);
+        tabLayout.getTabAt(2).setCustomView(tabFavoriteMovie);
+        
+        tabFavoriteTvShow = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
+        tabFavoriteTvShow.setText(getString(R.string.favorite_tv_show));
+        tabFavoriteTvShow.setCompoundDrawablesRelativeWithIntrinsicBounds(0, R.drawable.ic_tv_show_favorite, 0, 0);
+        tabLayout.getTabAt(3).setCustomView(tabFavoriteTvShow);
     }
 
     // Method tsb berguna untuk membuat isi dari ViewPager
     private void createViewPagerContent(ViewPager viewPager){
 
         // Create FragmentPagerAdapter untuk mengetahui fragment mana yg di show
-        movieSectionsFragmentPagerAdapter = new MovieSectionsFragmentPagerAdapter(this, getSupportFragmentManager());
+        itemSectionsFragmentPagerAdapter = new ItemSectionsFragmentPagerAdapter(this, getSupportFragmentManager());
 
         // Tambahkan fragment beserta title ke FragmentPagerAdapter
-        movieSectionsFragmentPagerAdapter.addMovieSectionFragment(new MovieFragment(), getString(R.string.now_playing));
-        movieSectionsFragmentPagerAdapter.addMovieSectionFragment(new UpcomingMovieFragment(), getString(R.string.upcoming));
-        movieSectionsFragmentPagerAdapter.addMovieSectionFragment(new FavoriteMovieFragment(), getString(R.string.favorite));
+        itemSectionsFragmentPagerAdapter.addMovieSectionFragment(new MovieFragment(), getString(R.string.movie));
+        itemSectionsFragmentPagerAdapter.addMovieSectionFragment(new TvShowFragment() , getString(R.string.tv_show));
+        itemSectionsFragmentPagerAdapter.addMovieSectionFragment(new FavoriteMovieFragment(), getString(R.string.favorite_movie));
+        itemSectionsFragmentPagerAdapter.addMovieSectionFragment(new FavoriteTvShowFragment(), getString(R.string.favorite_tv_show));
 
         // Set FragmentPagerAdapter ke ViewPager
-        viewPager.setAdapter(movieSectionsFragmentPagerAdapter);
+        viewPager.setAdapter(itemSectionsFragmentPagerAdapter);
     }
 
     @Override

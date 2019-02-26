@@ -13,13 +13,13 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MovieSectionsFragmentPagerAdapter extends FragmentStatePagerAdapter{
+public class ItemSectionsFragmentPagerAdapter extends FragmentStatePagerAdapter {
     // Create ArrayList untuk menampung Fragment beserta Title
     private final List<Fragment> mFragmentList = new ArrayList<>();
     private final List<String> mFragmentTitleList = new ArrayList<>();
     private Context mContext;
 
-    public MovieSectionsFragmentPagerAdapter(Context context, FragmentManager fragmentManager) {
+    public ItemSectionsFragmentPagerAdapter(Context context, FragmentManager fragmentManager) {
         super(fragmentManager);
         mContext = context;
     }

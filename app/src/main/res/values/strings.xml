@@ -19,6 +19,10 @@
 
     <!-- Set action bar title -->
     <string name="search_movie">Search Movie</string>
+    <string name="movie">Movie</string>
+    <string name="tv_show">TV Show</string>
+    <string name="favorite_movie">Favorite Movie</string>
+    <string name="favorite_tv_show">Favorite TV Show</string>
     <string name="now_playing">Now Playing</string>
     <string name="upcoming">Up Coming</string>
     <string name="favorite">Favorite</string>
@@ -81,7 +85,7 @@
     <string name="change_language_settings">Change Language Settings</string>
 
     <!-- Set Title for app menu -->
-    <string name="catalogue_storage">Catalogue Storage</string>
+    <string name="catalogue_movie_storage">Catalogue Movie Storage</string>
 
     <string name="mark_as_favorite">Mark as Favorite</string>
 
