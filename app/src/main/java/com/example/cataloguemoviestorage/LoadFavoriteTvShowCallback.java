@@ -6,5 +6,6 @@ import java.util.ArrayList;
 
 public interface LoadFavoriteTvShowCallback{
 	void preExecute();
-	void postExecute(ArrayList<TvShowItem> tvShowItems);
+	
+	void postExecute(ArrayList <TvShowItem> tvShowItems);
 }

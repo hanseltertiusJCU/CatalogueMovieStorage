@@ -35,11 +35,11 @@ public class TvShowViewModel extends AndroidViewModel{
 		tvShowLiveData = new TvShowLiveData(application);
 	}
 	
-	public LiveData<ArrayList<TvShowItem>> getTvShows(){
+	public LiveData <ArrayList <TvShowItem>> getTvShows(){
 		return tvShowLiveData;
 	}
 	
-	public class TvShowLiveData extends LiveData<ArrayList<TvShowItem>>{
+	public class TvShowLiveData extends LiveData <ArrayList <TvShowItem>>{
 		private final Context context;
 		
 		public TvShowLiveData(Context context){
@@ -51,7 +51,7 @@ public class TvShowViewModel extends AndroidViewModel{
 		// di AsyncTaskLoader
 		@SuppressLint("StaticFieldLeak")
 		private void loadTvShowLiveData(){
-			new AsyncTask<Void, Void, ArrayList<TvShowItem>>(){
+			new AsyncTask <Void, Void, ArrayList <TvShowItem>>(){
 				
 				@Override
 				protected ArrayList <TvShowItem> doInBackground(Void... voids){
@@ -59,7 +59,7 @@ public class TvShowViewModel extends AndroidViewModel{
 					// Menginisiasikan SyncHttpClientObject krn Loader itu sudah berjalan pada background thread
 					SyncHttpClient syncHttpClient = new SyncHttpClient();
 					
-					final ArrayList<TvShowItem> tvShowItems = new ArrayList <>();
+					final ArrayList <TvShowItem> tvShowItems = new ArrayList <>();
 					
 					String tvShowUrl = tvShowUrlBase + apiKey + languageUs;
 					syncHttpClient.get(tvShowUrl , new AsyncHttpResponseHandler(){
@@ -70,17 +70,17 @@ public class TvShowViewModel extends AndroidViewModel{
 								JSONObject responseObject = new JSONObject(result);
 								JSONArray results = responseObject.getJSONArray("results");
 								// Iterate semua data yg ada dan tambahkan ke ArrayList
-								for (int i = 0; i < results.length(); i++) {
+								for(int i = 0 ; i < results.length() ; i++){
 									JSONObject tvShow = results.getJSONObject(i);
 									boolean detailedItem = false;
-									TvShowItem tvShowItem = new TvShowItem(tvShow, detailedItem);
+									TvShowItem tvShowItem = new TvShowItem(tvShow , detailedItem);
 									// Cek jika posterPath itu tidak "null" karena null dr JSON itu berupa
 									// String, sehingga perlu menggunakan "" di dalam null
-									if (!tvShowItem.getTvShowPosterPath().equals("null")){
+									if(! tvShowItem.getTvShowPosterPath().equals("null")){
 										tvShowItems.add(tvShowItem);
 									}
 								}
-							} catch (Exception e){
+							} catch(Exception e){
 								e.printStackTrace();
 							}
 							

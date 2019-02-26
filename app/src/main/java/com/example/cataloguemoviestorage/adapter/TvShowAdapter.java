@@ -24,35 +24,38 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class TvShowAdapter extends RecyclerView.Adapter<TvShowAdapter.TvShowViewHolder>{
+public class TvShowAdapter extends RecyclerView.Adapter<TvShowAdapter.TvShowViewHolder> {
 	
-	private ArrayList<TvShowItem> mTvShowData = new ArrayList <>();
+	private ArrayList<TvShowItem> mTvShowData = new ArrayList<>();
 	private Context context;
 	
 	// Gunakan BuildConfig untuk menjaga credential
 	private String baseImageUrl = BuildConfig.POSTER_IMAGE_ITEM_URL;
 	
-	public TvShowAdapter(Context context){
+	public TvShowAdapter(Context context) {
 		this.context = context;
 	}
 	
-	public ArrayList<TvShowItem> getTvShowData(){
+	public ArrayList<TvShowItem> getTvShowData() {
 		return mTvShowData;
 	}
 	
-	public Context getContext(){
+	public Context getContext() {
 		return context;
 	}
 	
-	public void setTvShowData(ArrayList<TvShowItem> mData){
+	public void setTvShowData(ArrayList<TvShowItem> mData) {
 		
 		// Jika ada data di parameter, maka clear isi data di ArrayList global variable
-		if(mData.size() > 0){
+		if(mData.size() > 0) {
+			this.mTvShowData.clear();
+			// Add semua isi data ke global variable ArrayList
+			this.mTvShowData.addAll(mData);
+		} else {
 			this.mTvShowData.clear();
 		}
 		
-		// Add semua isi data ke global variable ArrayList
-		this.mTvShowData.addAll(mData);
+		
 		
 		// Method tersebut berguna untuk memanggil adapter bahwa ada data yg bru, sehingga data tsb
 		// dpt ditampilkan pada RecyclerView yg berisi adapter yg berkaitan dengan RecyclerView
@@ -61,7 +64,7 @@ public class TvShowAdapter extends RecyclerView.Adapter<TvShowAdapter.TvShowView
 	
 	@NonNull
 	@Override
-	public TvShowViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup , int i){
+	public TvShowViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
 		// Set layout xml yang berisi movie items ke View
 		View tvShowItem = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.tv_show_items, viewGroup, false);
 		// Return TvShowViewHolder dengan memanggil constructor TvShowViewHolder yang berisi View sbg
@@ -70,7 +73,7 @@ public class TvShowAdapter extends RecyclerView.Adapter<TvShowAdapter.TvShowView
 	}
 	
 	@Override
-	public void onBindViewHolder(@NonNull TvShowViewHolder tvShowViewHolder , int position){
+	public void onBindViewHolder(@NonNull TvShowViewHolder tvShowViewHolder, int position) {
 		// Load image jika ada poster path
 		Picasso.get().load(baseImageUrl + mTvShowData.get(position).getTvShowPosterPath()).into(tvShowViewHolder.imageViewTvShowPoster);
 		
@@ -102,24 +105,29 @@ public class TvShowAdapter extends RecyclerView.Adapter<TvShowAdapter.TvShowView
 	}
 	
 	@Override
-	public long getItemId(int position){
+	public long getItemId(int position) {
 		// Return position dari sebuah item di RecyclerView
 		return position;
 	}
 	
 	@Override
-	public int getItemCount(){
+	public int getItemCount() {
 		return getTvShowData().size();
 	}
 	
-	public class TvShowViewHolder extends RecyclerView.ViewHolder{
-		@BindView(R.id.poster_image) ImageView imageViewTvShowPoster;
-		@BindView(R.id.tv_show_name_text) TextView textViewTvShowName;
-		@BindView(R.id.tv_show_ratings_text) TextView textViewTvShowRatings;
-		@BindView(R.id.tv_show_first_air_date_text) TextView textViewTvShowFirstAirDate;
-		@BindView(R.id.tv_show_language_text) TextView textViewTvShowOriginalLanguage;
+	public class TvShowViewHolder extends RecyclerView.ViewHolder {
+		@BindView(R.id.poster_image)
+		ImageView imageViewTvShowPoster;
+		@BindView(R.id.tv_show_name_text)
+		TextView textViewTvShowName;
+		@BindView(R.id.tv_show_ratings_text)
+		TextView textViewTvShowRatings;
+		@BindView(R.id.tv_show_first_air_date_text)
+		TextView textViewTvShowFirstAirDate;
+		@BindView(R.id.tv_show_language_text)
+		TextView textViewTvShowOriginalLanguage;
 		
-		public TvShowViewHolder(@NonNull View itemView){
+		public TvShowViewHolder(@NonNull View itemView) {
 			super(itemView);
 			ButterKnife.bind(this, itemView);
 		}

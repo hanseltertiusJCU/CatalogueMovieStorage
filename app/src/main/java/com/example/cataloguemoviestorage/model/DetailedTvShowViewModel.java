@@ -29,23 +29,23 @@ public class DetailedTvShowViewModel extends AndroidViewModel{
 	
 	private int mDetailedTvShowId;
 	
-	public DetailedTvShowViewModel(Application application, int detailedTvShowId){
+	public DetailedTvShowViewModel(Application application , int detailedTvShowId){
 		super(application);
 		this.mDetailedTvShowId = detailedTvShowId;
 		// Buat LiveData agar dapat di return ke getDetailedTvShow method
-		detailedTvShowLiveData = new DetailedTvShowLiveData(application, detailedTvShowId);
+		detailedTvShowLiveData = new DetailedTvShowLiveData(application , detailedTvShowId);
 	}
 	
-	public LiveData<ArrayList<TvShowItem>> getDetailedTvShow(){
+	public LiveData <ArrayList <TvShowItem>> getDetailedTvShow(){
 		return detailedTvShowLiveData;
 	}
 	
-	private class DetailedTvShowLiveData extends LiveData<ArrayList<TvShowItem>>{
+	private class DetailedTvShowLiveData extends LiveData <ArrayList <TvShowItem>>{
 		private final Context context;
 		private final int id;
 		
 		// Buat constructor untuk mengakomodasi parameter yang ada dari {@link DetailedTvShowViewModel}
-		private DetailedTvShowLiveData(Context context, int id){
+		private DetailedTvShowLiveData(Context context , int id){
 			this.context = context;
 			this.id = id;
 			loadDetailedTvShowLiveData();
@@ -54,14 +54,14 @@ public class DetailedTvShowViewModel extends AndroidViewModel{
 		@SuppressLint("StaticFieldLeak")
 		private void loadDetailedTvShowLiveData(){
 			
-			new AsyncTask<Void, Void, ArrayList<TvShowItem>>(){
+			new AsyncTask <Void, Void, ArrayList <TvShowItem>>(){
 				
 				@Override
 				protected ArrayList <TvShowItem> doInBackground(Void... voids){
 					
 					SyncHttpClient syncHttpClient = new SyncHttpClient();
 					
-					final ArrayList<TvShowItem> tvShowItems = new ArrayList <>();
+					final ArrayList <TvShowItem> tvShowItems = new ArrayList <>();
 					
 					String detailedTvShowUrl = detailedTvShowUrlBase + mDetailedTvShowId + apiKeyFiller + apiKey;
 					
@@ -76,13 +76,13 @@ public class DetailedTvShowViewModel extends AndroidViewModel{
 						
 						@Override
 						public void onSuccess(int statusCode , Header[] headers , byte[] responseBody){
-							try {
+							try{
 								String result = new String(responseBody);
 								JSONObject responseObject = new JSONObject(result);
 								boolean detailedItem = true;
-								TvShowItem tvShowItem = new TvShowItem(responseObject, detailedItem);
+								TvShowItem tvShowItem = new TvShowItem(responseObject , detailedItem);
 								tvShowItems.add(tvShowItem);
-							} catch (Exception e){
+							} catch(Exception e){
 								e.printStackTrace();
 							}
 						}

@@ -36,7 +36,7 @@ import butterknife.ButterKnife;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MovieFragment extends Fragment implements LoadFavoriteMoviesCallback{
+public class MovieFragment extends Fragment implements LoadFavoriteMoviesCallback {
 	
 	// Key untuk membawa data ke intent (data tidak d private untuk dapat diapplikasikan di berbagai Fragments dan diakses ke {@link DetailActivity})
 	public static final String MOVIE_ID_DATA = "MOVIE_ID_DATA";
@@ -51,7 +51,7 @@ public class MovieFragment extends Fragment implements LoadFavoriteMoviesCallbac
 	private MovieAdapter movieAdapter;
 	@BindView(R.id.progress_bar)
 	ProgressBar progressBar;
-	private Observer <ArrayList <MovieItems>> movieObserver;
+	private Observer<ArrayList<MovieItems>> movieObserver;
 	private MovieViewModel movieViewModel;
 	// Bikin parcelable yang berguna untuk menyimpan lalu merestore position
 	private Parcelable mMovieListState = null;
@@ -60,15 +60,15 @@ public class MovieFragment extends Fragment implements LoadFavoriteMoviesCallbac
 	// Bikin linearlayout manager untuk dapat call onsaveinstancestate method
 	private LinearLayoutManager movieLinearLayoutManager;
 	
-	public MovieFragment(){
+	public MovieFragment() {
 		// Required empty public constructor
 	}
 	
 	@Override
-	public void onCreate(@Nullable Bundle savedInstanceState){
+	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		if(getActivity().getApplicationContext() != null){
+		if(getActivity().getApplicationContext() != null) {
 			favoriteItemsHelper = FavoriteItemsHelper.getInstance(getActivity().getApplicationContext());
 			favoriteItemsHelper.open();
 		}
@@ -76,17 +76,17 @@ public class MovieFragment extends Fragment implements LoadFavoriteMoviesCallbac
 	}
 	
 	@Override
-	public View onCreateView(LayoutInflater inflater , ViewGroup container ,
-							 Bundle savedInstanceState){
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+							 Bundle savedInstanceState) {
 		// Inflate the layout for this fragment
-		View view = inflater.inflate(R.layout.fragment_movie , container , false);
-		ButterKnife.bind(this , view);
+		View view = inflater.inflate(R.layout.fragment_movie, container, false);
+		ButterKnife.bind(this, view);
 		return view;
 	}
 	
 	@Override
-	public void onViewCreated(View view , @Nullable Bundle savedInstanceState){
-		super.onViewCreated(view , savedInstanceState);
+	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
 		
 		// Initiate movie adapter
 		movieAdapter = new MovieAdapter(getContext());
@@ -105,10 +105,10 @@ public class MovieFragment extends Fragment implements LoadFavoriteMoviesCallbac
 		// Set background color untuk RecyclerView
 		recyclerView.setBackgroundColor(getResources().getColor(R.color.colorWhite));
 		
-		if(getContext() != null){
+		if(getContext() != null) {
 			// Buat object DividerItemDecoration dan set drawable untuk DividerItemDecoration
-			DividerItemDecoration itemDecorator = new DividerItemDecoration(getContext() , DividerItemDecoration.VERTICAL);
-			itemDecorator.setDrawable(ContextCompat.getDrawable(getContext() , R.drawable.item_divider));
+			DividerItemDecoration itemDecorator = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
+			itemDecorator.setDrawable(ContextCompat.getDrawable(getContext(), R.drawable.item_divider));
 			// Set divider untuk RecyclerView items
 			recyclerView.addItemDecoration(itemDecorator);
 		}
@@ -119,16 +119,16 @@ public class MovieFragment extends Fragment implements LoadFavoriteMoviesCallbac
 	}
 	
 	@Override
-	public void onActivityCreated(@Nullable Bundle savedInstanceState){
+	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		
 		// Cek jika Bundle exist, jika iya maka kita metretrieve list state as well as
 		// list/item positions (scroll position)
-		if(savedInstanceState != null){
+		if(savedInstanceState != null) {
 			mMovieListState = savedInstanceState.getParcelable(MOVIE_LIST_STATE);
-		} else{
+		} else {
 			// Lakukan AsyncTask utk meretrieve ArrayList yg isinya data dari database (table movie item)
-			new LoadFavoriteMoviesAsync(favoriteItemsHelper , this).execute();
+			new LoadFavoriteMoviesAsync(favoriteItemsHelper, this).execute();
 		}
 		
 		// Dapatkan ViewModel yang tepat dari ViewModelProviders
@@ -138,11 +138,11 @@ public class MovieFragment extends Fragment implements LoadFavoriteMoviesCallbac
 		movieObserver = createObserver();
 		
 		// Tempelkan Observer ke LiveData object
-		movieViewModel.getMovies().observe(this , movieObserver);
+		movieViewModel.getMovies().observe(this, movieObserver);
 		
 	}
 	
-	private void showSelectedMovieItems(MovieItems movieItems){
+	private void showSelectedMovieItems(MovieItems movieItems) {
 		// Dapatkan id dan title bedasarkan ListView item
 		int movieIdItem = movieItems.getId();
 		String movieTitleItem = movieItems.getMovieTitle();
@@ -150,9 +150,9 @@ public class MovieFragment extends Fragment implements LoadFavoriteMoviesCallbac
 		int itemPosition = 0;
 		// if statement untuk tahu bahwa idnya itu termasuk d dalam tabel ato tidak, looping pake arraylist
 		// Cek jika size dari ArrayList itu lebih dari 0
-		if(FavoriteMovieFragment.favMovieListData.size() > 0){
-			for(int i = 0 ; i < FavoriteMovieFragment.favMovieListData.size() ; i++){
-				if(movieIdItem == FavoriteMovieFragment.favMovieListData.get(i).getId()){
+		if(FavoriteMovieFragment.favMovieListData.size() > 0) {
+			for(int i = 0 ; i < FavoriteMovieFragment.favMovieListData.size() ; i++) {
+				if(movieIdItem == FavoriteMovieFragment.favMovieListData.get(i).getId()) {
 					FavoriteMovieFragment.favMovieListData.get(i).setFavoriteBooleanState(1);
 					// Dapatin position dari arraylist jika idnya itu sama kyk id yg tersedia
 					itemPosition = i;
@@ -163,13 +163,13 @@ public class MovieFragment extends Fragment implements LoadFavoriteMoviesCallbac
 		// Tentukan bahwa kita ingin membuka data Movie
 		String modeItem = "open_movie_detail";
 		
-		Intent intentWithMovieIdData = new Intent(getActivity() , DetailActivity.class);
+		Intent intentWithMovieIdData = new Intent(getActivity(), DetailActivity.class);
 		// Bawa data untuk disampaikan ke {@link DetailActivity}
-		intentWithMovieIdData.putExtra(MOVIE_ID_DATA , movieIdItem);
-		intentWithMovieIdData.putExtra(MOVIE_TITLE_DATA , movieTitleItem);
+		intentWithMovieIdData.putExtra(MOVIE_ID_DATA, movieIdItem);
+		intentWithMovieIdData.putExtra(MOVIE_TITLE_DATA, movieTitleItem);
 		// Cek jika ArrayList ada data
-		if(FavoriteMovieFragment.favMovieListData.size() > 0){
-			intentWithMovieIdData.putExtra(MOVIE_BOOLEAN_STATE_DATA , FavoriteMovieFragment.favMovieListData.get(itemPosition).getFavoriteBooleanState());
+		if(FavoriteMovieFragment.favMovieListData.size() > 0) {
+			intentWithMovieIdData.putExtra(MOVIE_BOOLEAN_STATE_DATA, FavoriteMovieFragment.favMovieListData.get(itemPosition).getFavoriteBooleanState());
 		}
 		intentWithMovieIdData.putExtra(MODE_INTENT, modeItem);
 		// Start activity tujuan bedasarkan intent object dan bawa request code
@@ -178,21 +178,21 @@ public class MovieFragment extends Fragment implements LoadFavoriteMoviesCallbac
 	}
 	
 	@Override
-	public void onResume(){
+	public void onResume() {
 		super.onResume();
 		// Cek jika Parcelable itu exist, jika iya, maka update layout manager dengan memasukkan
 		// Parcelable sebagai input parameter
-		if(mMovieListState != null){
+		if(mMovieListState != null) {
 			movieLinearLayoutManager.onRestoreInstanceState(mMovieListState);
 		}
 	}
 	
 	@Override
-	public void onSaveInstanceState(@NonNull Bundle outState){
+	public void onSaveInstanceState(@NonNull Bundle outState) {
 		super.onSaveInstanceState(outState);
 		// Cek jika movieLinearLayoutManager itu ada, jika tidak maka kita tidak akan ngapa2in
 		// di onSaveInstanceState
-		if(movieLinearLayoutManager != null){
+		if(movieLinearLayoutManager != null) {
 			// Save list state/ scroll position dari list
 			mMovieListState = movieLinearLayoutManager.onSaveInstanceState();
 			outState.putParcelable(MOVIE_LIST_STATE, mMovieListState);
@@ -202,33 +202,33 @@ public class MovieFragment extends Fragment implements LoadFavoriteMoviesCallbac
 	
 	// Callback method dari Interface LoadFavoriteMoviesCallback
 	@Override
-	public void preExecute(){
+	public void preExecute() {
 		// Method tsb tidak melakukan apa2
 	}
 	
 	@Override
-	public void postExecute(ArrayList <MovieItems> movieItems){
+	public void postExecute(ArrayList<MovieItems> movieItems) {
 		// Bikin ArrayList global variable sama dengan hasil dari AsyncTask class
 		FavoriteMovieFragment.favMovieListData = movieItems;
 	}
 	
 	@Override
-	public void onActivityResult(int requestCode , int resultCode , Intent data){
-		super.onActivityResult(requestCode , resultCode , data);
-		if(data != null){
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if(data != null) {
 			// Check for correct request code
-			if(requestCode == DetailActivity.REQUEST_CHANGE){
+			if(requestCode == DetailActivity.REQUEST_CHANGE) {
 				// Check for result code
-				if(resultCode == DetailActivity.RESULT_CHANGE){
+				if(resultCode == DetailActivity.RESULT_CHANGE) {
 					// Tambahkan item ke adapter dan reset scroll position ke paling atas
-					boolean changedDataState = data.getBooleanExtra(DetailActivity.EXTRA_CHANGED_STATE , false);
+					boolean changedDataState = data.getBooleanExtra(DetailActivity.EXTRA_CHANGED_STATE, false);
 					// Cek jika value dari changedDataState itu true
-					if(changedDataState){
-						if(getActivity().getSupportFragmentManager() != null){
+					if(changedDataState) {
+						if(getActivity().getSupportFragmentManager() != null) {
 							// Dapatin position fragment dari FavoriteMovieFragment di ViewPager since ViewPager menampung list dari Fragments
 							FavoriteMovieFragment favoriteMovieFragment = (FavoriteMovieFragment) getActivity().getSupportFragmentManager().getFragments().get(2);
 							// Cek jika favoriteMovieFragment itu ada
-							if(favoriteMovieFragment != null){
+							if(favoriteMovieFragment != null) {
 								// Komunikasi dengan FavoriteMovieFragment dengan memanggil onActivityResult method di FavoriteMovieFragment
 								favoriteMovieFragment.onActivityResult(requestCode, resultCode, data);
 							}
@@ -241,11 +241,11 @@ public class MovieFragment extends Fragment implements LoadFavoriteMoviesCallbac
 	
 	
 	// Method tsb berguna untuk membuat observer
-	public Observer <ArrayList <MovieItems>> createObserver(){
+	public Observer<ArrayList<MovieItems>> createObserver() {
 		// Buat Observer yang gunanya untuk update UI
-		return new Observer <ArrayList <MovieItems>>(){
+		return new Observer<ArrayList<MovieItems>>() {
 			@Override
-			public void onChanged(@Nullable final ArrayList <MovieItems> movieItems){
+			public void onChanged(@Nullable final ArrayList<MovieItems> movieItems) {
 				// Set LinearLayoutManager object value dengan memanggil LinearLayoutManager constructor
 				movieLinearLayoutManager = new LinearLayoutManager(getContext());
 				// Kita menggunakan LinearLayoutManager berorientasi vertical untuk RecyclerView
@@ -257,10 +257,10 @@ public class MovieFragment extends Fragment implements LoadFavoriteMoviesCallbac
 				movieAdapter.setData(movieItems);
 				recyclerView.setAdapter(movieAdapter);
 				// Set item click listener di dalam recycler view
-				ItemClickSupport.addSupportToView(recyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener(){
+				ItemClickSupport.addSupportToView(recyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
 					// Implement interface method
 					@Override
-					public void onItemClicked(RecyclerView recyclerView , int position , View view){
+					public void onItemClicked(RecyclerView recyclerView, int position, View view) {
 						// Panggil method showSelectedMovieItems untuk mengakses DetailActivity bedasarkan data yang ada
 						showSelectedMovieItems(movieItems.get(position));
 					}

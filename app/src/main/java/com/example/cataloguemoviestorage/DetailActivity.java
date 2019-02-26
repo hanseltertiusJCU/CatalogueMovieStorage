@@ -100,11 +100,11 @@ public class DetailActivity extends AppCompatActivity{
 	// Buat ViewModel untuk detailedMovieInfo
 	private DetailedMovieViewModel detailedMovieViewModel;
 	// Buat Observer untuk detailedMovieInfo
-	private Observer <ArrayList<MovieItems>> detailedMovieObserver;
+	private Observer <ArrayList <MovieItems>> detailedMovieObserver;
 	// Buat ViewModel untuk detailedTvShowInfo
 	private DetailedTvShowViewModel detailedTvShowViewModel;
 	// Buat Observer untuk detailedTvShowInfo
-	private Observer <ArrayList<TvShowItem>> detailedTvShowObserver;
+	private Observer <ArrayList <TvShowItem>> detailedTvShowObserver;
 	
 	// Constant untuk key dri drawable dan boolean state
 	private static final String KEY_DRAWABLE_MARKED_AS_FAVORITE_STATE = "drawable_favorite_state";
@@ -151,23 +151,23 @@ public class DetailActivity extends AppCompatActivity{
 		accessItemMode = getIntent().getStringExtra(MovieFragment.MODE_INTENT);
 		
 		// Cek untuk mode yg tepat
-		if(accessItemMode.equals("open_movie_detail")) {
+		if(accessItemMode.equals("open_movie_detail")){
 			// Get intent untuk mendapatkan id, title serta favorite movie state dari {@link MainActivity}
 			detailedMovieId = getIntent().getIntExtra(MovieFragment.MOVIE_ID_DATA , 0);
 			detailedMovieTitle = getIntent().getStringExtra(MovieFragment.MOVIE_TITLE_DATA);
 			detailedMovieFavoriteState = getIntent().getIntExtra(MovieFragment.MOVIE_BOOLEAN_STATE_DATA , 0);
-		} else if (accessItemMode.equals("open_tv_show_detail")) {
+		} else if(accessItemMode.equals("open_tv_show_detail")){
 			// Get intent untuk mendapatkan id, title serta favorite tv show state dari {@link MainActivity}
-			detailedTvShowId = getIntent().getIntExtra(TvShowFragment.TV_SHOW_ID_DATA, 0);
+			detailedTvShowId = getIntent().getIntExtra(TvShowFragment.TV_SHOW_ID_DATA , 0);
 			detailedTvShowName = getIntent().getStringExtra(TvShowFragment.TV_SHOW_NAME_DATA);
-			detailedTvShowFavoriteState = getIntent().getIntExtra(TvShowFragment.TV_SHOW_BOOLEAN_STATE_DATA, 0);
+			detailedTvShowFavoriteState = getIntent().getIntExtra(TvShowFragment.TV_SHOW_BOOLEAN_STATE_DATA , 0);
 		}
 		
 		// Cek jika savedInstanceState itu ada, jika iya, restore drawable marked as favorite icon state
 		if(savedInstanceState != null){
 			if(accessItemMode.equals("open_movie_detail")){
 				detailedMovieFavoriteState = savedInstanceState.getInt(KEY_DRAWABLE_MARKED_AS_FAVORITE_STATE);
-			} else if(accessItemMode.equals("open_tv_show_detail")) {
+			} else if(accessItemMode.equals("open_tv_show_detail")){
 				detailedTvShowFavoriteState = savedInstanceState.getInt(KEY_DRAWABLE_MARKED_AS_FAVORITE_STATE);
 			}
 			
@@ -176,9 +176,9 @@ public class DetailActivity extends AppCompatActivity{
 		// Cek kalo ada action bar
 		if(getSupportActionBar() != null){
 			// Set action bar title untuk DetailActivity
-			if(accessItemMode.equals("open_movie_detail")) {
+			if(accessItemMode.equals("open_movie_detail")){
 				getSupportActionBar().setTitle(detailedMovieTitle);
-			} else if(accessItemMode.equals("open_tv_show_detail")) {
+			} else if(accessItemMode.equals("open_tv_show_detail")){
 				getSupportActionBar().setTitle(detailedTvShowName);
 			}
 			// Set up button
@@ -190,24 +190,22 @@ public class DetailActivity extends AppCompatActivity{
 		detailedProgressBar.setVisibility(View.VISIBLE);
 		
 		// Mode untuk menangani ViewModel yg berbeda
-		if(accessItemMode.equals("open_movie_detail")) {
+		if(accessItemMode.equals("open_movie_detail")){
 			// Panggil MovieViewModel dengan menggunakan ViewModelFactory sebagai parameter tambahan (dan satu-satunya pilihan) selain activity
 			detailedMovieViewModel = ViewModelProviders.of(this , new DetailedMovieViewModelFactory(this.getApplication() , detailedMovieId)).get(DetailedMovieViewModel.class);
 			// Buat observer object untuk mendisplay data ke UI
 			detailedMovieObserver = createDetailedMovieObserver();
 			// Tempelkan Observer ke LiveData object
 			detailedMovieViewModel.getDetailedMovie().observe(this , detailedMovieObserver);
-		} else if (accessItemMode.equals("open_tv_show_detail")){
+		} else if(accessItemMode.equals("open_tv_show_detail")){
 			// Panggil MovieViewModel dengan menggunakan ViewModelFactory sebagai parameter tambahan (dan satu-satunya pilihan) selain activity
-			detailedTvShowViewModel = ViewModelProviders.of(this, new DetailedTvShowViewModelFactory(this.getApplication(), detailedTvShowId)).get(DetailedTvShowViewModel.class);
+			detailedTvShowViewModel = ViewModelProviders.of(this , new DetailedTvShowViewModelFactory(this.getApplication() , detailedTvShowId)).get(DetailedTvShowViewModel.class);
 			// Buat observer object untuk mendisplay data ke UI
 			detailedTvShowObserver = createDetailedTvShowObserver();
 			// Tempelkan Observer ke LiveData object
-			detailedTvShowViewModel.getDetailedTvShow().observe(this, detailedTvShowObserver);
+			detailedTvShowViewModel.getDetailedTvShow().observe(this , detailedTvShowObserver);
 			
 		}
-		
-		
 		
 		
 		// Add on offset changed listener ke AppBarLayout untuk mengatur
@@ -309,8 +307,8 @@ public class DetailActivity extends AppCompatActivity{
 		return observer;
 	}
 	
-	private Observer<ArrayList<TvShowItem>> createDetailedTvShowObserver(){
-		Observer <ArrayList<TvShowItem>> observer = new Observer <ArrayList <TvShowItem>>(){
+	private Observer <ArrayList <TvShowItem>> createDetailedTvShowObserver(){
+		Observer <ArrayList <TvShowItem>> observer = new Observer <ArrayList <TvShowItem>>(){
 			@Override
 			public void onChanged(@Nullable ArrayList <TvShowItem> detailedTvShowItems){
 				// Ketika data selesai di load, maka kita akan mendapatkan data dan menghilangkan progress bar
@@ -325,10 +323,10 @@ public class DetailActivity extends AppCompatActivity{
 				textViewDetailedFirstInfoText.setText(detailedTvShowItems.get(0).getTvShowName());
 				
 				Spannable seasonsWord = new SpannableString(getString(R.string.span_tv_show_detail_number_of_seasons) + " ");
-				seasonsWord.setSpan(new ForegroundColorSpan(Color.BLACK), 0 , seasonsWord.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+				seasonsWord.setSpan(new ForegroundColorSpan(Color.BLACK) , 0 , seasonsWord.length() , Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 				textViewDetailedSecondInfoText.setText(seasonsWord);
 				Spannable seasonsDetailedTvShow = new SpannableString(detailedTvShowItems.get(0).getTvShowSeasons());
-				seasonsDetailedTvShow.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorAccent)), 0, seasonsDetailedTvShow.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+				seasonsDetailedTvShow.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorAccent)) , 0 , seasonsDetailedTvShow.length() , Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 				textViewDetailedSecondInfoText.append(seasonsDetailedTvShow);
 				
 				// Set textview content in detailed movie runtime to contain a variety of different colors
@@ -396,20 +394,20 @@ public class DetailActivity extends AppCompatActivity{
 	public boolean onCreateOptionsMenu(Menu menu){
 		// Inflate menu
 		getMenuInflater().inflate(R.menu.menu_favorite , menu);
-		if (accessItemMode.equals("open_movie_detail")){
+		if(accessItemMode.equals("open_movie_detail")){
 			// Cek jika value boolean nya itu adalah true, yang berarti menandakan movie favorite
-			if (detailedMovieFavoriteState == 1) {
+			if(detailedMovieFavoriteState == 1){
 				// Set drawable resource
 				drawableMenuMarkedAsFavouriteResourceId = R.drawable.ic_favourite_on;
-			} else {
+			} else{
 				drawableMenuMarkedAsFavouriteResourceId = R.drawable.ic_favourite_off;
 			}
-		} else if (accessItemMode.equals("open_tv_show_detail")) {
+		} else if(accessItemMode.equals("open_tv_show_detail")){
 			// Cek jika value boolean nya itu adalah true, yang berarti menandakan tv show favorite
-			if (detailedTvShowFavoriteState == 1) {
+			if(detailedTvShowFavoriteState == 1){
 				// Set drawable resource
 				drawableMenuMarkedAsFavouriteResourceId = R.drawable.ic_favourite_on;
-			} else {
+			} else{
 				drawableMenuMarkedAsFavouriteResourceId = R.drawable.ic_favourite_off;
 			}
 		}
@@ -431,7 +429,7 @@ public class DetailActivity extends AppCompatActivity{
 		resultIntent = new Intent();
 		switch(item.getItemId()){
 			case R.id.action_marked_as_favorite:
-				if (accessItemMode.equals("open_movie_detail")) { // Cek jika mode yg dibuka itu berada di Movie
+				if(accessItemMode.equals("open_movie_detail")){ // Cek jika mode yg dibuka itu berada di Movie
 					// Check for current state of drawable menu icon
 					if(detailedMovieFavoriteState != 1){
 						// Change icon into marked as favourite
@@ -443,12 +441,7 @@ public class DetailActivity extends AppCompatActivity{
 						detailedMovieItem.setFavoriteBooleanState(detailedMovieFavoriteState);
 						
 						// Cek jika value dari detailedMovieFavoriteState sama dengan value bawaan intent dengan key MOVIE_BOOLEAN_STATE_EXTRA
-						if(detailedMovieFavoriteState == getIntent().getIntExtra(MovieFragment.MOVIE_BOOLEAN_STATE_DATA , 0)){
-							// Set value changedState into false krn ga ad perubahan dengan state di bandingkan dengan value bawaan intent
-							changedState = false;
-						} else {
-							changedState = true;
-						}
+						changedState = detailedMovieFavoriteState != getIntent().getIntExtra(MovieFragment.MOVIE_BOOLEAN_STATE_DATA, 0);
 						
 						// Cek jika ada pergantian state dari sebuah data
 						if(changedState){
@@ -457,7 +450,7 @@ public class DetailActivity extends AppCompatActivity{
 							if(newIdItem > 0){
 								// Bawa nilai ke intent
 								resultIntent.putExtra(EXTRA_CHANGED_STATE , changedState);
-								setResult(RESULT_CHANGE, resultIntent); // Set result that brings result code and intent
+								setResult(RESULT_CHANGE , resultIntent); // Set result that brings result code and intent
 							}
 						}
 						
@@ -470,11 +463,7 @@ public class DetailActivity extends AppCompatActivity{
 						// Set boolean state value into MovieItem
 						detailedMovieItem.setFavoriteBooleanState(detailedMovieFavoriteState);
 						// Cek jika value dari detailedMovieFavoriteState sama dengan value bawaan intent dengan key MOVIE_BOOLEAN_STATE_EXTRA
-						if(detailedMovieFavoriteState == getIntent().getIntExtra(MovieFragment.MOVIE_BOOLEAN_STATE_DATA , 0)){
-							changedState = false;
-						} else {
-							changedState = true;
-						}
+						changedState = detailedMovieFavoriteState != getIntent().getIntExtra(MovieFragment.MOVIE_BOOLEAN_STATE_DATA, 0);
 						
 						// Cek jika ada pergantian state dari sebuah data
 						if(changedState){
@@ -483,14 +472,14 @@ public class DetailActivity extends AppCompatActivity{
 							if(deletedIdItem > 0){
 								// Bawa nilai ke intent
 								resultIntent.putExtra(EXTRA_CHANGED_STATE , changedState);
-								setResult(RESULT_CHANGE, resultIntent); // Set result that brings result code and intent
+								setResult(RESULT_CHANGE , resultIntent); // Set result that brings result code and intent
 							}
 						}
 						
 						// Update option menu
 						invalidateOptionsMenu();
 					}
-				} else if (accessItemMode.equals("open_tv_show_detail")) { // Cek jika mode yg dibuka itu berada di TV Show
+				} else if(accessItemMode.equals("open_tv_show_detail")){ // Cek jika mode yg dibuka itu berada di TV Show
 					if(detailedTvShowFavoriteState != 1){
 						// Change icon into marked as favourite
 						drawableMenuMarkedAsFavouriteResourceId = R.drawable.ic_favourite_on;
@@ -501,29 +490,22 @@ public class DetailActivity extends AppCompatActivity{
 						detailedTvShowItem.setFavoriteBooleanState(detailedTvShowFavoriteState);
 						// Cek jika value dari detailedTvShowFavoriteState sama dengan value
 						// bawaan intent dengan key TV_SHOW_BOOLEAN_STATE_EXTRA
-						if(detailedTvShowFavoriteState == getIntent().getIntExtra(TvShowFragment.TV_SHOW_BOOLEAN_STATE_DATA, 0)){
-							// Set value changedState into false krn ga ad perubahan dengan state di bandingkan dengan value bawaan intent
-							changedState = false;
-						} else {
-							changedState = true;
-						}
+						changedState = detailedTvShowFavoriteState != getIntent().getIntExtra(TvShowFragment.TV_SHOW_BOOLEAN_STATE_DATA, 0);
 						
 						// Cek jika ada pergantian state dari sebuah data
 						if(changedState){
 							// Insert based on data
 							long newIdItem = favoriteItemsHelper.insertFavoriteTvShowItem(detailedTvShowItem);
-							// todo: pake get current date
-							Log.d("Insert TV Show data", "Insert TV Show Data into DB");
 							if(newIdItem > 0){
 								// Bawa nilai ke intent
 								resultIntent.putExtra(EXTRA_CHANGED_STATE , changedState);
-								setResult(RESULT_CHANGE, resultIntent); // Set result that brings result code and intent
+								setResult(RESULT_CHANGE , resultIntent); // Set result that brings result code and intent
 							}
 						}
 						
 						// Update option menu
 						invalidateOptionsMenu();
-					} else {
+					} else{
 						// Change icon into unmarked as favourite
 						drawableMenuMarkedAsFavouriteResourceId = R.drawable.ic_favourite_off;
 						detailedTvShowFavoriteState = 0;
@@ -531,21 +513,16 @@ public class DetailActivity extends AppCompatActivity{
 						detailedTvShowItem.setFavoriteBooleanState(detailedTvShowFavoriteState);
 						// Cek jika value dari detailedTvShowFavoriteState sama dengan value
 						// bawaan intent dengan key TV_SHOW_BOOLEAN_STATE_EXTRA
-						if(detailedTvShowFavoriteState == getIntent().getIntExtra(TvShowFragment.TV_SHOW_BOOLEAN_STATE_DATA , 0)){
-							changedState = false;
-						} else {
-							changedState = true;
-						}
+						changedState = detailedTvShowFavoriteState != getIntent().getIntExtra(TvShowFragment.TV_SHOW_BOOLEAN_STATE_DATA, 0);
 						
 						// Cek jika ada pergantian state dari sebuah data
 						if(changedState){
 							// Remove from database
 							long deletedIdItem = favoriteItemsHelper.deleteFavoriteTvShowItem(detailedTvShowItem.getId());
-							Log.d("Delete TV Show data", "Delete TV Show Data from DB");
 							if(deletedIdItem > 0){
 								// Bawa nilai ke intent
 								resultIntent.putExtra(EXTRA_CHANGED_STATE , changedState);
-								setResult(RESULT_CHANGE, resultIntent); // Set result that brings result code and intent
+								setResult(RESULT_CHANGE , resultIntent); // Set result that brings result code and intent
 							}
 						}
 						
@@ -574,10 +551,10 @@ public class DetailActivity extends AppCompatActivity{
 	protected void onSaveInstanceState(Bundle outState){
 		if(accessItemMode.equals("open_movie_detail")){
 			// Save drawable marked as favorite state for movie
-			outState.putInt(KEY_DRAWABLE_MARKED_AS_FAVORITE_STATE, detailedMovieFavoriteState);
-		} else if(accessItemMode.equals("open_tv_show_detail")) {
+			outState.putInt(KEY_DRAWABLE_MARKED_AS_FAVORITE_STATE , detailedMovieFavoriteState);
+		} else if(accessItemMode.equals("open_tv_show_detail")){
 			// Save drawable marked as favorite state for tv show
-			outState.putInt(KEY_DRAWABLE_MARKED_AS_FAVORITE_STATE, detailedTvShowFavoriteState);
+			outState.putInt(KEY_DRAWABLE_MARKED_AS_FAVORITE_STATE , detailedTvShowFavoriteState);
 		}
 		super.onSaveInstanceState(outState);
 	}

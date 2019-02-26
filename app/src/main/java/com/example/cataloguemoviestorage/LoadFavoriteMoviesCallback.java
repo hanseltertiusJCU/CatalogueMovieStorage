@@ -6,5 +6,6 @@ import java.util.ArrayList;
 
 public interface LoadFavoriteMoviesCallback{
 	void preExecute();
-	void postExecute(ArrayList<MovieItems> movieItems);
+	
+	void postExecute(ArrayList <MovieItems> movieItems);
 }

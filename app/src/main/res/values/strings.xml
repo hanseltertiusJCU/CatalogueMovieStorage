@@ -2,8 +2,6 @@
     <string name="app_name">CatalogueMovieStorage</string>
 
     <!-- Set values for edit text search -->
-    <string name="hint_text">Type a movie</string>
-    <string name="search_text">Search</string>
 
     <!-- Set values for Movie data placeholder -->
     <string name="movie_title_text">Movie Title</string>
@@ -18,13 +16,10 @@
     <string name="tv_show_language_text">Language</string>
 
     <!-- Set action bar title -->
-    <string name="search_movie">Search Movie</string>
     <string name="movie">Movie</string>
     <string name="tv_show">TV Show</string>
     <string name="favorite_movie">Favorite Movie</string>
     <string name="favorite_tv_show">Favorite TV Show</string>
-    <string name="now_playing">Now Playing</string>
-    <string name="upcoming">Up Coming</string>
     <string name="favorite">Favorite</string>
 
     <!-- Set Detailed Movie section value placeholder -->
@@ -34,14 +29,6 @@
     <string name="detailed_movie_title_text">Detailed Movie Title Text</string>
     <string name="detailed_movie_overview_text">Detailed Overview</string>
     <string name="detailed_movie_release_date_text">yyyy-MM-dd</string>
-
-    <!-- Set Detailed TV Show section value placeholder -->
-    <string name="detailed_tv_show_rating_text">Detailed TV Show Rating Text</string>
-    <string name="detailed_tv_show_episodes_text">Detailed TV Show Episodes Text</string>
-    <string name="detailed_tv_show_seasons_text">Detailed TV Show Seasons Text</string>
-    <string name="detailed_tv_show_title_text">Detailed TV Show Title Text</string>
-    <string name="detailed_tv_show_overview_text">Detailed Overview</string>
-    <string name="detailed_tv_show_first_air_date_text">yyyy-MM-dd</string>
 
     <!-- Set Detailed Movie section title -->
     <string name="detailed_movie_overview_title">Overview</string>
@@ -55,9 +42,7 @@
     <string name="detailed_tv_show_overview_title">Overview</string>
     <string name="detailed_tv_show_first_air_date_title">First Air Date</string>
     <string name="detailed_tv_show_genres_title">Genre(s)</string>
-    <string name="detailed_tv_show_networks_text">Detailed TV Shows Network(s) Text</string>
     <string name="detailed_tv_show_networks_title">Network(s)</string>
-    <string name="detailed_tv_show_genres_text">Detailed TV Shows Genre(s) Text</string>
 
     <!-- Set Span movie item section title -->
     <string name="span_movie_item_ratings">Ratings :</string>
@@ -88,8 +73,6 @@
     <string name="catalogue_movie_storage">Catalogue Movie Storage</string>
 
     <string name="mark_as_favorite">Mark as Favorite</string>
-
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 
 </resources>

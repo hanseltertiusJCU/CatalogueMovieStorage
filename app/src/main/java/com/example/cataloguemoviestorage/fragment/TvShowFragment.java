@@ -30,14 +30,13 @@ import com.example.cataloguemoviestorage.support.ItemClickSupport;
 
 import java.util.ArrayList;
 
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class TvShowFragment extends Fragment implements LoadFavoriteTvShowCallback{
+public class TvShowFragment extends Fragment implements LoadFavoriteTvShowCallback {
 	
 	// Key untuk membawa data ke intent (data tidak d private untuk dapat diapplikasikan di berbagai Fragments dan diakses ke {@link DetailActivity})
 	public static final String TV_SHOW_ID_DATA = "TV_SHOW_ID_DATA";
@@ -49,9 +48,9 @@ public class TvShowFragment extends Fragment implements LoadFavoriteTvShowCallba
 	private static final String TV_SHOW_LIST_STATE = "tvShowListState";
 	@BindView(R.id.rv_tv_shows_item_list)
 	RecyclerView recyclerView;
-	private TvShowAdapter tvShowAdapter;
 	@BindView(R.id.progress_bar)
 	ProgressBar progressBar;
+	private TvShowAdapter tvShowAdapter;
 	private TvShowViewModel tvShowViewModel;
 	// Bikin parcelable yang berguna untuk menyimpan lalu merestore position
 	private Parcelable mTvShowListState = null;
@@ -62,23 +61,23 @@ public class TvShowFragment extends Fragment implements LoadFavoriteTvShowCallba
 	private Observer<ArrayList<TvShowItem>> tvShowObserver;
 	
 	
-	public TvShowFragment(){
+	public TvShowFragment() {
 		// Required empty public constructor
 	}
 	
 	@Override
-	public void onCreate(@Nullable Bundle savedInstanceState){
+	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		if(getActivity().getApplicationContext() != null){
+		if(getActivity().getApplicationContext() != null) {
 			favoriteItemsHelper = FavoriteItemsHelper.getInstance(getActivity().getApplicationContext());
 			favoriteItemsHelper.open();
 		}
 	}
 	
 	@Override
-	public View onCreateView(LayoutInflater inflater , ViewGroup container ,
-							 Bundle savedInstanceState){
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+							 Bundle savedInstanceState) {
 		// Inflate the layout for this fragment
 		View view = inflater.inflate(R.layout.fragment_tv_show, container, false);
 		ButterKnife.bind(this, view);
@@ -86,8 +85,8 @@ public class TvShowFragment extends Fragment implements LoadFavoriteTvShowCallba
 	}
 	
 	@Override
-	public void onViewCreated(@NonNull View view , @Nullable Bundle savedInstanceState){
-		super.onViewCreated(view , savedInstanceState);
+	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
 		
 		tvShowAdapter = new TvShowAdapter(getContext());
 		tvShowAdapter.notifyDataSetChanged();
@@ -104,10 +103,10 @@ public class TvShowFragment extends Fragment implements LoadFavoriteTvShowCallba
 		// Set background color untuk RecyclerView
 		recyclerView.setBackgroundColor(getResources().getColor(R.color.colorWhite));
 		
-		if(getContext() != null){
+		if(getContext() != null) {
 			// Buat object DividerItemDecoration dan set drawable untuk DividerItemDecoration
-			DividerItemDecoration itemDecorator = new DividerItemDecoration(getContext() , DividerItemDecoration.VERTICAL);
-			itemDecorator.setDrawable(ContextCompat.getDrawable(getContext() , R.drawable.item_divider));
+			DividerItemDecoration itemDecorator = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
+			itemDecorator.setDrawable(ContextCompat.getDrawable(getContext(), R.drawable.item_divider));
 			
 			// Set divider untuk RecyclerView items
 			recyclerView.addItemDecoration(itemDecorator);
@@ -119,12 +118,12 @@ public class TvShowFragment extends Fragment implements LoadFavoriteTvShowCallba
 	}
 	
 	@Override
-	public void onActivityCreated(@Nullable Bundle savedInstanceState){
+	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		
 		// Cek jika Bundle exist, jika iya maka kita metretrieve list state as well as
 		// list/item positions (scroll position)
-		if(savedInstanceState != null){
+		if(savedInstanceState != null) {
 			mTvShowListState = savedInstanceState.getParcelable(TV_SHOW_LIST_STATE);
 		} else {
 			// Lakukan AsyncTask utk meretrieve ArrayList yg isinya data dari database (tv show table)
@@ -142,7 +141,7 @@ public class TvShowFragment extends Fragment implements LoadFavoriteTvShowCallba
 		
 	}
 	
-	private void showSelectedTvShowItems(TvShowItem tvShowItem){
+	private void showSelectedTvShowItems(TvShowItem tvShowItem) {
 		// Dapatkan id dan title bedasarkan ListView item
 		int tvShowIdItem = tvShowItem.getId();
 		String tvShowNameItem = tvShowItem.getTvShowName();
@@ -150,9 +149,9 @@ public class TvShowFragment extends Fragment implements LoadFavoriteTvShowCallba
 		int itemPosition = 0;
 		// if statement untuk tahu bahwa idnya itu termasuk d dalam tabel ato tidak, looping pake arraylist
 		// Cek jika size dari ArrayList itu lebih dari 0
-		if(FavoriteTvShowFragment.favTvShowListData.size() > 0){
-			for(int i = 0; i < FavoriteTvShowFragment.favTvShowListData.size(); i++){
-				if(tvShowIdItem == FavoriteTvShowFragment.favTvShowListData.get(i).getId()){
+		if(FavoriteTvShowFragment.favTvShowListData.size() > 0) {
+			for(int i = 0 ; i < FavoriteTvShowFragment.favTvShowListData.size() ; i++) {
+				if(tvShowIdItem == FavoriteTvShowFragment.favTvShowListData.get(i).getId()) {
 					FavoriteTvShowFragment.favTvShowListData.get(i).setFavoriteBooleanState(1);
 					// Dapatin position dari arraylist jika idnya itu sama kyk id yg tersedia
 					itemPosition = i;
@@ -166,10 +165,10 @@ public class TvShowFragment extends Fragment implements LoadFavoriteTvShowCallba
 		Intent intentWithTvShowIdData = new Intent(getActivity(), DetailActivity.class);
 		// Bawa data untuk disampaikan ke {@link DetailActivity}
 		intentWithTvShowIdData.putExtra(TV_SHOW_ID_DATA, tvShowIdItem);
-		intentWithTvShowIdData.putExtra(TV_SHOW_NAME_DATA , tvShowNameItem);
+		intentWithTvShowIdData.putExtra(TV_SHOW_NAME_DATA, tvShowNameItem);
 		// Cek jika ArrayList ada data
-		if(FavoriteTvShowFragment.favTvShowListData.size() > 0){
-			intentWithTvShowIdData.putExtra(TV_SHOW_BOOLEAN_STATE_DATA , FavoriteTvShowFragment.favTvShowListData.get(itemPosition).getFavoriteBooleanState());
+		if(FavoriteTvShowFragment.favTvShowListData.size() > 0) {
+			intentWithTvShowIdData.putExtra(TV_SHOW_BOOLEAN_STATE_DATA, FavoriteTvShowFragment.favTvShowListData.get(itemPosition).getFavoriteBooleanState());
 		}
 		intentWithTvShowIdData.putExtra(MODE_INTENT, modeItem);
 		// Start activity tujuan bedasarkan intent object dan bawa request code
@@ -178,21 +177,21 @@ public class TvShowFragment extends Fragment implements LoadFavoriteTvShowCallba
 	}
 	
 	@Override
-	public void onResume(){
+	public void onResume() {
 		super.onResume();
 		// Cek jika Parcelable itu exist, jika iya, maka update layout manager dengan memasukkan
 		// Parcelable sebagai input parameter
-		if(mTvShowListState != null){
+		if(mTvShowListState != null) {
 			tvShowLinearLayoutManager.onRestoreInstanceState(mTvShowListState);
 		}
 	}
 	
 	@Override
-	public void onSaveInstanceState(@NonNull Bundle outState){
+	public void onSaveInstanceState(@NonNull Bundle outState) {
 		super.onSaveInstanceState(outState);
 		// Cek jika tvShowLinearLayoutManager itu ada, jika tidak maka tidak akan ngapa2in
 		// di onSaveInstanceState
-		if(tvShowLinearLayoutManager != null){
+		if(tvShowLinearLayoutManager != null) {
 			// Save list state/ scroll position dari list
 			mTvShowListState = tvShowLinearLayoutManager.onSaveInstanceState();
 			outState.putParcelable(TV_SHOW_LIST_STATE, mTvShowListState);
@@ -201,22 +200,22 @@ public class TvShowFragment extends Fragment implements LoadFavoriteTvShowCallba
 	
 	// Callback method dari Interface LoadFavoriteTvShowsCallback
 	@Override
-	public void preExecute(){
+	public void preExecute() {
 		// Method tsb tidak melakukan apa2
 	}
 	
 	@Override
-	public void postExecute(ArrayList <TvShowItem> tvShowItems){
+	public void postExecute(ArrayList<TvShowItem> tvShowItems) {
 		// Bikin ArrayList global variable sama dengan hasil dari AsyncTask class
 		FavoriteTvShowFragment.favTvShowListData = tvShowItems;
 	}
 	
 	// Method tsb berguna untuk membuat observer
-	public Observer<ArrayList<TvShowItem>> createObserver(){
+	public Observer<ArrayList<TvShowItem>> createObserver() {
 		// Buat Observer yang gunanya untuk update UI
-		return new Observer <ArrayList <TvShowItem>>(){
+		return new Observer<ArrayList<TvShowItem>>() {
 			@Override
-			public void onChanged(@Nullable final ArrayList <TvShowItem> tvShowItems){
+			public void onChanged(@Nullable final ArrayList<TvShowItem> tvShowItems) {
 				// Set LinearLayoutManager object value dengan memanggil LinearLayoutManager constructor
 				tvShowLinearLayoutManager = new LinearLayoutManager(getContext());
 				// Kita menggunakan LinearLayoutManager berorientasi vertical untuk RecyclerView
@@ -228,9 +227,9 @@ public class TvShowFragment extends Fragment implements LoadFavoriteTvShowCallba
 				tvShowAdapter.setTvShowData(tvShowItems);
 				recyclerView.setAdapter(tvShowAdapter);
 				// Set item click listener di dalam recycler view
-				ItemClickSupport.addSupportToView(recyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener(){
+				ItemClickSupport.addSupportToView(recyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
 					@Override
-					public void onItemClicked(RecyclerView recyclerView , int position , View view){
+					public void onItemClicked(RecyclerView recyclerView, int position, View view) {
 						// Panggil method showSelectedMovieItems untuk mengakses DetailActivity bedasarkan data yang ada
 						showSelectedTvShowItems(tvShowItems.get(position));
 					}
@@ -240,22 +239,22 @@ public class TvShowFragment extends Fragment implements LoadFavoriteTvShowCallba
 	}
 	
 	@Override
-	public void onActivityResult(int requestCode , int resultCode , Intent data){
-		super.onActivityResult(requestCode , resultCode , data);
-		if(data != null){
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if(data != null) {
 			// Check for correct request code
-			if(requestCode == DetailActivity.REQUEST_CHANGE){
+			if(requestCode == DetailActivity.REQUEST_CHANGE) {
 				// Check for result code
-				if(resultCode == DetailActivity.RESULT_CHANGE){
+				if(resultCode == DetailActivity.RESULT_CHANGE) {
 					// Tambahkan item ke adapter dan reset scroll position ke paling atas
-					boolean changedDataState = data.getBooleanExtra(DetailActivity.EXTRA_CHANGED_STATE , false);
+					boolean changedDataState = data.getBooleanExtra(DetailActivity.EXTRA_CHANGED_STATE, false);
 					// Cek jika value dari changedDataState itu true
-					if(changedDataState){
-						if(getActivity().getSupportFragmentManager() != null){
+					if(changedDataState) {
+						if(getActivity().getSupportFragmentManager() != null) {
 							// Dapatin position fragment dari FavoriteTvShowFragment di ViewPager since ViewPager menampung list dari Fragments
 							FavoriteTvShowFragment favoriteTvShowFragment = (FavoriteTvShowFragment) getActivity().getSupportFragmentManager().getFragments().get(3);
 							// Cek jika favoriteTvShowFragment itu ada
-							if(favoriteTvShowFragment != null){
+							if(favoriteTvShowFragment != null) {
 								// Komunikasi dengan FavoriteMovieFragment dengan memanggil onActivityResult method di FavoriteTvShowFragment
 								favoriteTvShowFragment.onActivityResult(requestCode, resultCode, data);
 							}
@@ -267,7 +266,7 @@ public class TvShowFragment extends Fragment implements LoadFavoriteTvShowCallba
 	}
 	
 	@Override
-	public void onDestroy(){
+	public void onDestroy() {
 		super.onDestroy();
 		// Menutup koneksi terhadap SQL
 		favoriteItemsHelper.close();
