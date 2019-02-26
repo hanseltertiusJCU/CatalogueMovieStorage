@@ -82,7 +82,7 @@ public class TvShowAdapter extends RecyclerView.Adapter<TvShowAdapter.TvShowView
 		tvShowViewHolder.textViewTvShowRatings.setText(ratingTvShowItemWord);
 		Spannable ratingTvShowItem = new SpannableString(mTvShowData.get(position).getTvShowRatings());
 		ratingTvShowItem.setSpan(new ForegroundColorSpan(getContext().getResources().getColor(R.color.colorAccent)), 0, ratingTvShowItem.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-		tvShowViewHolder.textViewTvShowRatings.setText(ratingTvShowItem);
+		tvShowViewHolder.textViewTvShowRatings.append(ratingTvShowItem);
 		
 		// Set textview content in tv show item first air date to contain a variety of different colors
 		Spannable firstAirDateTvShowItemWord = new SpannableString(context.getString(R.string.span_tv_show_item_first_air_date) + " ");
@@ -90,7 +90,7 @@ public class TvShowAdapter extends RecyclerView.Adapter<TvShowAdapter.TvShowView
 		tvShowViewHolder.textViewTvShowFirstAirDate.setText(firstAirDateTvShowItemWord);
 		Spannable firstAirDateTvShowItem = new SpannableString(mTvShowData.get(position).getTvShowFirstAirDate());
 		firstAirDateTvShowItem.setSpan(new ForegroundColorSpan(getContext().getResources().getColor(R.color.colorAccent)), 0, firstAirDateTvShowItem.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-		tvShowViewHolder.textViewTvShowFirstAirDate.setText(firstAirDateTvShowItem);
+		tvShowViewHolder.textViewTvShowFirstAirDate.append(firstAirDateTvShowItem);
 		
 		// Set textview content in tv show item original language to contain a variety of different colors
 		Spannable originalLanguageTvShowItemWord = new SpannableString(context.getString(R.string.span_tv_show_item_language) + " ");
@@ -98,7 +98,7 @@ public class TvShowAdapter extends RecyclerView.Adapter<TvShowAdapter.TvShowView
 		tvShowViewHolder.textViewTvShowOriginalLanguage.setText(originalLanguageTvShowItemWord);
 		Spannable originalLanguageTvShowItem = new SpannableString(mTvShowData.get(position).getTvShowOriginalLanguage());
 		originalLanguageTvShowItem.setSpan(new ForegroundColorSpan(getContext().getResources().getColor(R.color.colorAccent)), 0, originalLanguageTvShowItem.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-		tvShowViewHolder.textViewTvShowOriginalLanguage.setText(originalLanguageTvShowItem);
+		tvShowViewHolder.textViewTvShowOriginalLanguage.append(originalLanguageTvShowItem);
 	}
 	
 	@Override

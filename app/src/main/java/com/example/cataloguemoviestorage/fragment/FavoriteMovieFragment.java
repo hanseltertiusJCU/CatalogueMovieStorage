@@ -145,14 +145,14 @@ public class FavoriteMovieFragment extends Fragment implements LoadFavoriteMovie
 		// Initiate intent
 		Intent intentWithMovieIdData = new Intent(getActivity() , DetailActivity.class);
 		// Bawa data untuk disampaikan ke {@link DetailActivity}
-		intentWithMovieIdData.putExtra(MOVIE_ID_DATA , movieIdItem);
-		intentWithMovieIdData.putExtra(MOVIE_TITLE_DATA , movieTitleItem);
+		intentWithMovieIdData.putExtra(MOVIE_ID_DATA, movieIdItem);
+		intentWithMovieIdData.putExtra(MOVIE_TITLE_DATA, movieTitleItem);
 		// Cek jika ArrayList ada data
 		if(favMovieListData.size() > 0){
-			intentWithMovieIdData.putExtra(MOVIE_BOOLEAN_STATE_DATA , favMovieListData.get(itemPosition).getFavoriteBooleanState());
+			intentWithMovieIdData.putExtra(MOVIE_BOOLEAN_STATE_DATA, favMovieListData.get(itemPosition).getFavoriteBooleanState());
 		}
 		// Start activity tujuan bedasarkan intent object
-		startActivityForResult(intentWithMovieIdData , DetailActivity.REQUEST_CHANGE);
+		startActivityForResult(intentWithMovieIdData, DetailActivity.REQUEST_CHANGE);
 	}
 	
 	
@@ -209,11 +209,11 @@ public class FavoriteMovieFragment extends Fragment implements LoadFavoriteMovie
 			if(requestCode == DetailActivity.REQUEST_CHANGE){
 				// Check for result code
 				if(resultCode == DetailActivity.RESULT_CHANGE){
-					boolean changedDataState = data.getBooleanExtra(DetailActivity.EXTRA_MOVIE_CHANGED_STATE , false);
+					boolean changedDataState = data.getBooleanExtra(DetailActivity.EXTRA_CHANGED_STATE, false);
 					// Cek jika ada perubahan di movie item data state
 					if(changedDataState){
 						// Execute AsyncTask kembali
-						new LoadFavoriteMoviesAsync(favoriteItemsHelper , this).execute();
+						new LoadFavoriteMoviesAsync(favoriteItemsHelper, this).execute();
 						// Reset scroll position ke paling atas
 						recyclerView.smoothScrollToPosition(0);
 					}

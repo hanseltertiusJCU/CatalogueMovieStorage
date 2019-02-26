@@ -221,7 +221,7 @@ public class MovieFragment extends Fragment implements LoadFavoriteMoviesCallbac
 				// Check for result code
 				if(resultCode == DetailActivity.RESULT_CHANGE){
 					// Tambahkan item ke adapter dan reset scroll position ke paling atas
-					boolean changedDataState = data.getBooleanExtra(DetailActivity.EXTRA_MOVIE_CHANGED_STATE, false);
+					boolean changedDataState = data.getBooleanExtra(DetailActivity.EXTRA_CHANGED_STATE , false);
 					// Cek jika value dari changedDataState itu true
 					if(changedDataState){
 						if(getActivity().getSupportFragmentManager() != null){
