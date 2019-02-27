@@ -149,22 +149,30 @@ public class DetailActivity extends AppCompatActivity {
 		if(savedInstanceState != null) {
 			if(accessItemMode.equals("open_movie_detail")) {
 				detailedMovieFavoriteStateValue = savedInstanceState.getInt(KEY_DRAWABLE_MARKED_AS_FAVORITE_STATE);
-				detailedMovieFavoriteStateValueComparison = savedInstanceState.getInt(KEY_DRAWABLE_MARKED_AS_FAVORITE_STATE_COMPARISON);
 				changedState = savedInstanceState.getBoolean(EXTRA_CHANGED_STATE);
-				// Tujuannya agar bs bawa ke result dimana hal tsb dapat
-				// menghandle situasi orientation changes
+				// Tujuannya agar bs bawa ke result serta handle comparison value
+				// dimana kedua hal tsb dapat menghandle situasi orientation changes
 				if(changedState) { // Cek jika value dr changedState itu true
+					if(detailedMovieFavoriteStateValue == 1){
+						detailedMovieFavoriteStateValueComparison = 1; // Update comparison value
+					} else {
+						detailedMovieFavoriteStateValueComparison = 0;
+					}
 					Intent resultIntent = new Intent();
 					resultIntent.putExtra(EXTRA_CHANGED_STATE, changedState);
 					setResult(RESULT_CHANGE, resultIntent);
 				}
 			} else if(accessItemMode.equals("open_tv_show_detail")) {
 				detailedTvShowFavoriteStateValue = savedInstanceState.getInt(KEY_DRAWABLE_MARKED_AS_FAVORITE_STATE);
-				detailedTvShowFavoriteStateValueComparison = savedInstanceState.getInt(KEY_DRAWABLE_MARKED_AS_FAVORITE_STATE_COMPARISON);
 				changedState = savedInstanceState.getBoolean(EXTRA_CHANGED_STATE);
-				// Tujuannya agar bs bawa ke result dimana hal tsb dapat
-				// menghandle situasi orientation changes
+				// Tujuannya agar bs bawa ke result serta handle comparison value
+				// dimana kedua hal tsb dapat menghandle situasi orientation changes
 				if(changedState) { // Cek jika value dr changedState itu true
+					if(detailedTvShowFavoriteStateValue == 1){
+						detailedTvShowFavoriteStateValueComparison = 1; // Update comparison value
+					} else {
+						detailedTvShowFavoriteStateValueComparison = 0;
+					}
 					Intent resultIntent = new Intent();
 					resultIntent.putExtra(EXTRA_CHANGED_STATE, changedState);
 					setResult(RESULT_CHANGE, resultIntent);
@@ -572,9 +580,8 @@ public class DetailActivity extends AppCompatActivity {
 			outState.putInt(KEY_DRAWABLE_MARKED_AS_FAVORITE_STATE_COMPARISON, detailedMovieFavoriteStateValueComparison);
 			outState.putBoolean(EXTRA_CHANGED_STATE, changedState);
 		} else if(accessItemMode.equals("open_tv_show_detail")) {
-			// Save drawable marked as favorite state for tv show as well as boolean changed state + comparisons
+			// Save drawable marked as favorite state for tv show as well as boolean changed state
 			outState.putInt(KEY_DRAWABLE_MARKED_AS_FAVORITE_STATE, detailedTvShowFavoriteStateValue);
-			outState.putInt(KEY_DRAWABLE_MARKED_AS_FAVORITE_STATE_COMPARISON, detailedTvShowFavoriteStateValueComparison);
 			outState.putBoolean(EXTRA_CHANGED_STATE, changedState);
 		}
 		super.onSaveInstanceState(outState);
